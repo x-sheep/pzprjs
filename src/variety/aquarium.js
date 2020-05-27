@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["aquarium"], {
+})(["aquarium", "mold"], {
 	MouseEvent: {
 		use: true,
 		inputModes: { edit: ["border", "number"], play: ["shade", "unshade"] },
@@ -117,7 +117,7 @@
 					}
 				}
 			} else if (ca === " " || ca === "-") {
-				excell.setQnum(0);
+				excell.setQnum(-1);
 			} else {
 				return;
 			}
@@ -159,7 +159,7 @@
 		}
 	},
 
-	AreaRoomGraph: {
+	"AreaRoomGraph@aquarium": {
 		enabled: true
 	},
 
@@ -191,6 +191,10 @@
 		}
 	},
 
+	"AreaPoolGraph@mold": {
+		coloring: true
+	},
+
 	Graphic: {
 		enablebcolor: true,
 
@@ -214,20 +218,55 @@
 		}
 	},
 
+	"Graphic@mold": {
+		irowakeblk: true,
+		shadecolor: "#bab580",
+		qanscolor: "#000000",
+
+		getShadedCellColor: function(cell) {
+			if (cell.qans !== 1) {
+				return null;
+			}
+			var info = cell.error || cell.qinfo;
+			if (info === 1) {
+				return this.errcolor1;
+			} else if (info === 2) {
+				return this.errcolor2;
+			} else if (cell.trial) {
+				return this.trialcolor;
+			} else if (this.puzzle.execConfig("irowakeblk")) {
+				return cell.pool.color;
+			}
+			return this.shadecolor;
+		}
+	},
+
 	Encode: {
 		decodePzpr: function(type) {
 			this.decodeBorder();
 			this.outbstr = this.outbstr.substr(1);
 			this.decodeNumber16ExCell();
-
-			this.puzzle.setConfig("aquarium_regions", this.checkpflag("r"));
+			this.decodeConfig();
 		},
 		encodePzpr: function(type) {
-			this.outpflag = this.puzzle.getConfig("aquarium_regions") ? "r" : null;
+			this.encodeConfig();
 			this.encodeBorder();
 			this.outbstr += "/";
 			this.encodeNumber16ExCell();
+		},
+
+		decodeConfig: function() {
+			this.puzzle.setConfig("aquarium_regions", this.checkpflag("r"));
+		},
+
+		encodeConfig: function() {
+			this.outpflag = this.puzzle.getConfig("aquarium_regions") ? "r" : null;
 		}
+	},
+
+	"Encode@mold": {
+		decodeConfig: function() {},
+		encodeConfig: function() {}
 	},
 
 	FileIO: {
@@ -281,12 +320,18 @@
 		}
 	},
 
+	"FileIO@mold": {
+		decodeConfig: function() {},
+		encodeConfig: function() {}
+	},
+
 	AnsCheck: {
 		checklist: [
 			"checkShadeCellExist+",
-			"checkSupports",
-			"checkPoolLevel",
-			"checkRegionLevel",
+			"checkSupports@aquarium",
+			"checkPoolLevel@aquarium",
+			"checkRegionLevel@aquarium",
+			"checkConnectMold@mold",
 			"checkShadeCount+"
 		],
 
@@ -412,6 +457,10 @@
 				clist.seterr(1);
 			}
 			return result;
+		},
+
+		checkConnectMold: function() {
+			this.checkOneArea(this.board.poolgraph, "csDivide");
 		}
 	},
 

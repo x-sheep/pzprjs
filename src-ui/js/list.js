@@ -359,7 +359,8 @@
 			"detour",
 			"snake",
 			"putteria",
-			"haisu"
+			"haisu",
+			"mold"
 		]
 	};
 	var tabstate = {

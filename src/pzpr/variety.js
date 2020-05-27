@@ -215,6 +215,7 @@
 			midloop: [0, 0, "ミッドループ", "Mid-loop"],
 			mochikoro: [1, 0, "モチコロ", "Mochikoro", "nurikabe"],
 			mochinyoro: [1, 0, "モチにょろ", "Mochinyoro", "nurikabe"],
+			mold: [0, 0, "ホールドモールド", "Mold", "aquarium"],
 			moonsun: [0, 0, "月か太陽", "Moon or Sun", "country"],
 			nagare: [0, 0, "流れるループ", "Nagareru-Loop"],
 			nagenawa: [0, 0, "なげなわ", "Nagenawa", "nagenawa"],
