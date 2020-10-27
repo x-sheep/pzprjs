@@ -359,6 +359,7 @@
 			"detour",
 			"snake",
 			"nonogram",
+			"corral",
 			"putteria",
 			"haisu",
 			"nikoji",

@@ -168,6 +168,7 @@
 			chocona: [0, 0, "チョコナ", "Chocona", "shimaguni"],
 			cojun: [0, 0, "コージュン", "Cojun", "ripple"],
 			compass: [0, 0, "Compass", "Compass", "compass"],
+			corral: [0, 0, "Corral", "Corral", "nonogram"],
 			country: [1, 0, "カントリーロード", "Country Road"],
 			creek: [1, 0, "クリーク", "Creek"],
 			curvedata: [0, 0, "カーブデータ", "Curve Data"],

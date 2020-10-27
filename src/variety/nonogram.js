@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["nonogram"], {
+})(["nonogram", "corral"], {
 	MouseEvent: {
 		use: true,
 		inputModes: { edit: ["number"], play: ["shade", "unshade"] },
@@ -49,6 +49,13 @@
 			} else {
 				this.inputqnum_main(excell);
 			}
+		}
+	},
+
+	"MouseEvent@corral": {
+		inputModes: {
+			edit: ["number", "clear", "info-blk"],
+			play: ["shade", "unshade", "info-blk"]
 		}
 	},
 
@@ -209,6 +216,20 @@
 		}
 	},
 
+	"BoardExec@corral": {
+		adjustBoardData2: function(key, d) {
+			this.adjustExCellTopLeft_2(key, d, true);
+		}
+	},
+
+	"AreaUnshadeGraph@corral": {
+		enabled: true
+	},
+
+	"AreaShadeGraph@corral": {
+		enabled: true
+	},
+
 	Graphic: {
 		enablebcolor: true,
 
@@ -291,6 +312,8 @@
 	AnsCheck: {
 		checklist: ["checkNonogram"],
 
+		excellsInUnknownOrder: false,
+
 		checkNonogram: function() {
 			this.checkRowsCols(this.isExCellCount, "exNoMatch");
 		},
@@ -313,6 +336,11 @@
 			}
 
 			var lines = this.getLines(clist);
+
+			if (this.excellsInUnknownOrder) {
+				nums.sort();
+				lines.sort();
+			}
 
 			if (!this.puzzle.pzpr.util.sameArray(nums, lines)) {
 				clist.seterr(1);
@@ -338,6 +366,38 @@
 				lines.push(count);
 			}
 			return lines;
+		}
+	},
+
+	"AnsCheck@corral": {
+		checklist: [
+			"check2x2ShadeCell",
+			"checkConnectUnshadeOutside",
+			"checkNonogram",
+			"checkConnectShade"
+		],
+
+		excellsInUnknownOrder: true,
+
+		checkConnectUnshadeOutside: function() {
+			var bd = this.board;
+			for (var r = 0; r < bd.ublkmgr.components.length; r++) {
+				var clist = bd.ublkmgr.components[r].clist;
+				var d = clist.getRectSize();
+				if (
+					d.x1 === 1 ||
+					d.x2 === bd.maxbx - 1 ||
+					d.y1 === 1 ||
+					d.y2 === bd.maxby - 1
+				) {
+					continue;
+				}
+				this.failcode.add("cuConnOut");
+				if (this.checkOnly) {
+					break;
+				}
+				clist.seterr(1);
+			}
 		}
 	}
 });
