@@ -11,7 +11,8 @@
 		"simpleloop",
 		"detour",
 		"dotchi",
-		"ovotovata"
+		"ovotovata",
+		"curfew"
 	];
 	if (typeof module === "object" && module.exports) {
 		module.exports = [pidlist, classbase];
@@ -21,7 +22,7 @@
 })({
 	//---------------------------------------------------------
 	// マウス入力系
-	"MouseEvent@country,onsen,detour": {
+	"MouseEvent@country,onsen,detour,curfew": {
 		inputModes: {
 			edit: ["border", "number", "clear", "info-line"],
 			play: ["line", "peke", "subcircle", "subcross", "clear", "info-line"]
@@ -188,7 +189,7 @@
 
 	//---------------------------------------------------------
 	// 盤面管理系
-	"Cell@country,onsen,maxi,detour": {
+	"Cell@country,onsen,maxi,detour,curfew": {
 		maxnum: function() {
 			return Math.min(999, this.room.clist.length);
 		}
@@ -249,7 +250,7 @@
 	Board: {
 		hasborder: 1
 	},
-	"Board@onsen,maxi,detour": {
+	"Board@onsen,maxi,detour,curfew": {
 		cols: 8,
 		rows: 8,
 
@@ -266,10 +267,10 @@
 	LineGraph: {
 		enabled: true
 	},
-	"LineGraph@onsen,maxi,detour": {
+	"LineGraph@onsen,maxi,detour,curfew": {
 		makeClist: true
 	},
-	"LineBlockGraph:LineGraph@onsen,maxi,detour": {
+	"LineBlockGraph:LineGraph@onsen,maxi,detour,curfew": {
 		enabled: true,
 		relation: { "border.line": "link", "border.ques": "separator" },
 		makeClist: true,
@@ -412,7 +413,7 @@
 				this.drawQuesNumbers();
 			} else if (this.pid === "moonsun") {
 				this.drawMarks();
-			} else if (this.pid === "onsen") {
+			} else if (this.pid === "onsen" || this.pid === "curfew") {
 				this.drawCircledNumbers();
 			} else if (this.pid === "dotchi") {
 				this.drawCircles();
@@ -436,7 +437,7 @@
 			this.drawTarget();
 		}
 	},
-	"Graphic@onsen": {
+	"Graphic@onsen,curfew": {
 		hideHatena: true,
 		circleratio: [0.4, 0.37],
 		gridcolor_type: "LIGHT",
@@ -555,7 +556,7 @@
 				this.decodeRoomNumber16();
 			} else if (this.pid === "moonsun" || this.pid === "dotchi") {
 				this.decodeCircle();
-			} else if (this.pid === "onsen") {
+			} else if (this.pid === "onsen" || this.pid === "curfew") {
 				this.decodeNumber16();
 			} else if (this.pid === "doubleback" || this.pid === "simpleloop") {
 				this.decodeEmpty();
@@ -577,7 +578,7 @@
 				this.encodeRoomNumber16();
 			} else if (this.pid === "moonsun" || this.pid === "dotchi") {
 				this.encodeCircle();
-			} else if (this.pid === "onsen") {
+			} else if (this.pid === "onsen" || this.pid === "curfew") {
 				this.encodeNumber16();
 			} else if (this.pid === "doubleback" || this.pid === "simpleloop") {
 				this.encodeEmpty();
@@ -831,6 +832,20 @@
 
 			"checkDeadendLine+",
 			"checkOneLoop"
+		]
+	},
+	"AnsCheck@curfew#1": {
+		checklist: [
+			"checkBranchLine",
+			"checkCrossLine",
+
+			"checkLineRoomLength",
+
+			"checkDeadendLine+",
+			"checkIsolatedCircle+",
+
+			"checkOneLoop",
+			"checkSameNumberInBlock"
 		]
 	},
 	AnsCheck: {
@@ -1439,6 +1454,60 @@
 			return new this.klass.CellList(elist);
 		}
 	},
+	"AnsCheck@curfew": {
+		checkIsolatedCircle: function() {
+			this.checkAllCell(function(cell) {
+				return cell.lcnt === 0 && cell.isNum();
+			}, "lnIsolate");
+		},
+
+		checkLineRoomLength: function() {
+			var bd = this.board;
+			var lpaths = bd.lineblkgraph.components;
+			var numcache = [];
+			for (var r = 0; r < lpaths.length; r++) {
+				var lpath = lpaths[r];
+				if (
+					lpath.clist.some(function(cell) {
+						return cell.lcnt !== 2;
+					})
+				) {
+					continue;
+				}
+
+				var room = lpath.clist[0].room;
+				var roomid = bd.roommgr.components.indexOf(room);
+				var top = room.clist.getQnumCell();
+				if (top.isnull) {
+					continue;
+				}
+				var num = numcache[roomid] || top.getNum();
+				if (num === -2) {
+					numcache[roomid] = lpaths[r].clist.length;
+					continue;
+				}
+				if (num === lpaths[r].clist.length) {
+					continue;
+				}
+
+				this.failcode.add("bkLineNe");
+				if (this.checkOnly) {
+					break;
+				}
+				lpaths[r].clist.seterr(1);
+			}
+		},
+
+		checkSameNumberInBlock: function() {
+			this.checkSameObjectInRoom(
+				this.board.roommgr,
+				function(cell) {
+					return cell.getNum();
+				},
+				"bkPlNum"
+			);
+		}
+	},
 
 	"FailCode@country": {
 		bkPassTwice: [
@@ -1560,6 +1629,16 @@
 		bkNoLine: [
 			"(please translate) A line doesn't pass a shaded country.",
 			"A line doesn't pass a shaded country."
+		]
+	},
+	"FailCode@curfew": {
+		bkLineNe: [
+			"(please translate) The length of the path in a room is different from the number in the room.",
+			"The length of the path in a room is different from the number in the room."
+		],
+		lnIsolate: [
+			"線の通っていない○があります。",
+			"A circle doesn't have a line."
 		]
 	}
 });

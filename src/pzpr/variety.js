@@ -121,6 +121,7 @@
 			compass: [0, 0, "Compass", "Compass", "compass"],
 			country: [1, 0, "カントリーロード", "Country Road"],
 			creek: [1, 0, "クリーク", "Creek"],
+			curfew: [0, 0, "Curfew", "Curfew", "country"],
 			curvedata: [0, 0, "カーブデータ", "Curve Data"],
 			"curvedata-aux": [0, 0, "図形の編集", "Edit shape"],
 			dbchoco: [0, 0, "ダブルチョコ", "Double Choco", "cbblock"],
