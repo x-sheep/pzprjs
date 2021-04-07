@@ -344,6 +344,7 @@
 			tilepaint: [1, 0, "タイルペイント", "Tilepaint"],
 			toichika: [0, 0, "遠い誓い", "Toichika"],
 			toichika2: [0, 0, "遠い誓い２", "Toichika 2", "toichika"],
+			tontti: [0, 0, "Tonttiraja", "Tonttiraja"],
 			triplace: [0, 0, "トリプレイス", "Tri-place"],
 			usotatami: [0, 0, "ウソタタミ", "Uso-tatami", "fillmat"],
 			usoone: [0, 0, "ウソワン", "Uso-one"],
