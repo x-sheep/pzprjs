@@ -84,19 +84,6 @@
 	Border: {
 		enableLineNG: true
 	},
-	LineGraph: {
-		enabled: true,
-
-		rebuild2: function() {
-			var excells = this.board.excell;
-			for (var c = 0; c < excells.length; c++) {
-				this.setComponentRefs(excells[c], null);
-				this.resetObjNodeList(excells[c]);
-			}
-
-			this.common.rebuild2.call(this);
-		}
-	},
 	"AreaTonttiGraph:AreaRoomGraph": {
 		enabled: true,
 		pointgroup: "cross",
@@ -128,7 +115,7 @@
 		},
 		getSideNodesByLinkObj: function(border) {
 			var sidenodes = [],
-				sidenodeobj = border.sideobj;
+				sidenodeobj = border.sidecross;
 			for (var i = 0; i < sidenodeobj.length; i++) {
 				var nodes = this.getObjNodeList(sidenodeobj[i]);
 				if (!!nodes && !!nodes[0]) {
@@ -140,6 +127,36 @@
 		getSideNodesBySeparator: function(border) {
 			var sidenodes = this.getSideNodesByLinkObj(border);
 			return sidenodes.length >= 2 ? sidenodes : null;
+		},
+		resetBorderCount: function() {
+			var bd = this.board,
+				borders = bd.border;
+			/* 外枠のカウントをあらかじめ足しておく */
+			for (var c = 0; c < bd.cell.length; c++) {
+				var cross = bd.cell[c];
+				cross.lcnt = 0;
+			}
+			for (var c = 0; c < bd.excell.length; c++) {
+				var cross = bd.excell[c];
+				cross.lcnt = 0;
+			}
+			for (var id = 0; id < borders.length; id++) {
+				if (!this.isedgevalidbylinkobj(borders[id])) {
+					this.incdecBorderCount(borders[id], true);
+				}
+			}
+		},
+		incdecBorderCount: function(border, isset) {
+			for (var i = 0; i < 2; i++) {
+				var cross = border.sidecell[i];
+				if (!cross.isnull) {
+					if (isset) {
+						cross.lcnt++;
+					} else {
+						cross.lcnt--;
+					}
+				}
+			}
 		}
 	},
 
@@ -191,6 +208,12 @@
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: ["checkCrossLine", "checkSameConnected", "checkDeadendLine+"],
+
+		checkLineCount: function(val, code) {
+			this.checkAllCell(function(cell) {
+				return cell.lcnt === val;
+			}, code);
+		},
 
 		checkSameConnected: function() {
 			this.checkSideCell(function(cell1, cell2) {
