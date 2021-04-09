@@ -213,6 +213,44 @@
 			this.drawTarget();
 		},
 
+		drawLines: function() {
+			var g = this.vinc("line", "crispEdges");
+
+			var blist = this.range.borders;
+			for (var i = 0; i < blist.length; i++) {
+				var border = blist[i],
+					color = this.getLineColor(border);
+
+				g.vid = "b_line_" + border.id;
+				if (!!color) {
+					var px = border.bx * this.bw,
+						py = border.by * this.bh,
+						ph = this.bh,
+						pw = this.bw;
+					var lm = this.lm + this.addlw / 2;
+
+					if (border.bx === 0 || border.bx === this.board.maxbx - 2) {
+						pw /= 2;
+						px += this.bw * (border.bx === 0 ? 0.5 : -0.5);
+					}
+					if (border.by === 0 || border.by === this.board.maxby - 2) {
+						ph /= 2;
+						py += this.bh * (border.by === 0 ? 0.5 : -0.5);
+					}
+
+					g.fillStyle = color;
+					if (!border.isVert()) {
+						g.fillRectCenter(px, py, lm, ph + lm);
+					} else {
+						g.fillRectCenter(px, py, pw + lm, lm);
+					}
+				} else {
+					g.vhide();
+				}
+			}
+			this.addlw = 0;
+		},
+
 		drawBGCrosses: function() {
 			var g = this.context;
 			var clist = this.range.crosses;
