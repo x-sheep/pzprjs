@@ -109,7 +109,6 @@
 		},
 		seterr: function(component, val) {
 			component.getnodeobjs().seterr(val);
-			component.clist.seterr(val);
 		},
 		setExtraData: function(component) {
 			var items = component.getnodeobjs();
@@ -200,6 +199,7 @@
 
 		paint: function() {
 			this.drawBGCells();
+			this.drawBGCrosses();
 			this.drawGrid();
 			this.drawBorders();
 
@@ -211,6 +211,27 @@
 			this.drawMBs();
 
 			this.drawTarget();
+		},
+
+		drawBGCrosses: function() {
+			var g = this.context;
+			var clist = this.range.crosses;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i],
+					color = cell.error === 1 ? this.errbcolor1 : null;
+				g.vid = "c_cross_" + cell.id;
+				if (!!color) {
+					g.fillStyle = color;
+					g.fillRectCenter(
+						cell.bx * this.bw,
+						cell.by * this.bh,
+						this.bw + 0.5,
+						this.bh + 0.5
+					);
+				} else {
+					g.vhide();
+				}
+			}
 		}
 	},
 
