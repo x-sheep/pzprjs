@@ -217,17 +217,27 @@
 			var g = this.context;
 			var clist = this.range.crosses;
 			for (var i = 0; i < clist.length; i++) {
-				var cell = clist[i],
-					color = cell.error === 1 ? this.errbcolor1 : null;
-				g.vid = "c_cross_" + cell.id;
+				var cross = clist[i],
+					color = cross.error === 1 ? this.errbcolor1 : null;
+				g.vid = "c_cross_" + cross.id;
 				if (!!color) {
 					g.fillStyle = color;
-					g.fillRectCenter(
-						cell.bx * this.bw,
-						cell.by * this.bh,
-						this.bw + 0.5,
-						this.bh + 0.5
-					);
+
+					var x = cross.bx * this.bw;
+					var y = cross.by * this.bh;
+					var w = this.bw;
+					var h = this.bh;
+
+					if (cross.bx === 0 || cross.bx === this.board.maxbx - 2) {
+						w /= 2;
+						x += this.bw * (cross.bx === 0 ? 0.5 : -0.5);
+					}
+					if (cross.by === 0 || cross.by === this.board.maxby - 2) {
+						h /= 2;
+						y += this.bh * (cross.by === 0 ? 0.5 : -0.5);
+					}
+
+					g.fillRectCenter(x, y, w + 0.5, h + 0.5);
 				} else {
 					g.vhide();
 				}
