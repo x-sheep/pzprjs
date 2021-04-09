@@ -56,6 +56,20 @@
 			return this.getNum() !== -1;
 		}
 	},
+	CellList: {
+		getQnumCell: function() {
+			var ret = null;
+			for (var i = 0, len = this.length; i < len; i++) {
+				if (this[i].isNum()) {
+					if (ret) {
+						return this.board.emptycell;
+					}
+					ret = this[i];
+				}
+			}
+			return ret || this.board.emptycell;
+		}
+	},
 	ExCell: {
 		noLP: function(dir) {
 			return false;
@@ -77,7 +91,9 @@
 			this.common.setposCrosses.call(this);
 
 			for (var id = 0; id < this.cross.length; id++) {
-				this.cross[id].initAdjacent();
+				var cross = this.cross[id];
+				cross.initAdjacent();
+				cross.cell = this.getc(cross.bx + 1, cross.by + 1);
 			}
 		}
 	},
@@ -90,6 +106,23 @@
 		relation: { "border.line": "separator" },
 		isedgevalidbylinkobj: function(linkobj) {
 			return !linkobj.line;
+		},
+		seterr: function(component, val) {
+			component.getnodeobjs().seterr(val);
+			component.clist.seterr(val);
+		},
+		setExtraData: function(component) {
+			var items = component.getnodeobjs();
+			var cells = [];
+
+			for (var id = 0; id < items.length; id++) {
+				var cross = items[id];
+				if (!cross.cell.isnull) {
+					cells.push(cross.cell);
+				}
+			}
+
+			component.clist = new this.klass.CellList(cells);
 		},
 		setComponentRefs: function(obj, component) {
 			obj.tontti = component;
@@ -207,7 +240,14 @@
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
-		checklist: ["checkCrossLine", "checkSameConnected", "checkDeadendLine+"],
+		checklist: [
+			"checkCrossLine",
+			"checkNoNumber",
+			"checkSameConnected",
+			"checkNumberAndUnshadeSize",
+			"checkDoubleNumber",
+			"checkDeadendLine+"
+		],
 
 		checkLineCount: function(val, code) {
 			this.checkAllCell(function(cell) {
@@ -240,6 +280,42 @@
 
 				return false;
 			}, "lnAdjacent");
+		},
+		checkNoNumber: function() {
+			this.checkAllBlock(
+				this.board.tonttigraph,
+				function(cell) {
+					return cell.isNum();
+				},
+				function(w, h, a, n) {
+					return a !== 0;
+				},
+				"bkNoNum"
+			);
+		},
+		checkDoubleNumber: function() {
+			this.checkAllBlock(
+				this.board.tonttigraph,
+				function(cell) {
+					return cell.isNum();
+				},
+				function(w, h, a, n) {
+					return a < 2;
+				},
+				"bkNumGe2"
+			);
+		},
+		checkNumberAndUnshadeSize: function() {
+			this.checkAllBlock(
+				this.board.tonttigraph,
+				function(cell) {
+					return cell.lcnt === 0;
+				},
+				function(w, h, a, n) {
+					return n <= 0 || n === a;
+				},
+				"bkSizeNe"
+			);
 		}
 	},
 
