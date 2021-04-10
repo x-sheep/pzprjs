@@ -98,7 +98,16 @@
 		}
 	},
 	Border: {
-		enableLineNG: true
+		enableLineNG: true,
+
+		posthook: {
+			line: function(val) {
+				// TODO Actually fix the tonttigraph not merging nodes
+				if(!val && this.sidecross[0].tontti !== this.sidecross[1].tontti) {
+					this.board.tonttigraph.rebuild();
+				}
+			}
+		}
 	},
 	"AreaTonttiGraph:AreaRoomGraph": {
 		enabled: true,
@@ -202,6 +211,7 @@
 			this.drawBGCrosses();
 			this.drawGrid();
 			this.drawBorders();
+			this.drawDotCells();
 
 			this.drawQuesNumbers();
 			this.drawLines();
@@ -211,6 +221,24 @@
 			this.drawMBs();
 
 			this.drawTarget();
+		},
+
+		drawDotCells: function() {
+			var g = this.vinc("cell_dot", "auto", true);
+
+			var dsize = Math.max(this.cw * 0.06, 2);
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+
+				g.vid = "c_dot_" + cell.id;
+				if (cell.lcnt === 0 && cell.qnum === -1) {
+					g.fillStyle = "gray";
+					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, dsize);
+				} else {
+					g.vhide();
+				}
+			}
 		},
 
 		drawLines: function() {
@@ -313,7 +341,7 @@
 			"checkCrossLine",
 			"checkNoNumber",
 			"checkSameConnected",
-			"checkNumberAndUnshadeSize",
+			"checkNumberAndEmptyCellSize",
 			"checkDoubleNumber",
 			"checkDeadendLine+"
 		],
@@ -374,7 +402,7 @@
 				"bkNumGe2"
 			);
 		},
-		checkNumberAndUnshadeSize: function() {
+		checkNumberAndEmptyCellSize: function() {
 			this.checkAllBlock(
 				this.board.tonttigraph,
 				function(cell) {
@@ -392,6 +420,10 @@
 		lnAdjacent: [
 			"(please translate) Identical line shapes are connected.",
 			"Identical line shapes are connected."
+		],
+		bkSizeNe: [
+			"(please translate) The amount of empty cells is not equal to the number.",
+			"The amount of empty cells is not equal to the number."
 		]
 	}
 });
