@@ -34,6 +34,11 @@ div + h1 {
   display: inline-block;
   vertical-align: middle;
 }
+.rule-msg {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 1em;
+}
 .error-msg span {
   display: block;
 }
@@ -69,13 +74,16 @@ pzpr.on("load", function(){
     return;
   }
 
-  var failcheck, url;
+  var failcheck, url, rules;
   window.ui = {};
   window.ui.debug = {};
   window.ui.debug.addDebugData = function(pid, data){
     url = pid + "/" + data.url;
     failcheck = data.failcheck;
   };
+  window.ui.debug.addRules = function(pid, newrules) {
+    rules = newrules;
+  }
 
   var datadir='./js/pzpr-samples';
 
@@ -91,7 +99,18 @@ pzpr.on("load", function(){
     var player = document.createElement('div');
     player.className = 'player';
     body.appendChild(player);
-    render(player, url, 'player', function(puzzle){});
+    render(player, url, 'player', function(puzzle){
+      var rulediv = document.createElement('div');
+      rulediv.className = 'rule-msg';
+      var ruletext = rules[0].split("\n");
+      ruletext.forEach(function(r) {
+        var span = document.createElement('p');
+        span.setAttribute('lang', 'en');
+        span.textContent = r;
+        rulediv.appendChild(span);
+      });
+      player.appendChild(rulediv);
+    });
 
     heading = document.createElement('h1');
     heading.textContent = "Example errors / 誤答例";
