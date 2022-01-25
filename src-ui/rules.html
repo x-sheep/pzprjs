@@ -7,6 +7,25 @@
 html {
   font-family: sans-serif;
 }
+
+.language-all .langswitch {
+  display: none;
+}
+
+.langswitch {
+  position: absolute;
+  right: 1em;
+  user-select: none;
+}
+.langoption {
+  cursor: pointer;
+}
+.language-en .langoption[lang=en] {
+  font-weight: bold;
+}
+.language-ja .langoption[lang=ja] {
+  font-weight: bold;
+}
 h1 {
   font-size: medium;
 }
@@ -49,7 +68,27 @@ div + h1 {
   padding-bottom: 0.5em;
 }
 
+.rule-msg p {
+  display: none;
+}
+
+.language-en .rule-msg p[lang=en] {
+  display: block;
+}
+
+.language-ja .rule-msg p[lang=ja] {
+  display: block;
+}
+
 .error-msg span {
+  display: none;
+}
+
+.language-en .error-msg span[lang=en] {
+  display: block;
+}
+
+.language-ja .error-msg span[lang=ja] {
   display: block;
 }
 </style>
@@ -93,7 +132,20 @@ pzpr.on("load", function(){
   };
   window.ui.debug.addRules = function(pid, newrules) {
     rules = newrules;
+    if(!rules[1]) {
+      document.body.classList.add('language-en', 'language-ja', 'language-all');
+    } else {
+      document.body.classList.remove('language-all');
+      document.body.classList.add('language-' + pzpr.lang);
+    }
   }
+
+  document.querySelectorAll(".langoption").forEach(function(langb) {
+    langb.addEventListener("click", function() {
+      document.body.classList.remove('language-en', 'language-ja', 'language-all');
+      document.body.classList.add('language-' + langb.getAttribute("lang"));
+    });
+  });
 
   var datadir='./js/pzpr-samples';
 
@@ -104,7 +156,7 @@ pzpr.on("load", function(){
     var body = document.getElementsByTagName('body')[0];
 
     var heading = document.createElement('h1');
-    heading.textContent = "Example player / 例題";
+    heading.textContent = "Rules / ルール";
     body.appendChild(heading);
     var player = document.createElement('div');
     player.className = 'player';
@@ -112,13 +164,16 @@ pzpr.on("load", function(){
     render(player, url, 'player', function(puzzle){
       var rulediv = document.createElement('div');
       rulediv.className = 'rule-msg';
-      var ruletext = rules[0].split("\n");
-      ruletext.forEach(function(r) {
-        var span = document.createElement('p');
-        span.setAttribute('lang', 'en');
-        span.textContent = r;
-        rulediv.appendChild(span);
-      });
+      var langs = ['en', 'ja'];
+      for(var i in langs) {
+        var ruletext = rules[i].split("\n");
+        ruletext.forEach(function(r) {
+          var span = document.createElement('p');
+          span.setAttribute('lang', langs[i]);
+          span.textContent = r;
+          rulediv.appendChild(span);
+        });
+      }
       player.appendChild(rulediv);
     });
 
@@ -160,5 +215,10 @@ pzpr.on("load", function(){
 });
 </script>
 </head>
-<body>
+<body class="language-all">
+  <div class="langswitch">
+    <span class="langoption" lang="en">English</span> /
+    <span class="langoption" lang="ja">日本語</span>
+  </div>
 </body>
+</html>
