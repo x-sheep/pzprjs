@@ -34,11 +34,21 @@ div + h1 {
   display: inline-block;
   vertical-align: middle;
 }
-.rule-msg {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 1em;
+
+@media screen and (min-width: 700px) {
+  .player {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(200px, max-content);
+  }
 }
+
+.rule-msg {
+  margin-left: 1em;
+  margin-right: 1em;
+  padding-bottom: 0.5em;
+}
+
 .error-msg span {
   display: block;
 }
