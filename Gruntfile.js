@@ -2,10 +2,15 @@ module.exports = function(grunt){
   var pkg = grunt.file.readJSON('package.json'), deps = pkg.devDependencies;
   for(var plugin in deps){ if(plugin.match(/^grunt\-/)){ grunt.loadNpmTasks(plugin);}}
 
+  var fs = require('fs');
   var rulesEN = grunt.file.readYAML('src-ui/res/rules.en.yaml');
   var rulesJA = grunt.file.readYAML('src-ui/res/rules.ja.yaml');
-  
-  var fs = require('fs');
+
+  var rulesMTime = Math.max(
+    fs.statSync('src-ui/res/rules.en.yaml').mtime,
+    fs.statSync('src-ui/res/rules.ja.yaml').mtime
+  );
+
   var banner_min  = fs.readFileSync('./src/common/banner_min.js',  'utf-8');
   var banner_full = fs.readFileSync('./src/common/banner_full.js', 'utf-8');
 
@@ -49,6 +54,17 @@ module.exports = function(grunt){
         src: 'dist/list.html',
         dest: 'dist/list.template',
       },
+    },
+    newer: {
+      options: {
+        override: function(detail, include) {
+          if(detail.task === 'concat' && detail.target === 'samples') {
+            include(rulesMTime > detail.time);
+          } else {
+            include(false);
+          }
+        }
+      }
     },
 
     concat: {
