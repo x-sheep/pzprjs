@@ -5,13 +5,13 @@ bdwalk:
 
   2. The path must visit every number and elevator.
 
-  3. The line goes up one or more floors at an Up arrow, and goes down one or more floors at a Down arrow.
+  3. The path goes up one or more floors at an Up arrow, and goes down one or more floors at a Down arrow.
 
-  4. The line must change floors at an elevator without an arrow, but this can be in either direction.
+  4. The path must change floors at an elevator without an arrow, but this can be in either direction.
 
   5. A number indicates the floor that the path should be on when passing through it.
 
-  6. At no point does the line go below the 1st floor.
+  6. At no point does the path go below the 1st floor.
 
   This genre first appeared in Puzzle Communication Nikoli vol. 174.
 
@@ -57,7 +57,7 @@ chainedb:
 crossstitch:
   Draw diagonal lines to make two loops.
 
-  1. A loop cannot overlap a shaded cell.
+  1. A shaded cell is not part of any loop.
 
   2. Loops cannot branch off or cross themselves, but they can cross each other.
 
@@ -65,7 +65,7 @@ crossstitch:
 
   4. A circled number indicates how many of that cell's corner points touch a loop.
 
-  5. A number with an arrow indicates how many cells in that direction contain an intersection. Arrows cannot point past shaded cells.
+  5. A number with an arrow indicates how many cells in that direction contain an intersection, up to the next shaded cell.
 
   6. A question mark can be replaced with any number except 0.
 
@@ -77,11 +77,11 @@ dotchi:
 
   1. The loop cannot branch off or cross itself.
 
-  2. The loop goes through all white circles.
+  2. The loop goes through all unshaded circles.
 
-  3. Within a region, all white circles contain either a corner or a straight line.
+  3. Within a region, all unshaded circles contain either a corner or a straight line.
 
-  4. The loop cannot go though a black circle.
+  4. The loop cannot go through a shaded circle.
 
 
 lohkous:
@@ -91,11 +91,11 @@ lohkous:
 
   2. All lines must be used to divide two regions, there can not be any dead-ends.
 
-  3. When dividing a block into rows or columns, each row or column must have a length specified by one of the clue numbers.
+  3. When dividing a block into horizontal segments, each segment must have a length specified by one of the clue numbers. The same applies when dividing the block into vertical segments.
 
-  4. Each number must be represented at least once by a row or column.
+  4. Each number must be represented at least once by a horizontal or vertical segment in the same block.
 
-  5. A question mark can replace any number, as long as no number is repeated.
+  5. A question mark can replace any number, as long as no number is repeated in that cell.
 
   This genre is invented by Arvi Teikari a.k.a. Hempuli.
 
