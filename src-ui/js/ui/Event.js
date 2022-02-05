@@ -130,6 +130,15 @@ ui.event = {
 		ui.puzzle.mouse.mousereset();
 	},
 	onbeforeunload_func: function(e) {
+		if (
+			ui.puzzle.playeronly &&
+			ui.puzzle.ismodified() &&
+			ui.menuconfig.get("autosave")
+		) {
+			var filedata = ui.puzzle.getFileData(pzpr.parser.FILE_PZPR, {});
+			localStorage["pzprv3_save:" + ui.pzv] = filedata;
+		}
+
 		if (ui.puzzle.playeronly || !ui.puzzle.ismodified()) {
 			return;
 		}

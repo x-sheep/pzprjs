@@ -31,6 +31,8 @@
 
 			this.add("keypopup", false); /* キーポップアップ (数字などのパネル入力) */
 
+			this.add("autosave", true);
+
 			this.add("adjsize", true); /* 自動横幅調節 */
 			this.add(
 				"cellsizeval",

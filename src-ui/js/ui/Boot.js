@@ -39,6 +39,9 @@
 		if (!!ui.puzzle && !!ui.puzzle.pid) {
 			return;
 		}
+
+		localStorage.removeItem("pzprv3_save:" + ui.pzv);
+
 		var title2 = document.getElementById("title2");
 		if (!!title2) {
 			title2.innerHTML = "Fail to import puzzle data or URL.";
@@ -71,7 +74,18 @@
 
 		// 単体初期化処理のルーチンへ
 		puzzle.once("fail-open", failOpen);
-		puzzle.open(pzl);
+
+		var saved = null;
+		if (
+			onload_pzv &&
+			onload_option.type === "player" &&
+			ui.menuconfig.get("autosave")
+		) {
+			saved = localStorage["pzprv3_save:" + onload_pzv];
+		}
+
+		puzzle.open(saved || pzl);
+
 		if (onload_option.variant !== void 0) {
 			puzzle.config.set("variant", true);
 		}
