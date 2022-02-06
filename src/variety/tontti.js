@@ -338,8 +338,8 @@
 			"checkCrossLine",
 			"checkLineOverlap",
 			"checkNoNumber",
-			"checkSameConnected",
 			"checkNumberAndEmptyCellSize",
+			"checkSameConnected",
 			"checkDoubleNumber",
 			"checkDeadendLine+"
 		],
