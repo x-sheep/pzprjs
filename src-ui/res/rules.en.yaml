@@ -111,3 +111,19 @@ ovotovata:
 
   This genre is invented by Eric Fox.
 
+
+tontti:
+  Draw horizontal and vertical lines from the points to divide the grid into regions.
+
+  1. Cells can contain a straight line, a corner or a T-junction. There can not be any plus-shaped crossings or dead-end lines.
+
+  2. When two adjacent cells are directly connected by a line, the shapes inside the cells must be different.
+
+  3. Each region has exactly one numbered cell, or a question mark.
+
+  4. You cannot draw over numbered cells.
+
+  5. Each number indicates the amount of empty cells inside that region, the numbered cell included. Empty cells don't need to be adjacent, as long as they remain part of the same region.
+
+  This genre is invented by Arvi Teikari a.k.a. Hempuli.
+

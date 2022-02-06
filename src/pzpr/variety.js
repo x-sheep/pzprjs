@@ -68,7 +68,8 @@
 		"chainedb",
 		"canal",
 		"cbanana",
-		"bdwalk"
+		"bdwalk",
+		"tontti"
 	]);
 
 	(function(Genre, obj) {
