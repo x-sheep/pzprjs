@@ -90,6 +90,17 @@ ui.event = {
 		this.onvisibilitychange_func(); // set state
 	},
 
+	performAutosave: function() {
+		if (
+			ui.puzzle.playeronly &&
+			ui.puzzle.ismodified() &&
+			ui.menuconfig.get("autosave")
+		) {
+			var filedata = ui.puzzle.getFileData(pzpr.parser.FILE_PZPR, {});
+			localStorage["pzprv3_save:" + ui.pzv] = filedata;
+		}
+	},
+
 	//---------------------------------------------------------------------------
 	// event.onload_func()   ウィンドウを開いた時に呼ばれる関数
 	// event.onunload_func() ウィンドウをクローズする前に呼ばれる関数
@@ -128,16 +139,11 @@ ui.event = {
 	onblur_func: function() {
 		ui.puzzle.key.keyreset();
 		ui.puzzle.mouse.mousereset();
+
+		this.performAutosave();
 	},
 	onbeforeunload_func: function(e) {
-		if (
-			ui.puzzle.playeronly &&
-			ui.puzzle.ismodified() &&
-			ui.menuconfig.get("autosave")
-		) {
-			var filedata = ui.puzzle.getFileData(pzpr.parser.FILE_PZPR, {});
-			localStorage["pzprv3_save:" + ui.pzv] = filedata;
-		}
+		this.performAutosave();
 
 		if (ui.puzzle.playeronly || !ui.puzzle.ismodified()) {
 			return;
