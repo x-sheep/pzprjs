@@ -28,9 +28,7 @@
 					this.inputMB();
 				}
 			} else if (this.puzzle.editmode) {
-				if (this.mousestart || this.mousemove) {
-					this.inputborder();
-				} else if (this.mouseend && this.notInputted()) {
+				if (this.mousestart) {
 					this.inputqnum();
 				}
 			}
