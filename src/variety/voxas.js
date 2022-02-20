@@ -65,6 +65,7 @@
 
 	KeyEvent: {
 		enablemake: true,
+		keyrows: ["qwer", "asdf", "zxcv"],
 		moveTarget: function(ca) {
 			return this.moveTBorder(ca);
 		},
@@ -76,6 +77,16 @@
 			}
 
 			var num = +ca;
+			if (!num) {
+				for (var row in this.keyrows) {
+					num = this.keyrows[row].indexOf(ca);
+					if (num !== -1) {
+						num += 1;
+						break;
+					}
+				}
+			}
+
 			if (num > 0 && num <= 4) {
 				border.setQues(num);
 			} else if (ca === "BS" || ca === "0" || ca === " " || ca === "-") {
