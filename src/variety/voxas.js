@@ -28,6 +28,12 @@
 				}
 			}
 		},
+		mouseinput_clear: function() {
+			if (this.inputData === null) {
+				this.inputData = 0;
+			}
+			this.inputborder();
+		},
 
 		inputmark_voxas: function() {
 			var pos = this.getpos(0.33);
