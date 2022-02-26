@@ -69,6 +69,7 @@
 		"canal",
 		"cbanana",
 		"bdwalk",
+		"voxas",
 		"tontti"
 	]);
 
@@ -350,6 +351,7 @@
 			usotatami: [0, 0, "ウソタタミ", "Uso-tatami", "fillmat"],
 			usoone: [0, 0, "ウソワン", "Uso-one"],
 			view: [1, 0, "ヴィウ", "View", "sukoro"],
+			voxas: [0, 0, "Voxas", "Voxas"],
 			wagiri: [0, 0, "ごきげんななめ・輪切", "Wagiri", "gokigen"],
 			walllogic: [0, 0, "ウォールロジック", "Wall Logic"],
 			wblink: [0, 0, "シロクロリンク", "Shirokuro-link"],
