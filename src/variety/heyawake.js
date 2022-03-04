@@ -181,6 +181,13 @@
 			this.drawBoxBorders(false);
 
 			this.drawTarget();
+		},
+
+		getBorderColor: function(border) {
+			if (border.ques) {
+				return border.error === 1 ? this.errcolor1 : this.quescolor;
+			}
+			return null;
 		}
 	},
 
@@ -521,6 +528,7 @@
 				}
 
 				doors.each(function(border) {
+					border.seterr(1);
 					border.sidecell[0].seterr(1);
 					border.sidecell[1].seterr(1);
 				});
