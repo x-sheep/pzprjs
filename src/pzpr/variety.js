@@ -68,6 +68,7 @@
 		"chainedb",
 		"canal",
 		"cbanana",
+		"oneroom",
 		"bdwalk",
 		"voxas",
 		"tontti"
@@ -278,6 +279,7 @@
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
 			nurimisaki: [0, 0, "ぬりみさき", "Nurimisaki", "kurodoko"],
 			ovotovata: [0, 0, "Ovotovata", "Ovotovata", "country"],
+			oneroom: [0, 0, "ワンルームワンドア", "One Room One Door", "heyawake"],
 			onsen: [0, 0, "温泉めぐり", "Onsen-meguri", "country"],
 			paintarea: [1, 0, "ペイントエリア", "Paintarea"],
 			pencils: [0, 0, "ペンシルズ", "Pencils"],
