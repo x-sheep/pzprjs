@@ -70,7 +70,8 @@
 		"cbanana",
 		"oneroom",
 		"bdwalk",
-		"voxas"
+		"voxas",
+		"rassi"
 	]);
 
 	(function(Genre, obj) {
@@ -291,6 +292,7 @@
 				"pipelink"
 			],
 			putteria: [0, 0, "プッテリア", "Putteria", "hanare"],
+			rassi: [0, 0, "Rassi Silai", "Rassi Silai", "country"],
 			rectslider: [0, 0, "四角スライダー", "Rectangle-Slider", "bonsan"],
 			reflect: [1, 0, "リフレクトリンク", "Reflect Link"],
 			renban: [0, 0, "連番窓口", "Renban-Madoguchi"],
