@@ -40,6 +40,14 @@
 	KeyEvent: {
 		enablemake: true
 	},
+	TargetCursor: {
+		setminmax_customize: function() {
+			this.minx += 2;
+			this.miny += 2;
+			this.maxx -= 2;
+			this.maxy -= 2;
+		}
+	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
