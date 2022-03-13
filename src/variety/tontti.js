@@ -315,19 +315,19 @@
 
 		getBoardCols: function() {
 			var bd = this.board;
-			var offset = this.outputImage ? 2 : 0;
+			var offset = this.outputImage ? 2 : 1;
 			return (bd.maxbx - bd.minbx) / 2 - offset;
 		},
 		getBoardRows: function() {
 			var bd = this.board;
-			var offset = this.outputImage ? 2 : 0;
+			var offset = this.outputImage ? 2 : 1;
 			return (bd.maxby - bd.minby) / 2 - offset;
 		},
 		getOffsetCols: function() {
-			return this.outputImage ? 0 : 1;
+			return this.outputImage ? 0 : 0.5;
 		},
 		getOffsetRows: function() {
-			return this.outputImage ? 0 : 1;
+			return this.outputImage ? 0 : 0.5;
 		}
 	},
 
