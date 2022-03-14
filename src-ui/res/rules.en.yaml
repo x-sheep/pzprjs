@@ -119,11 +119,13 @@ oneroom:
 ovotovata:
   Draw lines through orthogonally adjacent cells to form a loop.
 
-  1. When the loop exits a numbered region in any direction, it must travel in a straight line for the indicated number of cells, and then turn. e.g. A number 1 means that the loop must turn immediately after leaving that region.
+  1. The loop cannot branch off or cross itself.
 
-  2. A question mark can be replaced with any number.
+  2. When the loop exits a numbered region in any direction, it must travel in a straight line for the indicated number of cells, and then turn. e.g. A number 1 means that the loop must turn immediately after leaving that region.
 
-  3. All shaded regions must be visited at least once.
+  3. A question mark can be replaced with any number.
+
+  4. All shaded regions must be visited at least once.
 
   This genre is invented by Eric Fox.
 
@@ -142,6 +144,22 @@ rassi:
   This genre is invented by Prasanna Seshadri.
 
 
+tontti:
+  Draw horizontal and vertical lines from the points to divide the grid into regions. You can connect two points, or draw from a point to the outer border.
+
+  1. Cells can contain a straight line, a corner or a T-junction (or remain empty). There can not be any plus-shaped crossings or dead-end lines.
+
+  2. When two adjacent cells are directly connected by a line, the shapes inside the cells must be different.
+
+  3. Each region has exactly one numbered cell, or a question mark.
+
+  4. You cannot draw over numbered cells.
+
+  5. Each number indicates the amount of cells without lines inside that region, the numbered cell included. Cells don't need to be adjacent, as long as they are reachable without going through a wall.
+
+  This genre is invented by Arvi Teikari a.k.a. Hempuli.
+
+
 voxas:
   Draw lines over the dotted lines to divide the board into several areas. Some lines are given.
   
@@ -154,3 +172,4 @@ voxas:
   4. Two rectangles divided by a black circle must have different size and different orientation.
 
   This genre is invented by Eric Fox.
+

@@ -101,8 +101,16 @@ ui.keypopup = {
 		doppelblock: [10, 115],
 		interbd: [116, 0],
 		toichika2: [10, 10],
+		crossstitch: [10, 0],
+		ovotovata: [10, 0],
 		lohkous: [10, 0],
-		bdwalk: [117, 0]
+		chainedb: [10, 0],
+		canal: [10, 0],
+		cbanana: [10, 0],
+		bdwalk: [117, 0],
+		voxas: [118, 0],
+		oneroom: [10, 0],
+		tontti: [10, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -218,6 +226,8 @@ ui.keypopup = {
 			this.generate_interbd();
 		} else if (type === 117) {
 			this.generate_bdwalk();
+		} else if (type === 118) {
+			this.generate_voxas();
 		}
 	},
 	gentable4: function(mode) {
@@ -263,8 +273,15 @@ ui.keypopup = {
 				null
 			);
 		}
-		if (mode === 1 && (pid === "kakuru" || pid === "tateyoko")) {
-			itemlist.push(["q1", "■"], ["w2", "□"], " ", ["-", "?"]);
+		if (
+			mode === 1 &&
+			(pid === "kakuru" || pid === "tateyoko" || pid === "crossstitch")
+		) {
+			itemlist.push(
+				["q1", "■"],
+				["w2", pid === "crossstitch" ? "○" : "□"],
+				["-", "?"]
+			);
 		}
 
 		itemlist.push("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
@@ -276,7 +293,12 @@ ui.keypopup = {
 		);
 
 		var cap = null;
-		if (mode === 3 || pid === "kakuru" || pid === "tateyoko") {
+		if (
+			mode === 3 ||
+			pid === "kakuru" ||
+			pid === "tateyoko" ||
+			pid === "crossstitch"
+		) {
 		} else if (!ui.puzzle.painter.hideHatena) {
 			cap = "?";
 		} else if (pid === "tasquare") {
@@ -534,6 +556,18 @@ ui.keypopup = {
 				" "
 			],
 			4
+		);
+	},
+	generate_voxas: function() {
+		this.generate_main(
+			[
+				["2", { text: "●" }],
+				["3", { text: "●", color: "gray" }],
+				["4", { text: "○" }],
+				["1", { text: "━" }],
+				" "
+			],
+			3
 		);
 	},
 

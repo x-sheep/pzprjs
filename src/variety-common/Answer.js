@@ -501,7 +501,9 @@ pzpr.classmgr.makeCommon({
 				if (this.checkOnly) {
 					break;
 				}
-				if (areas !== this.board.linegraph) {
+				if (!!graph.seterr) {
+					graph.seterr(area, 1);
+				} else if (areas !== this.board.linegraph) {
 					clist.seterr(this.pid !== "tateyoko" ? 1 : 4);
 				} else {
 					this.board.border.setnoerr();
