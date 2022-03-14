@@ -72,7 +72,7 @@
 		"bdwalk",
 		"voxas",
 		"tontti",
-    "rassi"
+		"rassi"
 	]);
 
 	(function(Genre, obj) {
