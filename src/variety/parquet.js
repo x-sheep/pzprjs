@@ -18,7 +18,6 @@
 		mouseinput: function() {
 			// オーバーライド
 			if (this.inputMode === "shade" || this.inputMode === "unshade") {
-				// TODO Checkbox for ensuring single region is shaded
 				this.inputtile();
 			} else {
 				this.common.mouseinput.call(this);
@@ -34,6 +33,43 @@
 					this.inputborder_parquet();
 				}
 			}
+		},
+
+		inputtile: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+			if (this.inputData === null) {
+				this.decIC(cell);
+			}
+
+			this.mouseCell = cell;
+
+			var clist = cell.room.clist;
+
+			if (
+				this.puzzle.execConfig("singleregion") &&
+				this.inputData === 1 &&
+				!cell.isShade()
+			) {
+				var others = cell.spblock.clist.filter(function(c) {
+					return clist.indexOf(c) === -1;
+				});
+				for (var i = 0; i < others.length; i++) {
+					var cell2 = others[i];
+					cell2.clrShade();
+				}
+			}
+
+			for (var i = 0; i < clist.length; i++) {
+				var cell2 = clist[i];
+				if (this.inputData === 1 || cell2.qsub !== 3) {
+					(this.inputData === 1 ? cell2.setShade : cell2.clrShade).call(cell2);
+					cell2.setQsub(this.inputData === 2 ? 1 : 0);
+				}
+			}
+			cell.spblock.clist.draw();
 		},
 
 		inputborder: function() {
