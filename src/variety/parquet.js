@@ -48,11 +48,14 @@
 
 			var clist = cell.room.clist;
 
+			this.board.spblockgraph.suppresscmp = true;
+
 			if (
 				this.puzzle.execConfig("singleregion") &&
 				this.inputData === 1 &&
 				!cell.isShade()
 			) {
+				// TODO this fills the undo stack
 				var others = cell.spblock.clist.filter(function(c) {
 					return clist.indexOf(c) === -1;
 				});
@@ -70,6 +73,8 @@
 				}
 			}
 			cell.spblock.clist.draw();
+			this.board.spblockgraph.suppresscmp = false;
+			this.board.spblockgraph.checkAutoCmp(cell.spblock);
 		},
 
 		inputborder: function() {
@@ -95,6 +100,7 @@
 			}
 
 			// TODO read one/two button mode in Auto Edit
+			// TODO remove all region shading when removing border
 			var border = this.prevPos.getborderobj(pos);
 			if (!border.isnull) {
 				if (this.inputData === null) {
@@ -118,7 +124,13 @@
 			this.spblockgraph = this.addInfoList(this.klass.AreaSuperRoomGraph);
 		}
 	},
-
+	Cell: {
+		posthook: {
+			qans: function(num) {
+				this.board.spblockgraph.checkAutoCmp(this.spblock);
+			}
+		}
+	},
 	AreaShadeGraph: {
 		enabled: true
 	},
@@ -142,6 +154,8 @@
 	},
 	"AreaSuperRoomGraph:AreaRoomGraph": {
 		enabled: true,
+		suppresscmp: false,
+
 		getComponentRefs: function(obj) {
 			return obj.spblock;
 		},
@@ -183,22 +197,41 @@
 				}
 			}
 			component.tiles = cnt;
-			// TODO Autocmp background for superrooms
+			this.checkAutoCmp(component);
+		},
+		checkAutoCmp: function(area) {
+			var tiles = area.tiles;
+			if (!tiles || this.suppresscmp) {
+				return;
+			}
+
+			var tilecnt = tiles.filter(function(g) {
+				return g.clist[0].isShade();
+			}).length;
+
+			var iscmp = tilecnt === 1;
+			if (area.cmp !== iscmp) {
+				area.cmp = iscmp;
+				if (this.puzzle.execConfig("autocmp")) {
+					area.clist.draw();
+				}
+			}
 		}
 	},
 
 	//---------------------------------------------------------
 	// 画像表示系
 	Graphic: {
+		autocmp: "room",
 		enablebcolor: true,
-		bgcellcolor_func: "qsub1",
 
 		bbcolor: "rgb(96, 96, 96)",
+		qcmpbgcolor: "rgb(96, 255, 160)",
 
 		paint: function() {
-			// TODO Render aux dots instead of background
 			this.drawBGCells();
 			this.drawShadedCells();
+			this.drawDotCells();
 
 			this.drawQuesNumbers();
 
@@ -223,6 +256,19 @@
 				: border.ques
 				? this.quescolor
 				: null;
+		},
+
+		getBGCellColor: function(cell) {
+			if (cell.error === 1 || cell.qinfo === 1) {
+				return this.errbcolor1;
+			} else if (
+				this.puzzle.execConfig("autocmp") &&
+				!!cell.spblock &&
+				cell.spblock.cmp
+			) {
+				return this.qcmpbgcolor;
+			}
+			return null;
 		}
 	},
 
