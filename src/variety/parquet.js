@@ -72,9 +72,9 @@
 					cell2.setQsub(this.inputData === 2 ? 1 : 0);
 				}
 			}
-			cell.spblock.clist.draw();
 			this.board.spblockgraph.suppresscmp = false;
-			this.board.spblockgraph.checkAutoCmp(cell.spblock);
+			cell.spblock.checkAutoCmp();
+			cell.spblock.clist.draw();
 		},
 
 		inputborder: function() {
@@ -127,8 +127,25 @@
 	Cell: {
 		posthook: {
 			qans: function(num) {
-				this.board.spblockgraph.checkAutoCmp(this.spblock);
+				this.spblock.checkAutoCmp();
 			}
+		}
+	},
+	CellList: {
+		checkCmp: function() {
+			if (this.length <= 0) {
+				return false;
+			}
+			var tiles = this[0].spblock.tiles;
+			if (!tiles || this.board.spblockgraph.suppresscmp) {
+				return !!this[0].spblock.iscmp;
+			}
+
+			var tilecnt = tiles.filter(function(g) {
+				return g.clist[0].isShade();
+			}).length;
+
+			return tilecnt === 1;
 		}
 	},
 	AreaShadeGraph: {
@@ -197,25 +214,7 @@
 				}
 			}
 			component.tiles = cnt;
-			this.checkAutoCmp(component);
-		},
-		checkAutoCmp: function(area) {
-			var tiles = area.tiles;
-			if (!tiles || this.suppresscmp) {
-				return;
-			}
-
-			var tilecnt = tiles.filter(function(g) {
-				return g.clist[0].isShade();
-			}).length;
-
-			var iscmp = tilecnt === 1;
-			if (area.cmp !== iscmp) {
-				area.cmp = iscmp;
-				if (this.puzzle.execConfig("autocmp")) {
-					area.clist.draw();
-				}
-			}
+			component.checkAutoCmp();
 		}
 	},
 
