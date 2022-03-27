@@ -5,6 +5,8 @@
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
 })(["parquet"], {
+	// TODO unit tests
+
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -16,6 +18,7 @@
 		mouseinput: function() {
 			// オーバーライド
 			if (this.inputMode === "shade" || this.inputMode === "unshade") {
+				// TODO Checkbox for ensuring single region is shaded
 				this.inputtile();
 			} else {
 				this.common.mouseinput.call(this);
@@ -55,6 +58,7 @@
 				return;
 			}
 
+			// TODO read one/two button mode in Auto Edit
 			var border = this.prevPos.getborderobj(pos);
 			if (!border.isnull) {
 				if (this.inputData === null) {
@@ -83,7 +87,22 @@
 		enabled: true
 	},
 	AreaRoomGraph: {
-		enabled: true
+		enabled: true,
+
+		setExtraData: function(component) {
+			// TODO clist breaks when editing subregions
+			component.clist = new this.klass.CellList(component.getnodeobjs());
+
+			if (this.rebuildmode || component.clist.length === 0) {
+				return;
+			}
+
+			// A tile is always contained within a single block.
+			var spblock = component.clist[0].spblock;
+			if (spblock) {
+				this.board.spblockgraph.setComponentInfo(spblock);
+			}
+		}
 	},
 	"AreaSuperRoomGraph:AreaRoomGraph": {
 		enabled: true,
@@ -128,6 +147,7 @@
 				}
 			}
 			component.tiles = cnt;
+			// TODO Autocmp background for superrooms
 		}
 	},
 
@@ -140,6 +160,7 @@
 		bbcolor: "rgb(96, 96, 96)",
 
 		paint: function() {
+			// TODO Render aux dots instead of background
 			this.drawBGCells();
 			this.drawShadedCells();
 
@@ -150,8 +171,6 @@
 			this.drawChassis();
 
 			this.drawBoxBorders(true);
-
-			this.drawTarget();
 		},
 
 		drawBorders: function() {
@@ -160,8 +179,14 @@
 		},
 
 		getBorderColor: function(border) {
-			this.addlw = border.ques === 2 ? -this.lw / 2 : 0;
-			return border.ques ? this.quescolor : null;
+			this.addlw = border.ques === 2 ? -this.lw + 1 : 0;
+			return border.ques === 2 &&
+				border.sidecell[0].isShade() &&
+				border.sidecell[1].isShade()
+				? "white"
+				: border.ques
+				? this.quescolor
+				: null;
 		}
 	},
 
@@ -169,12 +194,23 @@
 	// URLエンコード/デコード処理
 	Encode: {
 		decodePzpr: function(type) {
-			// TODO encode different borders
-			this.decodeBorder();
+			var bd = this.board;
+			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+				var cell = bd.cell[c];
+				if (!cell.adjborder.right.isnull) {
+					cell.adjborder.right.ques = (val / 3) | 0;
+				}
+				if (!cell.adjborder.bottom.isnull) {
+					cell.adjborder.bottom.ques = val % 3;
+				}
+			});
 		},
 		encodePzpr: function(type) {
-			// TODO encode different borders
-			this.encodeBorder();
+			var bd = this.board;
+			this.genericEncodeNumber16(bd.cell.length, function(c) {
+				var cell = bd.cell[c];
+				return cell.adjborder.right.ques * 3 + cell.adjborder.bottom.ques;
+			});
 		}
 	},
 	//---------------------------------------------------------
