@@ -30,7 +30,11 @@
 				}
 			} else if (this.puzzle.editmode) {
 				if (this.mousestart || this.mousemove) {
-					this.inputborder_parquet();
+					if (this.puzzle.getConfig("use") === 1) {
+						this.inputborder_parquet(this.btn === "left" ? 1 : 2);
+					} else {
+						this.inputborder_parquet();
+					}
 				}
 			}
 		},
@@ -99,7 +103,6 @@
 				return;
 			}
 
-			// TODO read one/two button mode in Auto Edit
 			// TODO remove all region shading when removing border
 			var border = this.prevPos.getborderobj(pos);
 			if (!border.isnull) {
@@ -142,7 +145,7 @@
 			}
 
 			var tilecnt = tiles.filter(function(g) {
-				return g.clist[0].isShade();
+				return g.clist && g.clist.length && g.clist[0].isShade();
 			}).length;
 
 			return tilecnt === 1;
