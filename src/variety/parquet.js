@@ -103,7 +103,6 @@
 				return;
 			}
 
-			// TODO remove all region shading when removing border
 			var border = this.prevPos.getborderobj(pos);
 			if (!border.isnull) {
 				if (this.inputData === null) {
@@ -113,6 +112,21 @@
 						this.inputData = border.ques === def ? 0 : def;
 					}
 				}
+
+				if (
+					this.inputData === 0 &&
+					border.sidecell[0].isShade() !== border.sidecell[1].isShade()
+				) {
+					for (var side = 0; side <= 1; side++) {
+						var others = border.sidecell[side].room;
+						for (var i = 0; others && i < others.clist.length; i++) {
+							var cell2 = others.clist[i];
+							cell2.clrShade();
+							cell2.draw();
+						}
+					}
+				}
+
 				border.setQues(this.inputData);
 				border.draw();
 			}
@@ -254,7 +268,7 @@
 			return border.ques === 2 &&
 				border.sidecell[0].isShade() &&
 				border.sidecell[1].isShade()
-				? "white"
+				? this.bbcolor
 				: border.ques
 				? this.quescolor
 				: null;
