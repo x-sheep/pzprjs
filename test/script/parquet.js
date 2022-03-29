@@ -32,5 +32,32 @@ ui.debug.addDebugData("parquet", {
 			"pzprv3/parquet/6/6/2 1 2 1 2 /0 1 2 1 2 /2 1 2 1 2 /0 1 0 1 0 /2 1 0 1 0 /0 1 0 1 2 /2 0 0 0 0 0 /1 1 1 1 1 1 /0 2 2 0 2 0 /1 1 1 1 1 1 /2 0 2 2 2 0 /. # . # . # /# # . # . # /# . . # . # /# # # # # # /. # . . . . /# # # # # . /"
 		]
 	],
-	inputs: []
+	inputs: [
+		{
+			input: ["newboard,4,2", "editmode", "setconfig,use,2"]
+		},
+		{
+			input: ["mouse,left, 4,0, 4,4"],
+			result: "pzprv3/parquet/2/4/0 1 0 /0 1 0 /0 0 0 0 /. . . . /. . . . /"
+		},
+		{
+			input: ["mouse,left, 0,2, 4,2", "mouse,left, 0,2, 4,2"],
+			result: "pzprv3/parquet/2/4/0 1 0 /0 1 0 /2 2 0 0 /. . . . /. . . . /"
+		},
+		{
+			label: "Click to shade the whole tile",
+			input: ["playmode", "mouse,left, 1,1"],
+			result: "pzprv3/parquet/2/4/0 1 0 /0 1 0 /2 2 0 0 /# # . . /. . . . /"
+		},
+		{
+			label: "Click another tile to unshade the first tile",
+			input: ["mouse,left, 3,3, 5,3"],
+			result: "pzprv3/parquet/2/4/0 1 0 /0 1 0 /2 2 0 0 /. . # # /# # # # /"
+		},
+		{
+			label: "Remove border to unshade adjacent tiles",
+			input: ["editmode", "mouse,left, 0,2, 2,2"],
+			result: "pzprv3/parquet/2/4/0 1 0 /0 1 0 /0 2 0 0 /. . # # /. . # # /"
+		}
+	]
 });
