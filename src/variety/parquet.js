@@ -176,7 +176,6 @@
 		enabled: true,
 
 		setExtraData: function(component) {
-			// TODO clist breaks when editing subregions
 			component.clist = new this.klass.CellList(component.getnodeobjs());
 
 			if (this.rebuildmode || component.clist.length === 0) {
@@ -193,6 +192,7 @@
 	"AreaSuperRoomGraph:AreaRoomGraph": {
 		enabled: true,
 		suppresscmp: false,
+		countprop: "lcnt2",
 
 		getComponentRefs: function(obj) {
 			return obj.spblock;
