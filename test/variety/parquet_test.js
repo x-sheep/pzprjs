@@ -28,4 +28,21 @@ describe("Variety:parquet", function() {
 		puzzle.mouse.inputPath(1, 1, 3, 1);
 		assert.equal(puzzle.opemgr.history.length, 2);
 	});
+
+	it("rebuilds cell lists", function() {
+		puzzle.open("pzprv3/parquet/2/2/0 /2 /0 2 /. . /. . /");
+
+		puzzle.setMode("edit");
+		puzzle.mouse.setInputMode("border");
+		puzzle.mouse.inputPath(2, 2, 4, 2);
+		puzzle.mouse.inputPath(2, 2, 4, 2);
+
+		puzzle.setMode("play");
+		puzzle.mouse.inputPath(1, 1);
+
+		var result = "pzprv3/parquet/2/2/0 /2 /0 0 /# # /# # /";
+		var filestr = puzzle.getFileData();
+		var resultstr = result.replace(/\//g, "\n");
+		assert.equal(filestr, resultstr);
+	});
 });

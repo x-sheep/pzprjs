@@ -5,8 +5,6 @@
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
 })(["parquet"], {
-	// TODO Broken clist unit test
-
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
