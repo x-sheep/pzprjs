@@ -259,6 +259,8 @@
 
 			this.drawChassis();
 
+			this.drawBaseMarks(this.puzzle.editmode && !this.outputImage);
+
 			this.drawBoxBorders(true);
 		},
 
