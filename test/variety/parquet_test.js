@@ -17,10 +17,10 @@ describe("Variety:parquet", function() {
 		assert(puzzle.board.getc(5, 1).spblock.clist.checkCmp());
 	});
 
-	it("rewites undo history", function() {
+	it("rewrites undo history", function() {
 		puzzle.open("pzprv3/parquet/2/3/2 1 /0 1 /0 2 2 /. . . /. . . /");
 		assert.equal(puzzle.opemgr.history.length, 0);
-	
+
 		puzzle.setMode("play");
 		puzzle.mouse.inputPath(5, 1);
 		assert.equal(puzzle.opemgr.history.length, 1);

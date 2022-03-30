@@ -5,7 +5,7 @@
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
 })(["parquet"], {
-	// TODO unit tests
+	// TODO Broken clist unit test
 
 	//---------------------------------------------------------
 	// マウス入力系
@@ -45,6 +45,7 @@
 				return;
 			}
 			if (this.inputData === null) {
+				this.lastRegion = null;
 				this.decIC(cell);
 			}
 
@@ -59,7 +60,12 @@
 				this.inputData === 1 &&
 				!cell.isShade()
 			) {
-				// TODO this fills the undo stack
+				if (this.lastRegion && this.lastRegion === cell.spblock) {
+					this.puzzle.opemgr.chainflag = true;
+				} else {
+					this.lastRegion = cell.spblock;
+				}
+
 				var others = cell.spblock.clist.filter(function(c) {
 					return clist.indexOf(c) === -1;
 				});
