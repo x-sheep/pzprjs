@@ -35,6 +35,10 @@
 			}
 		},
 
+		mouseinput_clear: function() {
+			this.inputFixedNumber(-1);
+		},
+
 		inputdragcross: function() {
 			if (this.firstPoint.bx === null) {
 				this.firstPoint.set(this.inputPoint);
