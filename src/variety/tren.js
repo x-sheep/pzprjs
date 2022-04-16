@@ -109,22 +109,41 @@
 	Encode: {
 		decodePzpr: function(type) {
 			this.decodeNumber16();
+			this.puzzle.setConfig("tren_new", this.checkpflag("n"));
 		},
 		encodePzpr: function(type) {
+			this.outpflag = this.puzzle.getConfig("tren_new") ? "n" : null;
 			this.encodeNumber16();
 		}
 	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
+			this.decodeConfig();
 			this.decodeCellQnum();
 			this.decodeBorderAns();
 			this.decodeCellAns();
 		},
 		encodeData: function() {
+			this.encodeConfig();
 			this.encodeCellQnum();
 			this.encodeBorderAns();
 			this.encodeCellAns();
+		},
+
+		decodeConfig: function() {
+			if (this.dataarray[this.lineseek] === "n") {
+				this.puzzle.setConfig("tren_new", true);
+				this.readLine();
+			} else {
+				this.puzzle.setConfig("tren_new", false);
+			}
+		},
+
+		encodeConfig: function() {
+			if (this.puzzle.getConfig("tren_new")) {
+				this.writeLine("n");
+			}
 		}
 	},
 
@@ -133,10 +152,37 @@
 	AnsCheck: {
 		checklist: [
 			"checkDoubleNumberInTren",
+			"checkConnectivity",
 			"checkTrenDistance",
 			"checkNumberNotInTren+",
 			"checkDeadendLines"
 		],
+
+		checkConnectivity: function() {
+			if (!this.puzzle.getConfig("tren_new")) {
+				return;
+			}
+
+			var first = null;
+			var rooms = this.board.roommgr.components;
+			for (var id = 0; id < rooms.length; id++) {
+				var area = rooms[id];
+				if (area.num !== -1) {
+					continue;
+				}
+				if (!first) {
+					first = area;
+					continue;
+				}
+
+				this.failcode.add("bkDivide");
+				if (this.checkOnly) {
+					break;
+				}
+				first.clist.seterr(1);
+				area.clist.seterr(1);
+			}
+		},
 
 		checkDoubleNumberInTren: function() {
 			// TODO shorten
@@ -283,6 +329,10 @@
 		bdUnused: [
 			"(please translate) A border is not adjacent to a block.",
 			"A border is not adjacent to a block."
+		],
+		bkDivide: [
+			"(please translate) The unused cells are divided.",
+			"The unused cells are divided."
 		]
 	}
 });
