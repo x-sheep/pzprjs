@@ -49,6 +49,10 @@
 			qnum: function() {
 				this.board.roommgr.setExtraData(this.room);
 			}
+		},
+
+		isTren: function() {
+			return this.isNum();
 		}
 	},
 	Board: {
@@ -199,9 +203,10 @@
 		},
 
 		checkTrenDistance: function() {
+			var checkSingleError = !this.puzzle.getConfig("multierr");
 			this.checkRowsColsPartly(
 				function(clist, info) {
-					if (info.keycell && !info.keycell.isnull) {
+					if (info.keycell && !info.keycell.isnull && !info.keycell.isTren()) {
 						clist.add(info.keycell);
 					}
 
@@ -216,7 +221,7 @@
 				},
 				function(cell, isvert) {
 					var dir = isvert ? "top" : "left";
-					if (cell.adjborder[dir].isBorder()) {
+					if (cell.isTren() || cell.adjborder[dir].isBorder()) {
 						var key = isvert ? "vertlist" : "horzlist";
 						cell[key] = new cell.klass.CellList([cell]);
 						return true;
@@ -244,34 +249,19 @@
 					forwardcell = cell.relcell(area.clist.length * 2, 0);
 				}
 
-				// TODO stop when finding number
+				var lists = [backcell, forwardcell].map(function(c) {
+					var r = new c.klass.CellList();
+					if (
+						!c.isnull &&
+						c.qnum === -1 &&
+						(!c.room.tren || c.room.qnum === -1 || c.room.qnum === -3)
+					) {
+						r = area.tren === c.board.roommgr.VERT ? c.vertlist : c.horzlist;
+					}
+					return r;
+				});
 
-				var back = new this.klass.CellList();
-				if (
-					!backcell.isnull &&
-					(!backcell.room.tren ||
-						backcell.room.qnum === -1 ||
-						backcell.room.qnum === -3)
-				) {
-					back =
-						area.tren === this.board.roommgr.VERT
-							? backcell.vertlist
-							: backcell.horzlist;
-				}
-				var forward = new this.klass.CellList();
-				if (
-					!forwardcell.isnull &&
-					(!forwardcell.room.tren ||
-						forwardcell.room.qnum === -1 ||
-						forwardcell.room.qnum === -3)
-				) {
-					forward =
-						area.tren === this.board.roommgr.VERT
-							? forwardcell.vertlist
-							: forwardcell.horzlist;
-				}
-
-				if (area.num === back.length + forward.length) {
+				if (area.num === lists[0].length + lists[1].length) {
 					continue;
 				}
 
@@ -280,10 +270,12 @@
 					break;
 				}
 				area.clist.seterr(1);
-				back.seterr(1);
-				forward.seterr(1);
+				lists[0].seterr(1);
+				lists[1].seterr(1);
 
-				// TODO break if multierr is off
+				if (checkSingleError) {
+					break;
+				}
 			}
 		},
 
