@@ -126,13 +126,13 @@
 			this.decodeConfig();
 			this.decodeCellQnum();
 			this.decodeBorderAns();
-			this.decodeCellAns();
+			this.decodeCellQanssub();
 		},
 		encodeData: function() {
 			this.encodeConfig();
 			this.encodeCellQnum();
 			this.encodeBorderAns();
-			this.encodeCellAns();
+			this.encodeCellQanssub();
 		},
 
 		decodeConfig: function() {
@@ -189,7 +189,6 @@
 		},
 
 		checkDoubleNumberInTren: function() {
-			// TODO shorten
 			this.checkAllBlock(
 				this.board.roommgr,
 				function(cell) {
