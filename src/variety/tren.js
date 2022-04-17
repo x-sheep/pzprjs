@@ -92,8 +92,8 @@
 	// 画像表示系
 	Graphic: {
 		gridcolor_type: "DLIGHT",
-		bgcellcolor_func: "qsub2",
 		bordercolor_func: "qans",
+		errbcolor2: "rgb(255, 192, 192)",
 
 		paint: function() {
 			this.drawBGCells();
@@ -105,6 +105,12 @@
 			this.drawChassis();
 
 			this.drawTarget();
+		},
+
+		getBGCellColor: function(cell) {
+			return (
+				this.getBGCellColor_error2(cell) || this.getBGCellColor_qsub2(cell)
+			);
 		}
 	},
 
@@ -269,8 +275,8 @@
 					break;
 				}
 				area.clist.seterr(1);
-				lists[0].seterr(1);
-				lists[1].seterr(1);
+				lists[0].seterr(2);
+				lists[1].seterr(2);
 
 				if (checkSingleError) {
 					break;
