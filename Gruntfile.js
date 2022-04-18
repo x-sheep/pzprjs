@@ -30,6 +30,10 @@ module.exports = function(grunt){
     pkg: pkg,
 
     git: grunt.file.readJSON("git.json"),
+    langs: {
+      p_en: grunt.file.readJSON("src-ui/res/p.en.json", 'utf-8'),
+      p_ja: grunt.file.readJSON("src-ui/res/p.ja.json", 'utf-8')
+    },
 
     copy: {
       ui: {
