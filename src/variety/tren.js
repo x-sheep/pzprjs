@@ -259,7 +259,7 @@
 					if (
 						!c.isnull &&
 						c.qnum === -1 &&
-						(!c.room.tren || c.room.qnum === -1 || c.room.qnum === -3)
+						(!c.room.tren || c.room.num === -1 || c.room.num === -3)
 					) {
 						r = area.tren === c.board.roommgr.VERT ? c.vertlist : c.horzlist;
 					}
