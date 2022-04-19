@@ -196,9 +196,9 @@ ui.toolarea = {
 		if (idname === "variant") {
 			var str;
 			if (ui.menuconfig.get("variant")) {
-				str = ui.selectStr("本家ルールでチェック", "Check base type");
+				str = ui.i18n("check.variant");
 			} else {
-				str = ui.selectStr("チェック", "Check");
+				str = ui.i18n("check");
 			}
 			getEL("btncheck").textContent = str;
 		}

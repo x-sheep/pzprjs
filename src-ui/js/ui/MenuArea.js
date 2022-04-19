@@ -237,9 +237,9 @@ ui.menuarea = {
 		if (idname === "toolarea") {
 			var str;
 			if (!ui.menuconfig.get("toolarea")) {
-				str = ui.selectStr("ツールエリアを表示", "Show tool area");
+				str = ui.i18n("toolarea.show");
 			} else {
-				str = ui.selectStr("ツールエリアを隠す", "Hide tool area");
+				str = ui.i18n("toolarea.hide");
 			}
 			getEL("menu_toolarea").textContent = str;
 		} else if (this.menuitem === null || !this.menuitem[idname]) {
@@ -405,22 +405,14 @@ ui.menuarea = {
 	},
 	answerclear: function() {
 		this.stopHovering();
-		ui.notify.confirm(
-			"解答を消去しますか？",
-			"Do you want to erase the answer?",
-			function() {
-				ui.puzzle.ansclear();
-			}
-		);
+		ui.notify.confirm(ui.i18n("ansclear.confirm"), function() {
+			ui.puzzle.ansclear();
+		});
 	},
 	submarkclear: function() {
 		this.stopHovering();
-		ui.notify.confirm(
-			"補助記号を消去しますか？",
-			"Do you want to erase the auxiliary marks?",
-			function() {
-				ui.puzzle.subclear();
-			}
-		);
+		ui.notify.confirm(ui.i18n("subclear.confirm"), function() {
+			ui.puzzle.subclear();
+		});
 	}
 };
