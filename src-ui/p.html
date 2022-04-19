@@ -491,71 +491,71 @@
   </div>
 
   <div class="popup">
-    <div class="titlebar">__画像を保存する__Save Image__</div>
+    <div class="titlebar">__imagesave.title__</div>
     <form name="imagesave" target="fileiopanel">
       <input type="hidden" name="operation" value="imagesave">
       <input type="hidden" name="urlstr" value="">
-      <span>__ファイル形式__File format__</span>
+      <span>__imagesave.filetype__</span>
       <select name="filetype" data-change-exec="changefilename">
-        <option value="png">__PNG形式__PNG Format__</option>
-        <option value="svg">__ベクター画像(SVG)__Vector Image (SVG)__</option>
-        <option value="gif">__GIF形式__GIF Format__</option>
-        <option value="jpeg">__jpeg形式__jpeg Format__</option>
-        <option value="webp">__webp形式__webp Format__</option>
+        <option value="png">__imagesave.png__</option>
+        <option value="svg">__imagesave.svg__</option>
+        <option value="gif">__imagesave.gif__</option>
+        <option value="jpeg">__imagesave.jpeg__</option>
+        <option value="webp">__imagesave.webp__</option>
       </select>
       <br>
-      <span>__ファイル名__Filename__</span>
+      <span>__imagesave.filename__</span>
       <input type="text" name="filename" value="">
       <br>
-      <span>__画像のサイズ__Image Size__</span>
+      <span>__imagesave.cellsize__</span>
       <input type="number" name="cellsize" value="36" size=4 maxlength=3 min=8 max=999 data-change-exec="estimatesize">
       <span id="showsize">x</span>
       <br>
       <label>
-        <span>__背景色を透明にする__Set background to transparent__</span>
+        <span>__imagesave.transparent__</span>
         <input type="checkbox" name="transparent">
       </label>
       <br>
       <br>
-      <button type="button" class="btn btn-ok"   data-button-exec="saveimage">__ダウンロード__Download__</button>
-      <button type="button" class="btn btn-info" data-button-exec="openimage">__別ウィンドウで開く__Open in another window__</button>
+      <button type="button" class="btn btn-ok"   data-button-exec="saveimage">__imagesave.saveimage__</button>
+      <button type="button" class="btn btn-info" data-button-exec="openimage">__imagesave.openimage__</button>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
     </form>
   </div>
 
   <div class="popup">
-    <div class="titlebar">__盤面の調整__Board Dimension Resizer__</div>
+    <div class="titlebar">__adjust.title__</div>
     <form name="adjust">
-      <span>__盤面の調整を行います。__Adjust the board.__</span>
+      <span>__adjust.header__</span>
       <br>
-      <span>__拡大__Expand__</span>
-      <button type="button" class="btn" data-button-exec="adjust" name="expandup">__上__Top__</button>
-      <button type="button" class="btn" data-button-exec="adjust" name="expanddn">__下__Bottom__</button>
+      <span>__adjust.expand__</span>
+      <button type="button" class="btn" data-button-exec="adjust" name="expandup">__adjust.up__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="expanddn">__adjust.dn__</button>
       <span> </span>
-      <button type="button" class="btn" data-button-exec="adjust" name="expandlt">__左__Left__</button>
-      <button type="button" class="btn" data-button-exec="adjust" name="expandrt">__右__Right__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="expandlt">__adjust.lt__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="expandrt">__adjust.rt__</button>
       <br>
-      <span>__縮小__Reduce__</span>
-      <button type="button" class="btn" data-button-exec="adjust" name="reduceup">__上__Top__</button>
-      <button type="button" class="btn" data-button-exec="adjust" name="reducedn">__下__Bottom__</button>
+      <span>__adjust.reduce__</span>
+      <button type="button" class="btn" data-button-exec="adjust" name="reduceup">__adjust.up__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="reducedn">__adjust.dn__</button>
       <span> </span>
-      <button type="button" class="btn" data-button-exec="adjust" name="reducelt">__左__Left__</button>
-      <button type="button" class="btn" data-button-exec="adjust" name="reducert">__右__Right__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="reducelt">__adjust.lt__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="reducert">__adjust.rt__</button>
       <br>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
     </form>
   </div>
 
   <div class="popup">
-    <div class="titlebar">__反転・回転__Flip/Turn the board__</div>
+    <div class="titlebar">__turnflip.title__</div>
     <form name="turnflip">
-      <span>__盤面の回転・反転を行います。__Flip/Turn the board.__</span>
+      <span>__turnflip.header__</span>
       <br>
-      <button type="button" class="btn" data-button-exec="adjust" name="turnl">__左90°回転__Turn left by 90 degree__</button>
-      <button type="button" class="btn" data-button-exec="adjust" name="turnr">__右90°回転__Turn right by 90 degree__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="turnl">__turnflip.turnl__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="turnr">__turnflip.turnr__</button>
       <br>
-      <button type="button" class="btn" data-button-exec="adjust" name="flipy">__上下反転__Flip upside down__</button>
-      <button type="button" class="btn" data-button-exec="adjust" name="flipx">__左右反転__Flip leftside right__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="flipy">__turnflip.flipy__</button>
+      <button type="button" class="btn" data-button-exec="adjust" name="flipx">__turnflip.flipx__</button>
       <br>
       <br>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
@@ -563,23 +563,23 @@
   </div>
 
   <div class="popup">
-    <div class="titlebar">__表示サイズの変更__Change size__</div>
+    <div class="titlebar">__dispsize.title__</div>
     <form name="dispsize">
-      <span>__表示サイズを変更します。__Change the display size.__</span>
+      <span>__dispsize.header__</span>
       <br>
-      <span>__表示サイズ__Display size__</span>
+      <span>__dispsize.cellsize__</span>
       <input type="number" name="cellsize" value="" size=4 maxlength=3 min=8 max=999>
       <br>
-      <button type="button" class="btn btn-ok" data-button-exec="changesize">__変更する__Change__</button>
+      <button type="button" class="btn btn-ok" data-button-exec="changesize">__dispsize.submit__</button>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
     </form>
   </div>
 
   <div class="popup" id="about">
-    <div class="titlebar">__pzprxsについて__About pzprxs__</div>
+    <div class="titlebar">__about.title__</div>
     <form name="about">
       <p><a href="https://github.com/x-sheep/pzprjs">github.com/x-sheep/pzprjs</a> version <%= git.hash %></p>
-      <p>based on <span>__ぱずぷれv3__PUZ-PRE v3__</span> by <span>__は はっぱ/連続発破__happa__</span></p>
+      <p>based on <span>__about.pzv__</span> by <span>__about.author__</span></p>
       <button type="button" class="btn btn-ok" data-button-exec="close">OK</button>
     </form>
   </div>
@@ -608,7 +608,7 @@
   </div>
 
   <div class="popup">
-    <div class="titlebar">__ネットワークプレイ__Network play__</div>
+    <div class="titlebar">__network.title__</div>
     <form name="network">
     <button type="button" class="btn" data-button-exec="coop">Start</button>
     <br>
