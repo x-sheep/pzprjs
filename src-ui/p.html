@@ -18,44 +18,44 @@
 
 <div id="menuboard" class="outofboard">
   <menu id="menupanel" style="display:none;">
-   <li id="menu_file"><span>__ファイル__File__</span><menu label="__ファイル__File__">
-     <li data-popup="newboard" id="menu_newboard"><span>__新規作成__New board__</span></li>
-     <li data-popup="urlinput"><span>__URL入力__Load from URL__</span></li>
-     <li data-popup="urloutput" id="menu_urloutput"><span>__URL出力__Export URL__</span></li>
+   <li id="menu_file"><span>__menu_file__</span><menu label="__menu_file__">
+     <li data-popup="newboard" id="menu_newboard"><span>__newboard__</span></li>
+     <li data-popup="urlinput"><span>__urlinput__</span></li>
+     <li data-popup="urloutput" id="menu_urloutput"><span>__urloutput__</span></li>
      <hr>
-     <li data-popup="fileopen"><span>__ファイルを開く__Open file__</span></li>
-     <li data-popup="filesave"><span>__ファイル保存__Save file as ...__</span></li>
-     <li class="link" data-linktype="duplicate" id="menu_duplicate"><a target="_blank">__盤面の複製__Duplicate the board__</a></li>
+     <li data-popup="fileopen"><span>__fileopen__</span></li>
+     <li data-popup="filesave"><span>__filesave__</span></li>
+     <li class="link" data-linktype="duplicate" id="menu_duplicate"><a target="_blank">__duplicate__</a></li>
      <hr>
-     <li data-popup="imagesave" id="menu_imagesave"><span>__画像を保存__Save as image file__</span></li>
+     <li data-popup="imagesave" id="menu_imagesave"><span>__imagesave__</span></li>
    </menu></li>
-   <li id="menu_edit"><span>__編集__Edit__</span><menu label="__編集__Edit__">
-     <li data-popup="adjust" id="menu_adjust"><span>__盤面の調整__Adjust the board__</span></li>
-     <li data-popup="turnflip" id="menu_turnflip"><span>__反転・回転__Flip/Turn the board__</span></li>
+   <li id="menu_edit"><span>__menu_edit__</span><menu label="__menu_edit__">
+     <li data-popup="adjust" id="menu_adjust"><span>__adjust__</span></li>
+     <li data-popup="turnflip" id="menu_turnflip"><span>__turnflip__</span></li>
    </menu></li>
-   <li id="menu_display"><span>__表示__Display__</span><menu label="__表示__Display__">
-     <li data-config="cellsizeval"><span>__表示サイズ__Cell size__</span> -&gt;<menu label="__表示サイズ__Cell size__">
-       <li data-value="19"><span>__サイズ 極小__Extra small__</span></li>
-       <li data-value="36"><span>__サイズ 小__Small__</span></li>
-       <li data-value="48"><span>__サイズ 標準__Normal__</span></li>
-       <li data-value="72"><span>__サイズ 大__Large__</span></li>
-       <li data-value="108"><span>__サイズ 特大__Extra large__</span></li>
+   <li id="menu_display"><span>__menu_display__</span><menu label="__menu_display__">
+     <li data-config="cellsizeval"><span>__cellsize__</span> -&gt;<menu label="__表示サイズ__Cell size__">
+       <li data-value="19"><span>__cellsize.xs__</span></li>
+       <li data-value="36"><span>__cellsize.s__</span></li>
+       <li data-value="48"><span>__cellsize.n__</span></li>
+       <li data-value="72"><span>__cellsize.l__</span></li>
+       <li data-value="108"><span>__cellsize.xl__</span></li>
        <hr>
-       <li data-popup="dispsize"><span>__数値指定__Set by number ...__</span></li>
+       <li data-popup="dispsize"><span>__cellsize.custom__</span></li>
      </menu></li>
-     <li data-config="font"><span>__フォント__Font family__</span> -&gt;<menu label="__フォント__Font family__">
-       <li data-value="1"><span>__ゴシック__Sans-serif__</span></li>
-       <li data-value="2"><span>__明朝__Serif__</span></li>
+     <li data-config="font"><span>__font__</span> -&gt;<menu label="__font__">
+       <li data-value="1"><span>__font.sans__</span></li>
+       <li data-value="2"><span>__font.serif__</span></li>
      </menu></li>
      <hr>
-     <li class="check" data-config="dispqnumbg"><span>__問題背景描画__Paint background of clue circles__</span></li>
-     <li class="check" data-config="undefcell"><span>__未確定領域背景描画__Paint uninputted cells__</span></li>
-     <li class="check" data-config="cursor"><span>__カーソルの表示__Show cursor__</span></li>
-     <li class="check" data-config="trialmarker"><span>__仮置きマーカーの表示__Show trial markers__</li>
-     <li class="check" data-config="adjsize"><span>__自動横幅調節__Auto size adjust__</span></li>
-     <li class="check" data-config="fullwidth"><span>__横幅最大拡張__Expand canvas width__</span></li>
+     <li class="check" data-config="dispqnumbg"><span>__dispqnumbg__</span></li>
+     <li class="check" data-config="undefcell"><span>__undefcell__</span></li>
+     <li class="check" data-config="cursor"><span>__cursor__</span></li>
+     <li class="check" data-config="trialmarker"><span>__trialmarker__</span></li>
+     <li class="check" data-config="adjsize"><span>__adjsize__</span></li>
+     <li class="check" data-config="fullwidth"><span>__fullwidth__</span></li>
      <hr>
-     <li data-menu-exec="toolarea"><span id="menu_toolarea">__ツールエリアを隠す__Hide tool area__</span></li>
+     <li data-menu-exec="toolarea"><span id="menu_toolarea">__toolarea.hide__</span></li>
    </menu></li>
    <li id="menu_setting"><span>__設定__Setting__</span><menu label="__設定__Setting__">
      <li class="check" data-config="lrinvert"><span>__マウス左右反転__Invert mouse button__</span></li>

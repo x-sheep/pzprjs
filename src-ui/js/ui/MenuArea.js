@@ -221,9 +221,9 @@ ui.menuarea = {
 		for (var i = 0; i < this.captions.length; i++) {
 			var obj = this.captions[i];
 			if (!!obj.textnode) {
-				obj.textnode.data = ui.selectStr(obj.str_jp, obj.str_en);
+				obj.textnode.data = ui.i18n(obj.str_key);
 			} else if (!!obj.menu) {
-				obj.menu.setAttribute("label", ui.selectStr(obj.str_jp, obj.str_en));
+				obj.menu.setAttribute("label", ui.i18n(obj.str_key));
 			}
 		}
 	},
