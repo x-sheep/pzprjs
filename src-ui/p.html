@@ -342,21 +342,21 @@
 </div>
 
 <div id="btnarea" class="outofboard" style="display:none;"> <!-- Buttons below board下部のボタン -->
-  <button type="button" class="btn btn-ok" id="btncheck" data-button-exec="answercheck">__チェック__Check__</button>
-  <button type="button" class="btn" id="btnundo"    data-press-exec="undo,undostop">__戻__&lt;-__</button
- ><button type="button" class="btn" id="btnredo"    data-press-exec="redo,redostop">__進__-&gt;__</button>
-  <button type="button" class="btn" id="btnclear"   data-button-exec="ansclear">__解答消去__Erase answer__</button
- ><button type="button" class="btn" id="btnclear2"  data-button-exec="subclear">__補助消去__Erase aux. marks__</button>
-  <button type="button" class="btn" id="btnirowake" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change line colors__</button>
-  <button type="button" class="btn" id="btnirowakeblk" data-button-exec="irowake" style="display:none;">__色分けしなおす__Change block colors__</button>
-  <button type="button" class="btn" id="btncolor"   data-button-exec="encolorall">__色をつける__Color up__</button>
-  <button type="button" class="btn" id="btnflush"   data-button-exec="flushexcell">__(please translate) Flush clues__Flush clues__</button>
-  <button type="button" class="btn" data-disp-pid="stostone" data-press-exec="dropblocks,resetblocks">__ブロックを落とす__Drop blocks__</button>
-  <button type="button" class="btn" id="btntrial"   data-button-exec="enterTrial">__仮置きモード__Trial mode__</button>
+  <button type="button" class="btn btn-ok" id="btncheck" data-button-exec="answercheck">__check__</button>
+  <button type="button" class="btn" id="btnundo"    data-press-exec="undo,undostop">__undo__</button
+ ><button type="button" class="btn" id="btnredo"    data-press-exec="redo,redostop">__redo__</button>
+  <button type="button" class="btn" id="btnclear"   data-button-exec="ansclear">__ansclear__</button
+ ><button type="button" class="btn" id="btnclear2"  data-button-exec="subclear">__subclear__</button>
+  <button type="button" class="btn" id="btnirowake" data-button-exec="irowake" style="display:none;">__irowake.change__</button>
+  <button type="button" class="btn" id="btnirowakeblk" data-button-exec="irowake" style="display:none;">__irowakeblk.change__</button>
+  <button type="button" class="btn" id="btncolor"   data-button-exec="encolorall">__encolorall__</button>
+  <button type="button" class="btn" id="btnflush"   data-button-exec="flushexcell">__flushexcell__</button>
+  <button type="button" class="btn" data-disp-pid="stostone" data-press-exec="dropblocks,resetblocks">__dropblocks__</button>
+  <button type="button" class="btn" id="btntrial"   data-button-exec="enterTrial">__enterTrial__</button>
   <div id="btntrialarea" style="display:none;">
-    <button type="button" class="btn btn-ok" id="btntriala"  data-button-exec="acceptTrial">__仮置き確定__Accept trial__</button
-   ><button type="button" class="btn btn-danger" id="btntrialr"  data-button-exec="rejectTrial">__仮置き破棄__Reject trial__</button
-   ><button type="button" class="btn" id="btntriale"  data-button-exec="enterFurtherTrial">__多重仮置き__Enter further trial__</button>
+    <button type="button" class="btn btn-ok" id="btntriala"  data-button-exec="acceptTrial">__acceptTrial__</button
+   ><button type="button" class="btn btn-danger" id="btntrialr"  data-button-exec="rejectTrial">__rejectTrial__</button
+   ><button type="button" class="btn" id="btntriale"  data-button-exec="enterFurtherTrial">__enterFurtherTrial__</button>
   </div>
 </div>
 
@@ -396,18 +396,18 @@
 <div id="popup_parent" class="outofboard">
 
   <div class="popup">
-    <div class="titlebar">__盤面の新規作成__New Board__</div>
+    <div class="titlebar">__newboard.title__</div>
     <form name="newboard">
-      <span>__盤面を新規作成します。__Create New Board.__</span>
+      <span>__newboard.header__</span>
       <br>
       <div id="nb_size" data-disp-pid="!sudoku">
-        <span id="nb_cols" data-disp-pid="!tawa">__よこ__Cols__</span>
+        <span id="nb_cols" data-disp-pid="!tawa">__newboard.cols__</span>
         <input type="number" name="col" value="1" size=4 maxlength=3 min=1 max=999>
-        <span id="nb_cols_tawa" data-disp-pid="tawa">__横幅 (黄色の数)__Width (Yellows)__</span>
+        <span id="nb_cols_tawa" data-disp-pid="tawa">__newboard.tawa.width__</span>
         <br>
-        <span id="nb_rows" data-disp-pid="!tawa">__たて__Rows__</span>
+        <span id="nb_rows" data-disp-pid="!tawa">__newboard.rows__</span>
         <input type="number" name="row" value="1" size=4 maxlength=3 min=1 max=999>
-        <span id="nb_rows_tawa" data-disp-pid="tawa">__高さ__Height__</span>
+        <span id="nb_rows_tawa" data-disp-pid="tawa">__newboard.tawa.height__</span>
       </div>
       <div id="nb_size_sudoku" data-disp-pid="sudoku">
         <input type="radio" name="size" id="nb_size_sudoku_0" value="0"> 4x4<br>
@@ -423,40 +423,40 @@
         <td><div id="nb_shape_2"><img src="" data-button-exec="clickshape"></div></td>
         <td><div id="nb_shape_3"><img src="" data-button-exec="clickshape"></div></td>
       </tr></table>
-      <button type="button" class="btn btn-ok" data-button-exec="execute">__新規作成__Create__</button>
+      <button type="button" class="btn btn-ok" data-button-exec="execute">__newboard.submit__</button>
       <button type="button" class="btn" data-button-exec="close">__cancel__</button>
     </form>
   </div>
 
   <div class="popup">
-    <div class="titlebar">__URL入力__Load from URL__</div>
+    <div class="titlebar">__urlinput.title__</div>
     <form name="urlinput">
       <textarea name="ta" cols=48 rows=8 wrap="hard"></textarea>
       <br>
-      <button type="button" class="btn btn-ok" data-button-exec="urlinput">__読み込む__Load__</button>
+      <button type="button" class="btn btn-ok" data-button-exec="urlinput">__urlinput.submit__</button>
       <button type="button" class="btn" data-button-exec="close">__cancel__</button>
     </form>
   </div>
 
   <div class="popup">
-    <div class="titlebar">__URL出力__Export URL__</div>
+    <div class="titlebar">__urloutput.title__</div>
     <form name="urloutput">
       <a id="urlanchor" class="urlanchor" target="_blank"></a>
       <br>
-      <button type="button" class="btn" data-button-exec="urloutput" name="kanpen" >__カンペンのURLを出力する__Change to Kanpen URL__</button><br>
-      <button type="button" class="btn" data-button-exec="urloutput" name="heyaapp">__へやわけアプレットのURLを出力する__Change to Heyawake-Applet URL__</button><br>
-      <button type="button" class="btn" data-button-exec="urloutput" name="pzprv3e">__ぱずぷれv3の再編集用URLを出力する__Change to PUZ-PRE v3 Re-Edit URL__</button><br>
+      <button type="button" class="btn" data-button-exec="urloutput" name="kanpen" >__urloutput.kanpen__</button><br>
+      <button type="button" class="btn" data-button-exec="urloutput" name="heyaapp">__urloutput.heyaapp__</button><br>
+      <button type="button" class="btn" data-button-exec="urloutput" name="pzprv3e">__urloutput.pzprv3e__</button><br>
       <br>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
     </form>
   </div>
 
   <div class="popup">
-    <div class="titlebar">__ファイルを開く__Open File__</div>
+    <div class="titlebar">__fileopen.title__</div>
     <form name="fileform" target="fileiopanel">
       <input type="hidden" name="operation" value="open">
       <input type="hidden" name="pencilbox" value="0">
-      <span>__ファイル選択__Choose file__</span>
+      <span>__fileopen.choose__</span>
       <br>
       <input type="file" name="filebox" data-change-exec="fileopen" class="btn btn-info" id="filebox" value="">
       <br>
@@ -465,7 +465,7 @@
   </div>
 
   <div class="popup">
-    <div class="titlebar">__ファイルを保存する__Save File__</div>
+    <div class="titlebar">__filesave.title__</div>
     <form name="filesave" target="fileiopanel">
       <input type="hidden" name="operation" value="save">
       <input type="hidden" name="ques" value="">
@@ -474,18 +474,18 @@
       <br>
       <textarea name="ta2" cols=48 rows=2 wrap="hard"></textarea>
       <br>
-      <span>__ファイル形式__File format__</span>
+      <span>__filesave.format__</span>
       <select name="filetype" data-change-exec="changefilename">
-        <option value="filesave">__ぱずぷれv3形式__Puz-Pre v3 format__</option>
-        <option value="filesave2">__pencilbox形式__Pencilbox Text format__</option>
-        <option value="filesave4">__pencilbox XML形式__Pencilbox XML format__</option>
+        <option value="filesave">__filesave.format.pzprv3__</option>
+        <option value="filesave2">__filesave.format.penciltxt__</option>
+        <option value="filesave4">__filesave.format.pencilxml__</option>
       </select>
       <br>
-      <span>__ファイル名__Filename__</span>
+      <span>__filesave.filename__</span>
       <input type="text" name="filename" value="">
       <br>
       <br>
-      <button type="button" class="btn btn-ok" data-button-exec="filesave">__保存__Save__</button>
+      <button type="button" class="btn btn-ok" data-button-exec="filesave">__filesave.submit__</button>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
     </form>
   </div>

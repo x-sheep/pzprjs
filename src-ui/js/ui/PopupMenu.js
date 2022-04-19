@@ -148,7 +148,7 @@ ui.popupmgr.addpopup("template", {
 		}
 		for (var i = 0; i < this.captions.length; i++) {
 			var obj = this.captions[i];
-			var text = ui.selectStr(obj.str_jp, obj.str_en);
+			var text = ui.i18n(obj.str_key);
 			if (!!obj.textnode) {
 				obj.textnode.data = text;
 			} else if (!!obj.button) {
@@ -161,11 +161,10 @@ ui.popupmgr.addpopup("template", {
 		var popup = this;
 		this.captions = [];
 		ui.misc.walker(parent, function(el) {
-			if (el.nodeType === 3 && el.data.match(/^__(.+)__(.+)__$/)) {
+			if (el.nodeType === 3 && el.data.match(/^__(.+)__$/)) {
 				popup.captions.push({
 					textnode: el,
-					str_jp: RegExp.$1,
-					str_en: RegExp.$2
+					str_key: RegExp.$1
 				});
 			}
 		});

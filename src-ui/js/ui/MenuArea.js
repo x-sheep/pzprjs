@@ -120,11 +120,10 @@ ui.menuarea = {
 				}
 			} else if (el.nodeType === 1 && el.nodeName === "MENU") {
 				var label = el.getAttribute("label");
-				if (!!label && label.match(/^__(.+)__(.+)__$/)) {
+				if (!!label && label.match(/^__(.+)__$/)) {
 					menuarea.captions.push({
 						menu: el,
-						str_jp: RegExp.$1,
-						str_en: RegExp.$2
+						str_key: RegExp.$1
 					});
 					if (menuarea.nohover) {
 						addmenuevent(el, "mousedown", function(e) {
@@ -133,11 +132,10 @@ ui.menuarea = {
 					}
 				}
 			} else if (el.nodeType === 3) {
-				if (el.data.match(/^__(.+)__(.+)__$/)) {
+				if (el.data.match(/^__(.+)__$/)) {
 					menuarea.captions.push({
 						textnode: el,
-						str_jp: RegExp.$1,
-						str_en: RegExp.$2
+						str_key: RegExp.$1
 					});
 				}
 			}
