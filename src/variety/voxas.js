@@ -377,7 +377,7 @@
 		},
 
 		checkValueSmall: function() {
-			this.checkRegionValue(this.board.roommgr.ERROR_SMALL, "bkSize1");
+			this.checkRegionValue(this.board.roommgr.ERROR_SMALL, "bkSizeLt2");
 		},
 		checkValueWide: function() {
 			this.checkRegionValue(this.board.roommgr.ERROR_WIDE, "bkNotRect");
@@ -452,8 +452,6 @@
 		}
 	},
 	FailCode: {
-		bkNotRect: "bkNotRect.voxas",
-		bkSizeGt3: "bkSizeGt3.voxas",
-		bkSize1: "bkSize1.voxas"
+		bkNotRect: "bkNotRect.voxas"
 	}
 });

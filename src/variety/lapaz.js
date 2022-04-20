@@ -262,7 +262,6 @@
 	FailCode: {
 		nmShadeNe: "nmShadeNe.lapaz",
 		nmLt1: "nmLt1.lapaz",
-		bkSizeGt2: "bkSizeGt2.lapaz",
 		bkUnshade: "bkUnshade.lapaz"
 	}
 });

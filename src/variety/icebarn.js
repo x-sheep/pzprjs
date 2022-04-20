@@ -1391,10 +1391,6 @@
 			"すべてのアイスバーンを通っていません。",
 			"A icebarn is not gone through."
 		],
-		arNoLine: [
-			"線が通っていない矢印があります。",
-			"A line doesn't go through some arrows."
-		],
 		lrOrder: [
 			"数字の通過順が間違っています。",
 			"A line goes through an arrow reverse."

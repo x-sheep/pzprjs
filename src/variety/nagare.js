@@ -816,10 +816,6 @@
 	},
 
 	FailCode: {
-		arNoLine: [
-			"線が通っていない矢印があります。",
-			"A line doesn't go through some arrows."
-		],
 		arAgainstWind: [
 			"矢印の向きが風の指示と合っていません。",
 			"The direction of the arrow is against the wind."
