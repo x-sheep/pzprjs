@@ -484,18 +484,9 @@
 	},
 
 	FailCode: {
-		nmBorderNe: [
-			"数字の周りにある境界線の本数が違います。",
-			"The number is not equal to the number of border lines around it."
-		],
-		bkNoNum: ["数字の入っていない部屋があります。", "A room has no numbers."],
-		bkNumGe2: [
-			"1つの部屋に2つ以上の数字が入っています。",
-			"A room has more than one number."
-		],
-		bkSameTouch: [
-			"向きも形も同じブロックが接しています。",
-			"Two areas of the same shape and orientation area adjacent."
-		]
+		bkSameTouch: "bkSameTouch.nawabari",
+		bkNumGe2: "bkNumGe2.nawabari",
+		bkNoNum: "bkNoNum.nawabari",
+		nmBorderNe: "nmBorderNe.nawabari"
 	}
 });

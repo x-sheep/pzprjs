@@ -1555,35 +1555,14 @@
 	},
 
 	FailCode: {
-		lnIsolate: [
-			"線がマークのないところから出ています。",
-			"A segment starts outside a clue."
-		],
-		lnPassOver: [
-			"線がマークを通過しています。",
-			"A segment passes over a clue."
-		],
-		lnOverlap: ["線が同一直線上で重なっています。", "Some segments overlap."],
-		lnRightAngle: [
-			"線が直角に交差していません。",
-			"Segments don't intersect at a right angle."
-		],
-		lnWrongAngle: [
-			"直線のなす角度がマークと違います。",
-			"Some segments meet at the wrong angle."
-		],
-		nmConnDiff: [
-			"異なる文字が直接繋がっています。",
-			"Different letters are connected directly."
-		],
-		nmNotConseq: [
-			"同じ文字がひとつながりになっていません。",
-			"Equal letters are not connected directly."
-		],
-		nmLineLt2: [
-			"線が2本出ていない丸があります。",
-			"A clue doesn't have two segments."
-		],
-		brNoLine: ["線が存在していません。", "There is no segment."]
+		brNoLine: "brNoLine.kouchoku",
+		nmLineLt2: "nmLineLt2.kouchoku",
+		nmNotConseq: "nmNotConseq.kouchoku",
+		nmConnDiff: "nmConnDiff.kouchoku",
+		lnWrongAngle: "lnWrongAngle.kouchoku",
+		lnRightAngle: "lnRightAngle.kouchoku",
+		lnOverlap: "lnOverlap.kouchoku",
+		lnPassOver: "lnPassOver.kouchoku",
+		lnIsolate: "lnIsolate.kouchoku"
 	}
 });
