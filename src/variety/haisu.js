@@ -980,41 +980,12 @@
 		}
 	},
 
-	FailCode: {
-		haisuSG: [
-			"(please translate) The line goes through S/G",
-			"The line goes through S/G"
-		],
-		haisuError: [
-			"(please translate) A number is not passed on the right visit",
-			"A number is not passed on the right visit"
-		]
-	},
-
 	"FailCode@bdwalk": {
-		lnIsolate: [
-			"(please translate) A symbol has no line.",
-			"A symbol has no line."
-		],
-		bdwGroundFloor: [
-			"(please translate) The line goes below the 1st floor.",
-			"The line goes below the 1st floor."
-		],
-		bdwSkipElevator: [
-			"(please translate) The line doesn't change floors at an elevator.",
-			"The line doesn't change floors at an elevator."
-		],
-		bdwInvalidUp: [
-			"(please translate) The line goes up at a downward elevator.",
-			"The line goes up at a downward elevator."
-		],
-		bdwInvalidDown: [
-			"(please translate) The line goes down at an upward elevator.",
-			"The line goes down at an upward elevator."
-		],
-		bdwMismatch: [
-			"(please translate) The line goes through different numbers without switching floors.",
-			"The line goes through different numbers without switching floors."
-		]
+		lnIsolate: "lnIsolate.bdwalk",
+		bdwGroundFloor: "bdwGroundFloor.bdwalk",
+		bdwSkipElevator: "bdwSkipElevator.bdwalk",
+		bdwInvalidUp: "bdwInvalidUp.bdwalk",
+		bdwInvalidDown: "bdwInvalidDown.bdwalk",
+		bdwMismatch: "bdwMismatch.bdwalk"
 	}
 });

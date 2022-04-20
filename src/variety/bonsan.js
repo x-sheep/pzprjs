@@ -725,10 +725,6 @@
 		nmNoMove: ["○から線が出ていません。", "A circle doesn't start any line."]
 	},
 	"FailCode@rectslider": {
-		csNotRect: [
-			"黒マスのカタマリが正方形か長方形ではありません。",
-			"A mass of shaded cells is not rectangle."
-		],
 		bkSize1: [
 			"黒マスが一つで孤立しています。",
 			"There is a isolated shaded cells."

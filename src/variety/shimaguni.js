@@ -509,10 +509,6 @@
 	},
 
 	"FailCode@chocona": {
-		csNotRect: [
-			"黒マスのカタマリが正方形か長方形ではありません。",
-			"A mass of shaded cells is not rectangle."
-		],
 		bkShadeNe: [
 			"数字のある領域と、領域の中にある黒マスの数が違います。",
 			"The number of shaded cells in the area and the number written in the area is different."

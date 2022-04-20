@@ -19,7 +19,7 @@ function loadAllScript(){
     if(!pzpr.custom[pid]){ loadedall = false;}
   });
   if(!loadedall){
-    setTimeout(loadAllScript,10);
+    setTimeout(loadAllScript,100);
   }
   else{
     bglist();
@@ -41,6 +41,7 @@ function bglist(){
   
   var txt_en = "{\n";
   var txt_ja = "{\n";
+  var txt_keys = "{\n";
   for(var i in sorted){
     var obj = list[i];
 
@@ -52,10 +53,13 @@ function bglist(){
     txt_ja += key;
     txt_ja += JSON.stringify(obj.ja);
     txt_ja += ",\n";
+
+    txt_keys += obj.code + ": " + "\"" + obj.code + "." + obj.pid + "\",\n";
   }
   txt_en += "}";
   txt_ja += "}";
-  [txt_en, txt_ja].forEach(function(txt) {
+  txt_keys += "}";
+  [txt_keys, txt_en, txt_ja].forEach(function(txt) {
     var el = document.createElement('code');
     el.appendChild(document.createTextNode(txt));
     main.appendChild(el);

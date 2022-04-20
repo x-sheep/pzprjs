@@ -397,13 +397,7 @@
 	},
 
 	FailCode: {
-		csLoop: [
-			"(please translate) There is a loop of shaded cells.",
-			"There is a loop of shaded cells."
-		],
-		bkPluralShade: [
-			"(please translate) A region has multiple shaded tiles.",
-			"A region has multiple shaded tiles."
-		]
+		bkPluralShade: "bkPluralShade.parquet",
+		csLoop: "csLoop.parquet"
 	}
 });

@@ -452,17 +452,8 @@
 		}
 	},
 	FailCode: {
-		bkSize1: [
-			"サイズが2マスより小さいブロックがあります。",
-			"The size of an area is smaller than two."
-		],
-		bkSizeGt3: [
-			"サイズが3マスより大きいブロックがあります。",
-			"The size of an area is larger than three."
-		],
-		bkNotRect: [
-			"四角形ではない領域があります。",
-			"An area is not a rectangle."
-		]
+		bkNotRect: "bkNotRect.voxas",
+		bkSizeGt3: "bkSizeGt3.voxas",
+		bkSize1: "bkSize1.voxas"
 	}
 });

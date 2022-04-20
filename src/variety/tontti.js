@@ -444,17 +444,8 @@
 	},
 
 	FailCode: {
-		lnOverlap: [
-			"(please translate) A line overlaps a number.",
-			"A line overlaps a number."
-		],
-		lnAdjacent: [
-			"(please translate) Identical line shapes are connected.",
-			"Identical line shapes are connected."
-		],
-		bkSizeNe: [
-			"(please translate) The amount of empty cells is not equal to the number.",
-			"The amount of empty cells is not equal to the number."
-		]
+		bkSizeNe: "bkSizeNe.tontti",
+		lnAdjacent: "lnAdjacent.tontti",
+		lnOverlap: "lnOverlap.tontti"
 	}
 });

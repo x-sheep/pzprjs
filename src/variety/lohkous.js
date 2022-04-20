@@ -630,26 +630,11 @@
 		},
 
 		FailCode: {
-			ceNoNum: [
-				"記号マスを１つも含まないブロックがあります。",
-				"There is an area without a clue."
-			],
-			bkNumGe2: [
-				"２つ以上の記号マスを含むブロックがあります。",
-				"There is an area with more than one clue."
-			],
-			bdUnused: [
-				"(please translate) There is an unused border.",
-				"There is an unused border."
-			],
-			bkUnknown: [
-				"(please translate) A room has a segment of invalid length.",
-				"A room has a segment of invalid length."
-			],
-			nmMissing: [
-				"(please translate) There is no segment of the given length in the room.",
-				"There is no segment of the given length in the room."
-			]
+			nmMissing: "nmMissing.lohkous",
+			bkUnknown: "bkUnknown.lohkous",
+			bdUnused: "bdUnused.lohkous",
+			bkNumGe2: "bkNumGe2.lohkous",
+			ceNoNum: "ceNoNum.lohkous"
 		}
 	});
 })();

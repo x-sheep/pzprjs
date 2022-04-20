@@ -1599,144 +1599,54 @@
 	},
 
 	"FailCode@country": {
-		bkPassTwice: [
-			"線が１つの国を２回以上通っています。",
-			"A line passes a country twice or more."
-		],
-		bkNoLine: [
-			"線の通っていない国があります。",
-			"A line doesn't pass a country."
-		],
-		bkLineNe: [
-			"数字のある国と線が通過するマスの数が違います。",
-			"The number of the cells that is passed any line in the country and the number written in the country is diffrerent."
-		],
-		cbNoLine: [
-			"線が通らないマスが、太線をはさんでタテヨコにとなりあっています。",
-			"The cells that is not passed any line are adjacent over border line."
-		]
+		bkPassTwice: "bkPassTwice.country",
+		bkNoLine: "bkNoLine.country",
+		bkLineNe: "bkLineNe.country",
+		cbNoLine: "cbNoLine.country"
 	},
 	"FailCode@doubleback": {
-		bkNotPassTwice: [
-			"線がちょうど２回通過していない部屋があります。",
-			"A room isn't passed exactly twice."
-		]
+		bkNotPassTwice: "bkNotPassTwice.doubleback"
 	},
 	"FailCode@moonsun": {
-		bkPassTwice: [
-			"線が１つの部屋を２回以上通っています。",
-			"A line passes a room twice or more."
-		],
-		bkNoLine: [
-			"線の通っていない部屋があります。",
-			"A line doesn't pass a room."
-		],
-		bkBothMarksPassed: [
-			"線が月と太陽を両方通っています。",
-			"A line passes both the marks of the moon and the sun."
-		],
-		bkNoMarksPassed: [
-			"線が月も太陽も通っていません。",
-			"A line passes neither the marks of the moon nor the sun."
-		],
-		bkNotAllMSPassed: [
-			"線が全ての月を通っていません。",
-			"A line doesn't pass all of the marks of the moon."
-		],
-		bkNotAllMUPassed: [
-			"線が全ての太陽を通っていません。",
-			"A line doesn't pass all of the marks of the sun."
-		],
-		bkMSPassedGt2: [
-			"月を通った部屋が連続しています。",
-			"A line passes the marks of the moon for two rooms in a row."
-		],
-		bkMUPassedGt2: [
-			"太陽を通った部屋が連続しています。",
-			"A line passes the marks of the sun for two rooms in a row."
-		]
+		bkMUPassedGt2: "bkMUPassedGt2.moonsun",
+		bkMSPassedGt2: "bkMSPassedGt2.moonsun",
+		bkNotAllMUPassed: "bkNotAllMUPassed.moonsun",
+		bkNotAllMSPassed: "bkNotAllMSPassed.moonsun",
+		bkNoMarksPassed: "bkNoMarksPassed.moonsun",
+		bkBothMarksPassed: "bkBothMarksPassed.moonsun",
+		bkNoLine: "bkNoLine.moonsun",
+		bkPassTwice: "bkPassTwice.moonsun"
 	},
 	"FailCode@onsen": {
-		blPassTwice: [
-			"ある線が１つの部屋を２回以上通っています。",
-			"A line passes a room more than once."
-		],
-		blLineNe: [
-			"線が通過するマスの数が数字と違います。",
-			"The length of the path in a room is different from the number of the loop."
-		],
-		blLineDiff: [
-			"各部屋で線が通過するマスの数が違います。",
-			"The length of the path in a room is different in some rooms."
-		],
-		bkNoLine: ["線の通っていない部屋があります。", "A room remains blank."],
-		lnIsolate: [
-			"線の通っていない○があります。",
-			"A circle doesn't have a line."
-		],
-		lpNumGt2: [
-			"数字が2つ以上含まれたループがあります。",
-			"A loop has more than one number."
-		],
-		lpNoNum: ["○を含んでいないループがあります。", "A loop has no numbers."]
+		lpNoNum: "lpNoNum.onsen",
+		lpNumGt2: "lpNumGt2.onsen",
+		lnIsolate: "lnIsolate.onsen",
+		bkNoLine: "bkNoLine.onsen",
+		blLineDiff: "blLineDiff.onsen",
+		blLineNe: "blLineNe.onsen",
+		blPassTwice: "blPassTwice.onsen"
 	},
 	"FailCode@maxi": {
-		blLineShort: [
-			"枠内のどの線も、連続して通るマス数が数字よりも小さいです。",
-			"All lines in a room are shorter than the number."
-		],
-		blLineLong: [
-			"枠内を連続して通るマス数が、数字よりも大きい線があります。",
-			"A line in a room is longer than the number."
-		]
+		blLineLong: "blLineLong.maxi",
+		blLineShort: "blLineShort.maxi"
 	},
 	"FailCode@detour": {
-		blWrongTurns: [
-			"線の曲がった回数が数字と違っています。",
-			"A room has the wrong number of turns."
-		]
+		blWrongTurns: "blWrongTurns.detour"
 	},
 	"FailCode@dotchi": {
-		lnIsolate: [
-			"線の通っていない○があります。",
-			"A circle doesn't have a line."
-		],
-		lnOnShade: [
-			"(please translate) A line goes over a shaded circle.",
-			"A line goes over a shaded circle."
-		],
-		bkNoMatch: [
-			"(please translate) Circles in a region contain both curves and straight lines.",
-			"Circles in a region contain both curves and straight lines."
-		]
+		lnIsolate: "lnIsolate.dotchi",
+		lnOnShade: "lnOnShade.dotchi",
+		bkNoMatch: "bkNoMatch.dotchi"
 	},
 	"FailCode@ovotovata": {
-		blNoNumber: [
-			"(please translate) A line that exits a numbered region turns at the wrong position.",
-			"A line that exits a numbered region turns at the wrong position."
-		],
-		blNoHatena: [
-			'(please translate) Lines that exit a "?" region turn at different positions.',
-			'Lines that exit a "?" region turn at different positions.'
-		],
-		bkNoLine: [
-			"(please translate) A line doesn't pass a shaded country.",
-			"A line doesn't pass a shaded country."
-		]
+		blNoNumber: "blNoNumber.ovotovata",
+		blNoHatena: "blNoHatena.ovotovata",
+		bkNoLine: "bkNoLine.ovotovata"
 	},
 	"FailCode@rassi": {
-		laOnBorder: [
-			"線が境界線をまたいでいます。",
-			"There is a line across a border."
-		],
-		laLoop: ["(please translate) A line forms a loop.", "A line forms a loop."],
-		lnDeadEndAround: [
-			"(please translate) Two line ends are adjacent.",
-			"Two line ends are adjacent."
-		],
-		blPassTwice: [
-			"(please translate) A room has more than one line.",
-			"A room has more than one line."
-		]
+		blPassTwice: "blPassTwice.rassi",
+		lnDeadEndAround: "lnDeadEndAround.rassi",
+		laLoop: "laLoop.rassi",
+		laOnBorder: "laOnBorder.rassi"
 	}
 });
