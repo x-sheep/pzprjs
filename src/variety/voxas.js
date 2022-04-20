@@ -463,18 +463,6 @@
 		bkNotRect: [
 			"四角形ではない領域があります。",
 			"An area is not a rectangle."
-		],
-		bdVoxasBlack: [
-			"(please translate) Two areas separated by a black dot have the same size or the same orientation.",
-			"Two areas separated by a black dot have the same size or the same orientation."
-		],
-		bdVoxasGray: [
-			"(please translate) Two areas separated by a gray dot are identical, or have both a different size and different orientation.",
-			"Two areas separated by a gray dot are identical, or have both a different size and different orientation."
-		],
-		bdVoxasWhite: [
-			"(please translate) Two areas separated by a white dot are different.",
-			"Two areas separated by a white dot are different."
 		]
 	}
 });
