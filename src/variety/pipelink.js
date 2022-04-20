@@ -713,26 +713,11 @@
 		}
 	},
 	FailCode: {
-		lnCrossExCir: [
-			"○の部分以外で線が交差しています。",
-			"There is a crossing line out of circles."
-		],
-		lnCurveOnCir: [
-			"○の部分で線が曲がっています。",
-			"A line turns on a circle."
-		],
-		lnCrossOnNum: [
-			"○の部分で線が交差しています。",
-			"Lines are crossed on a number."
-		],
-		lpPlNum: [
-			"異なる数字を含んだループがあります。",
-			"A loop has multiple kinds of number."
-		],
-		lpSepNum: [
-			"同じ数字が異なるループに含まれています。",
-			"A kind of number is in different loops."
-		],
-		lpNoNum: ["○を含んでいないループがあります。", "A loop has no numbers."]
+		lpNoNum: "lpNoNum.pipelink",
+		lpSepNum: "lpSepNum.pipelink",
+		lpPlNum: "lpPlNum.pipelink",
+		lnCrossOnNum: "lnCrossOnNum.pipelink",
+		lnCurveOnCir: "lnCurveOnCir.pipelink",
+		lnCrossExCir: "lnCrossExCir.pipelink"
 	}
 });
