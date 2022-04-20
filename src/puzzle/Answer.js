@@ -141,15 +141,17 @@ pzpr.classmgr.makeCommon({
 		},
 		gettext: function(lang) {
 			var puzzle = this.puzzle,
-				textlist = puzzle.faillist,
+				textlist = pzpr.failcodes,
 				texts = [];
-			var langcode = (lang || pzpr.lang) === "ja" ? 0 : 1;
+			var langcode = (lang || pzpr.lang) === "ja" ? "ja" : "en";
 			if (this.length === 0) {
-				return textlist.complete[langcode];
+				return textlist[langcode].complete;
 			}
 			for (var i = 0; i < this.length; i++) {
-				var textitem = textlist[this[i]] || textlist.invalid;
-				texts.push(textitem[langcode]);
+				var key =
+					this[i] in puzzle.faillist ? puzzle.faillist[this[i]] : this[i];
+				var textitem = textlist[langcode][key] || textlist[langcode].invalid;
+				texts.push(textitem);
 			}
 			return texts.join("\n");
 		},
@@ -162,8 +164,5 @@ pzpr.classmgr.makeCommon({
 	// ★FailCodeクラス 答えの文字列を扱う
 	//---------------------------------------------------------------------------
 	// FailCodeクラス
-	FailCode: {
-		complete: ["正解です！", "Complete!"],
-		invalid: ["不明なエラーです", "Invalid Error"]
-	}
+	FailCode: {}
 });
