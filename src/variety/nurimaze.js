@@ -619,10 +619,6 @@
 	},
 
 	FailCode: {
-		cu2x2: [
-			"2x2の白マスのカタマリがあります。",
-			"There is a 2x2 block of unshaded cells."
-		],
 		cuLoop: [
 			"白マスで輪っかができています。",
 			"There is a looped unshaded cells."

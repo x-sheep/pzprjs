@@ -547,22 +547,10 @@
 	},
 
 	FailCode: {
-		slLoop: [
-			"斜線で輪っかができています。",
-			"There is a loop consisted in some slashes."
-		],
-		slLoopGiri: [
-			"'切'が含まれた線が輪っかになっています。",
-			"There is a loop that consists '切'."
-		],
-		slNotLoopWa: [
-			"'輪'が含まれた線が輪っかになっていません。",
-			"There is not a loop that consists '輪'."
-		],
-		crConnSlNe: [
-			"数字に繋がる線の数が間違っています。",
-			"A number is not equal to count of lines that is connected to it."
-		],
-		ceNoSlash: ["斜線がないマスがあります。", "There is an empty cell."]
+		ceNoSlash: "ceNoSlash.gokigen",
+		crConnSlNe: "crConnSlNe.gokigen",
+		slNotLoopWa: "slNotLoopWa.gokigen",
+		slLoopGiri: "slLoopGiri.gokigen",
+		slLoop: "slLoop.gokigen"
 	}
 });

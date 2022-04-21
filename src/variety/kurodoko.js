@@ -328,21 +328,8 @@
 	},
 
 	FailCode: {
-		cu2x2: [
-			"2x2の白マスのカタマリがあります。",
-			"There is a 2x2 block of unshaded cells."
-		],
-		circleNotPromontory: [
-			"丸のマスが岬になっていません。",
-			"A circle is not a dead end."
-		],
-		nonCirclePromontory: [
-			"丸のないマスが岬になっています。",
-			"A dead end has no circle."
-		],
-		csConnOut: [
-			"盤面の外につながっていない黒マスがあります。",
-			"Some shaded cells are not connected to the outside."
-		]
+		csConnOut: "csConnOut.kurodoko",
+		nonCirclePromontory: "nonCirclePromontory.kurodoko",
+		circleNotPromontory: "circleNotPromontory.kurodoko"
 	}
 });

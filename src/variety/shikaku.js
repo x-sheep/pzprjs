@@ -284,26 +284,11 @@
 	},
 
 	FailCode: {
-		bkNoNum: ["数字の入っていない領域があります。", "An area has no numbers."],
-		bkNumGe2: [
-			"1つの領域に2つ以上の数字が入っています。",
-			"An area has more than one number."
-		],
-		bkSizeNe: [
-			"数字と領域の大きさが違います。",
-			"The size of the area is not equal to the number."
-		],
-		bkNotRect: [
-			"四角形ではない領域があります。",
-			"An area is not a rectangle."
-		],
-		bkNotRect3: [
-			"大きさが3の倍数ではないのに四角形ではない領域があります。",
-			"An area whose size is not a multiple of three is not a rectangle."
-		],
-		bkNotLshape3: [
-			"大きさが3の倍数である領域がL字型になっていません。",
-			"An area whose size is a multiple of three is not L-shaped."
-		]
+		bkNotLshape3: "bkNotLshape3.shikaku",
+		bkNotRect3: "bkNotRect3.shikaku",
+		bkNotRect: "bkNotRect.shikaku",
+		bkSizeNe: "bkSizeNe.shikaku",
+		bkNumGe2: "bkNumGe2.shikaku",
+		bkNoNum: "bkNoNum.shikaku"
 	}
 });
