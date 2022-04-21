@@ -6,10 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html">
 <TITLE>ぱずぷれv3 FailCode一覧</TITLE>
 <style type="text/css">
-  code {
-    display: block;
-    white-space: pre;
-  }
+  #main span { display:inline-block; vertical-align:middle;}
+  #main span.code  { width:160px;}
+  #main span.pid   { width:120px;}
+  #main span.strja { width:480px;}
+  #main span.stren { width:480px;}
 </style>
 <script type="text/javascript">
 function loadAllScript(){
@@ -19,7 +20,7 @@ function loadAllScript(){
     if(!pzpr.custom[pid]){ loadedall = false;}
   });
   if(!loadedall){
-    setTimeout(loadAllScript,100);
+    setTimeout(loadAllScript,10);
   }
   else{
     bglist();
@@ -28,42 +29,47 @@ function loadAllScript(){
 function bglist(){
   var main = document.getElementById("main");
   var list = [], commons = {};
+  var FC = pzpr.common.FailCode.prototype;
+  for(var code in FC){
+    if(code==='common' || code==='pid' || !FC.hasOwnProperty(code)){ continue;}
+    var obj = {code:code, pid:'', ja:FC[code][0], en:FC[code][1]};
+    list.push(obj);
+    commons[code] = obj;
+  }
   for(var pid in pzpr.custom){
     var FC = pzpr.custom[pid].FailCode.prototype;
     for(var code in FC){
       if(code==='common' || code==='pid' || !FC.hasOwnProperty(code)){ continue;}
-      if(typeof(FC[code]) !== 'object'){ continue;}
+      if(!!commons[code] && commons[code].ja===FC[code][0] && commons[code].en===FC[code][1]){ continue;}
       list.push({code:code, pid:pid, ja:FC[code][0], en:FC[code][1]});
     }
   }
-
-  var sorted = list.sort(function(a,b){ return a.pid>=b.pid ? 1 : -1;});
   
-  var txt_en = "{\n";
-  var txt_ja = "{\n";
-  var txt_keys = "{\n";
-  for(var i in sorted){
+  for(var i in list.sort(function(a,b){ return a.code>=b.code ? 1 : -1;})){
     var obj = list[i];
-
-    var key = "    \"" + obj.code + "." + obj.pid + "\": ";
-    txt_en += key;
-    txt_en += JSON.stringify(obj.en);
-    txt_en += ",\n";
-
-    txt_ja += key;
-    txt_ja += JSON.stringify(obj.ja);
-    txt_ja += ",\n";
-
-    txt_keys += obj.code + ": " + "\"" + obj.code + "." + obj.pid + "\",\n";
-  }
-  txt_en += "}";
-  txt_ja += "}";
-  txt_keys += "}";
-  [txt_keys, txt_en, txt_ja].forEach(function(txt) {
-    var el = document.createElement('code');
-    el.appendChild(document.createTextNode(txt));
+    
+    var el = document.createElement('span');
+    el.appendChild(document.createTextNode(obj.code));
+    el.className = 'code';
     main.appendChild(el);
-  });
+    
+    el = document.createElement('span');
+    el.appendChild(document.createTextNode(obj.pid));
+    el.className = 'pid';
+    main.appendChild(el);
+    
+    el = document.createElement('span');
+    el.appendChild(document.createTextNode(obj.ja));
+    el.className = 'strja';
+    main.appendChild(el);
+    
+    el = document.createElement('span');
+    el.appendChild(document.createTextNode(obj.en));
+    el.className = 'stren';
+    main.appendChild(el);
+    
+    main.appendChild(document.createElement('br'));
+  }
 }
 window.addEventListener('load', loadAllScript, false);
 </script>
