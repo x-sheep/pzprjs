@@ -450,8 +450,5 @@
 				cell2.room.clist.seterr(1);
 			}
 		}
-	},
-	FailCode: {
-		bkNotRect: "bkNotRect.voxas"
 	}
 });

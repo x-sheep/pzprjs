@@ -627,14 +627,6 @@
 					"nmMissing"
 				);
 			}
-		},
-
-		FailCode: {
-			nmMissing: "nmMissing.lohkous",
-			bkUnknown: "bkUnknown.lohkous",
-			bdUnused: "bdUnused.lohkous",
-			bkNumGe2: "bkNumGe2.lohkous",
-			ceNoNum: "ceNoNum.lohkous"
 		}
 	});
 })();

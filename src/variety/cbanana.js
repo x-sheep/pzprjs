@@ -128,9 +128,5 @@
 				"cuRect"
 			);
 		}
-	},
-
-	FailCode: {
-		bkSizeNe: "bkSizeNe.cbanana"
 	}
 });

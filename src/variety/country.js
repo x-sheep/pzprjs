@@ -1596,57 +1596,5 @@
 				}
 			}
 		}
-	},
-
-	"FailCode@country": {
-		bkPassTwice: "bkPassTwice.country",
-		bkNoLine: "bkNoLine.country",
-		bkLineNe: "bkLineNe.country",
-		cbNoLine: "cbNoLine.country"
-	},
-	"FailCode@doubleback": {
-		bkNotPassTwice: "bkNotPassTwice.doubleback"
-	},
-	"FailCode@moonsun": {
-		bkMUPassedGt2: "bkMUPassedGt2.moonsun",
-		bkMSPassedGt2: "bkMSPassedGt2.moonsun",
-		bkNotAllMUPassed: "bkNotAllMUPassed.moonsun",
-		bkNotAllMSPassed: "bkNotAllMSPassed.moonsun",
-		bkNoMarksPassed: "bkNoMarksPassed.moonsun",
-		bkBothMarksPassed: "bkBothMarksPassed.moonsun",
-		bkNoLine: "bkNoLine.moonsun",
-		bkPassTwice: "bkPassTwice.moonsun"
-	},
-	"FailCode@onsen": {
-		lpNoNum: "lpNoNum.onsen",
-		lpNumGt2: "lpNumGt2.onsen",
-		lnIsolate: "lnIsolate.onsen",
-		bkNoLine: "bkNoLine.onsen",
-		blLineDiff: "blLineDiff.onsen",
-		blLineNe: "blLineNe.onsen",
-		blPassTwice: "blPassTwice.onsen"
-	},
-	"FailCode@maxi": {
-		blLineLong: "blLineLong.maxi",
-		blLineShort: "blLineShort.maxi"
-	},
-	"FailCode@detour": {
-		blWrongTurns: "blWrongTurns.detour"
-	},
-	"FailCode@dotchi": {
-		lnIsolate: "lnIsolate.dotchi",
-		lnOnShade: "lnOnShade.dotchi",
-		bkNoMatch: "bkNoMatch.dotchi"
-	},
-	"FailCode@ovotovata": {
-		blNoNumber: "blNoNumber.ovotovata",
-		blNoHatena: "blNoHatena.ovotovata",
-		bkNoLine: "bkNoLine.ovotovata"
-	},
-	"FailCode@rassi": {
-		blPassTwice: "blPassTwice.rassi",
-		lnDeadEndAround: "lnDeadEndAround.rassi",
-		laLoop: "laLoop.rassi",
-		laOnBorder: "laOnBorder.rassi"
 	}
 });

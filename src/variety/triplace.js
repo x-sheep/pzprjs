@@ -444,12 +444,5 @@
 			}
 			return result;
 		}
-	},
-
-	FailCode: {
-		asLblockNe: [
-			"数字の下か右にあるまっすぐのブロックの数が間違っています。",
-			"The number of straight areas below or to the right is not correct."
-		]
 	}
 });

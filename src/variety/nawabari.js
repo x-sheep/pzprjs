@@ -481,12 +481,5 @@
 				l2.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		bkSameTouch: "bkSameTouch.nawabari",
-		bkNumGe2: "bkNumGe2.nawabari",
-		bkNoNum: "bkNoNum.nawabari",
-		nmBorderNe: "nmBorderNe.nawabari"
 	}
 });

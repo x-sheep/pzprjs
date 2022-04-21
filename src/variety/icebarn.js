@@ -1384,17 +1384,5 @@
 
 			return info;
 		}
-	},
-
-	FailCode: {
-		cuNoLine: "cuNoLine.icebarn",
-		lrReverse: "lrReverse.icebarn",
-		lrOffField: "lrOffField.icebarn",
-		lrDeadEnd: "lrDeadEnd.icebarn",
-		stNoLine: "stNoLine.icebarn",
-		stInvalid: "stInvalid.icebarn",
-		nmUnpass: "nmUnpass.icebarn",
-		lrOrder: "lrOrder.icebarn",
-		bkNoLine: "bkNoLine.icebarn"
 	}
 });

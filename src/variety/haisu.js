@@ -978,14 +978,5 @@
 				);
 			}, "lnIsolate");
 		}
-	},
-
-	"FailCode@bdwalk": {
-		lnIsolate: "lnIsolate.bdwalk",
-		bdwGroundFloor: "bdwGroundFloor.bdwalk",
-		bdwSkipElevator: "bdwSkipElevator.bdwalk",
-		bdwInvalidUp: "bdwInvalidUp.bdwalk",
-		bdwInvalidDown: "bdwInvalidDown.bdwalk",
-		bdwMismatch: "bdwMismatch.bdwalk"
 	}
 });

@@ -534,12 +534,5 @@
 				});
 			}
 		}
-	},
-
-	FailCode: {
-		bkNotSymShade: "bkNotSymShade.ayeheya",
-		bkNotSymRoom: "bkNotSymRoom.ayeheya",
-		bkSubdivided: "bkSubdivided.oneroom",
-		bdDoorsGt: "bdDoorsGt.oneroom"
 	}
 });

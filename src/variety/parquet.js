@@ -394,10 +394,5 @@
 				area.clist.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		bkPluralShade: "bkPluralShade.parquet",
-		csLoop: "csLoop.parquet"
 	}
 });

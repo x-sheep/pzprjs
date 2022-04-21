@@ -325,11 +325,5 @@
 				clist.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		csConnOut: "csConnOut.kurodoko",
-		nonCirclePromontory: "nonCirclePromontory.kurodoko",
-		circleNotPromontory: "circleNotPromontory.kurodoko"
 	}
 });

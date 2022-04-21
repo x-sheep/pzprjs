@@ -148,8 +148,19 @@ pzpr.classmgr.makeCommon({
 				return textlist[langcode].complete;
 			}
 			for (var i = 0; i < this.length; i++) {
-				var key =
-					this[i] in puzzle.faillist ? puzzle.faillist[this[i]] : this[i];
+				var key = this[i];
+
+				var specKey = key + "." + this.pid;
+				var baseKey = key + "." + this.pidbase;
+
+				if (key in puzzle.faillist) {
+					key = puzzle.faillist[key];
+				} else if (specKey in textlist.en) {
+					key = specKey;
+				} else if (baseKey in textlist.en) {
+					key = baseKey;
+				}
+
 				var textitem = textlist[langcode][key] || textlist[langcode].invalid;
 				texts.push(textitem);
 			}

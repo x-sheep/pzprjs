@@ -281,14 +281,5 @@
 				clist.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		bkNotLshape3: "bkNotLshape3.shikaku",
-		bkNotRect3: "bkNotRect3.shikaku",
-		bkNotRect: "bkNotRect.shikaku",
-		bkSizeNe: "bkSizeNe.shikaku",
-		bkNumGe2: "bkNumGe2.shikaku",
-		bkNoNum: "bkNoNum.shikaku"
 	}
 });

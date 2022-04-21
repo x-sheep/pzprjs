@@ -441,11 +441,5 @@
 				"bkSizeNe"
 			);
 		}
-	},
-
-	FailCode: {
-		bkSizeNe: "bkSizeNe.tontti",
-		lnAdjacent: "lnAdjacent.tontti",
-		lnOverlap: "lnOverlap.tontti"
 	}
 });

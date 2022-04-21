@@ -335,13 +335,5 @@
 				}
 			}
 		}
-	},
-
-	FailCode: {
-		nmNotConsecNeighbors: "nmNotConsecNeighbors.ripple",
-		nmAround: "nmAround.ripple",
-		nmSmallGap: "nmSmallGap.ripple",
-		bkSmallOnBig: "bkSmallOnBig.ripple",
-		bkDupNum: "bkDupNum.ripple"
 	}
 });

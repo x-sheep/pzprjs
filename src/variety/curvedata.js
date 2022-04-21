@@ -1495,11 +1495,5 @@
 			}
 			return false;
 		}
-	},
-
-	FailCode: {
-		shIncorrect: "shIncorrect.curvedata",
-		shMultiple: "shMultiple.curvedata",
-		shNone: "shNone.curvedata"
 	}
 });

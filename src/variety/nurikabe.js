@@ -550,23 +550,9 @@
 		}
 	},
 
-	FailCode: {
-		bkNoNum: "bkNoNum.nurikabe",
-		bkNumGe2: "bkNumGe2.nurikabe",
-		bkSizeNe: "bkSizeNe.nurikabe"
-	},
-	"FailCode@nuribou": {
-		csWidthGt1: "csWidthGt1.nuribou",
-		csCornerSize: "csCornerSize.nuribou"
-	},
-
 	"FailCode@mochikoro,mochinyoro": {
 		cuNotRect: "cuNotRect.mochikoro",
 		csRect: "csRect.mochikoro",
 		csDivide8: "csDivide8.mochikoro"
-	},
-
-	"FailCode@canal": {
-		nmShadeViewNe: "nmShadeViewNe.canal"
 	}
 });

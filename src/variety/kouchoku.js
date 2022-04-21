@@ -1552,17 +1552,5 @@
 			"checkCrossLine",
 			"checkAngle"
 		]
-	},
-
-	FailCode: {
-		brNoLine: "brNoLine.kouchoku",
-		nmLineLt2: "nmLineLt2.kouchoku",
-		nmNotConseq: "nmNotConseq.kouchoku",
-		nmConnDiff: "nmConnDiff.kouchoku",
-		lnWrongAngle: "lnWrongAngle.kouchoku",
-		lnRightAngle: "lnRightAngle.kouchoku",
-		lnOverlap: "lnOverlap.kouchoku",
-		lnPassOver: "lnPassOver.kouchoku",
-		lnIsolate: "lnIsolate.kouchoku"
 	}
 });

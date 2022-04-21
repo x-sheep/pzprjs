@@ -410,13 +410,5 @@
 				}, "ceNoNum");
 			}
 		}
-	},
-
-	FailCode: {
-		bkNotSymmRoom: "bkNotSymmRoom.fillomino",
-		bsSameNum: "bsSameNum.fillomino",
-		bkMixedNum: "bkMixedNum.fillomino",
-		bkSizeGt: "bkSizeGt.fillomino",
-		bkSizeLt: "bkSizeLt.fillomino"
 	}
 });

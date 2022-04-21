@@ -781,15 +781,5 @@
 				return cell.qans === 33;
 			}).length;
 		}
-	},
-
-	FailCode: {
-		anHatenaNe: "anHatenaNe.crossstitch",
-		anNumberNe: "anNumberNe.crossstitch",
-		lnPlLoop: "lnPlLoop.crossstitch",
-		lnCross: "lnCross.crossstitch",
-		nmHatenaNe: "nmHatenaNe.crossstitch",
-		nmCircleNe: "nmCircleNe.crossstitch",
-		cxAdjacent: "cxAdjacent.crossstitch"
 	}
 });

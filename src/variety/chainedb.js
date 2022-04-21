@@ -311,10 +311,5 @@
 				}
 			}
 		}
-	},
-
-	FailCode: {
-		bkNoChain: "bkNoChain.chainedb",
-		bsSameShape: "bsSameShape.chainedb"
 	}
 });

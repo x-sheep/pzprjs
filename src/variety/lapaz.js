@@ -258,10 +258,5 @@
 			}
 			return true;
 		}
-	},
-	FailCode: {
-		nmShadeNe: "nmShadeNe.lapaz",
-		nmLt1: "nmLt1.lapaz",
-		bkUnshade: "bkUnshade.lapaz"
 	}
 });

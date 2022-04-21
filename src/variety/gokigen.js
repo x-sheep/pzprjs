@@ -544,13 +544,5 @@
 				errclist.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		ceNoSlash: "ceNoSlash.gokigen",
-		crConnSlNe: "crConnSlNe.gokigen",
-		slNotLoopWa: "slNotLoopWa.gokigen",
-		slLoopGiri: "slLoopGiri.gokigen",
-		slLoop: "slLoop.gokigen"
 	}
 });

@@ -169,14 +169,5 @@
 				"bkWidthGt1"
 			);
 		}
-	},
-
-	FailCode: {
-		bsSizeEq: "bsSizeEq.fillmat",
-		bkLenGt4: "bkLenGt4.fillmat",
-		bkSizeEq: "bkSizeEq.fillmat",
-		bkSizeNe: "bkSizeNe.fillmat",
-		bkNumGe2: "bkNumGe2.fillmat",
-		bkNoNum: "bkNoNum.fillmat"
 	}
 });

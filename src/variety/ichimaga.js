@@ -155,12 +155,5 @@
 				return !path.cells[1].isnull && path.ccnt > 1;
 			}, "lcCurveGt1");
 		}
-	},
-
-	FailCode: {
-		lcCurveGt1: "lcCurveGt1.ichimaga",
-		lcSameNum: "lcSameNum.ichimaga",
-		nmLineNe: "nmLineNe.ichimaga",
-		nmNoLine: "nmNoLine.ichimaga"
 	}
 });

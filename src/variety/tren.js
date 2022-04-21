@@ -312,12 +312,5 @@
 				border.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		bkDivide: "bkDivide.tren",
-		bdUnused: "bdUnused.tren",
-		nmMoveNe: "nmMoveNe.tren",
-		nmOutsideTren: "nmOutsideTren.tren"
 	}
 });

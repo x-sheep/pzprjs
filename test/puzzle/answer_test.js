@@ -15,11 +15,12 @@ pzpr.variety.each(function(pid) {
 				it("Check: " + testcase[0], function() {
 					puzzle.open(testcase[1]);
 					var failcode = puzzle.check(true);
-					assert.notEqual(failcode.gettext("en"), pzpr.failcodes.en.invalid);
 					assert.equal(failcode[0], testcase[0]);
 					if (testcase.length > 2 && "undecided" in testcase[2]) {
 						assert.equal(failcode.undecided, testcase[2].undecided);
 					}
+					assert.notEqual(failcode.gettext("en"), pzpr.failcodes.en.invalid);
+					assert.notEqual(failcode.gettext("ja"), pzpr.failcodes.ja.invalid);
 				});
 			});
 		});

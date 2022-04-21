@@ -675,12 +675,5 @@
 				rooms[id].clist.seterr(1);
 			}
 		}
-	},
-
-	FailCode: {
-		ciNotOnCnr: "ciNotOnCnr.loute",
-		arNotPtCnr: "arNotPtCnr.loute",
-		arBlkEdge: "arBlkEdge.loute",
-		bkNotLshape: "bkNotLshape.loute"
 	}
 });

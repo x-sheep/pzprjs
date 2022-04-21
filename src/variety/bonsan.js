@@ -704,37 +704,5 @@
 				"bkSize1"
 			);
 		}
-	},
-
-	FailCode: {
-		nmNoMove: "nmNoMove.bonsan",
-		nmConnected: "nmConnected.bonsan",
-		laIsolate: "laIsolate.bonsan",
-		laOnNum: "laOnNum.bonsan",
-		brObjNotSym: "brObjNotSym.bonsan",
-		bkObjNotSym: "bkObjNotSym.bonsan",
-		bkNoNum: "bkNoNum.bonsan"
-	},
-	"FailCode@rectslider": {
-		bkSize1: [
-			"黒マスが一つで孤立しています。",
-			"There is a isolated shaded cells."
-		],
-		laOnNum: [
-			"黒マスの上を線が通過しています。",
-			"A line goes through a shaded cell."
-		],
-		laIsolate: [
-			"黒マスにつながっていない線があります。",
-			"A line doesn't connect any shaded cell."
-		],
-		nmConnected: [
-			"黒マスが繋がっています。",
-			"There are connected shaded cells."
-		],
-		nmNoMove: [
-			"黒マスから線が出ていません。",
-			"A shaded cell doesn't start any line."
-		]
 	}
 });

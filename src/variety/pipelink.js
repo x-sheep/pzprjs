@@ -711,13 +711,5 @@
 				}
 			}
 		}
-	},
-	FailCode: {
-		lpNoNum: "lpNoNum.pipelink",
-		lpSepNum: "lpSepNum.pipelink",
-		lpPlNum: "lpPlNum.pipelink",
-		lnCrossOnNum: "lnCrossOnNum.pipelink",
-		lnCurveOnCir: "lnCurveOnCir.pipelink",
-		lnCrossExCir: "lnCrossExCir.pipelink"
 	}
 });

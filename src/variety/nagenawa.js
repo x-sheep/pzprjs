@@ -332,12 +332,5 @@
 			}
 			return true;
 		}
-	},
-
-	FailCode: {
-		cuNoLine: "cuNoLine.nagenawa",
-		bkLineLt: "bkLineLt.nagenawa",
-		bkLineGt: "bkLineGt.nagenawa",
-		lnNotRect: "lnNotRect.nagenawa"
 	}
 });
