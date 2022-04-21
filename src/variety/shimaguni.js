@@ -483,5 +483,11 @@
 				"csNotRect"
 			);
 		}
+	},
+
+	"FailCode@stostone": {
+		bkShadeDivide: "bkShadeDivide",
+		bkNoShade: "bkNoShade",
+		bkShadeNe: "bkShadeNe"
 	}
 });

@@ -650,5 +650,10 @@
 
 			return (this._info.parrow = ainfo);
 		}
+	},
+
+	"FailCode@toichika2": {
+		bkNumGe2: "bkNumGe2",
+		bkNoNum: "bkNoNum"
 	}
 });
