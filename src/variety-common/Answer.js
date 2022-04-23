@@ -1128,7 +1128,7 @@ pzpr.classmgr.makeCommon({
 		//     shape, counting all orientations as equal.
 		//--------------------------------------------------------------------------------
 		isDifferentShapeBlock: function(area1, area2) {
-			if (area1.size !== area2.size) {
+			if (area1.clist.length !== area2.clist.length) {
 				return true;
 			}
 			var s1 = area1.clist.getBlockShapes(),

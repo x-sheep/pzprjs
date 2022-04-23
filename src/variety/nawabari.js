@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["nawabari", "fourcells", "fivecells", "heteromino"], {
+})(["nawabari", "fourcells", "fivecells", "heteromino", "pentominous"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -33,6 +33,8 @@
 		mouseinput_other: function() {
 			if (this.inputMode === "empty") {
 				this.inputempty();
+			} else if (this.inputMode.indexOf("letter") === 0 && this.mousestart) {
+				this.inputqnum();
 			}
 		},
 		inputempty: function() {
@@ -58,6 +60,12 @@
 			play: ["border", "subline"]
 		}
 	},
+	"MouseEvent@pentominous": {
+		inputModes: {
+			edit: ["empty", "letter", "letter-", "clear"],
+			play: ["border", "letter", "letter-", "subline"]
+		}
+	},
 	"MouseEvent@heteromino": {
 		inputModes: { edit: ["empty", "clear"], play: ["border", "subline"] }
 	},
@@ -71,24 +79,49 @@
 	//---------------------------------------------------------
 	// キーボード入力系
 	KeyEvent: {
-		enablemake: true
+		enablemake: true,
+		key_inputvalid: function() {
+			var cell = this.cursor.getc();
+			if (!cell.isnull) {
+				cell.setValid(cell.ques !== 7 ? 7 : 0);
+			}
+		}
 	},
 
 	"KeyEvent@fourcells,fivecells,heteromino": {
 		keyinput: function(ca) {
 			if (ca === "w") {
-				this.key_inputvalid(ca);
+				this.key_inputvalid();
 			} else if (this.pid !== "heteromino") {
 				this.key_inputqnum(ca);
 			}
-		},
-		key_inputvalid: function(ca) {
-			if (ca === "w") {
-				var cell = this.cursor.getc();
-				if (!cell.isnull) {
-					cell.setValid(cell.ques !== 7 ? 7 : 0);
+		}
+	},
+
+	"KeyEvent@pentominous": {
+		enableplay: true,
+		keyinput: function(ca) {
+			// TODO add subnumber support
+			var cell = this.cursor.getc();
+			var idx = this.klass.Cell.prototype.letters.toLowerCase().indexOf(ca);
+			if (this.puzzle.playmode) {
+				if (idx !== -1) {
+					cell.setQans(idx);
+				} else if (ca === "BS" || ca === "-") {
+					cell.setQans(-1);
+				}
+			} else {
+				if (idx !== -1) {
+					cell.setQnum(idx);
+				} else if (ca === "q") {
+					this.key_inputvalid();
+				} else if (ca === "-") {
+					cell.setQnum(-2);
+				} else if (ca === "BS" || ca === "-") {
+					cell.setQnum(-1);
 				}
 			}
+			cell.draw();
 		}
 	},
 
@@ -129,6 +162,12 @@
 	"Cell@fivecells": {
 		maxnum: 3,
 		minnum: 0
+	},
+	"Cell@pentominous": {
+		letters: "FILNPTUVWXYZ",
+
+		minnum: 0,
+		maxnum: 11
 	},
 	"CellList@heteromino": {
 		triminoShape: function() {
@@ -174,11 +213,11 @@
 	Board: {
 		hasborder: 2
 	},
-	"Board@fourcells,fivecells": {
+	"Board@fourcells,fivecells,pentominous": {
 		initBoardSize: function(col, row) {
 			this.common.initBoardSize.call(this, col, row);
 
-			var odd = (col * row) % (this.pid === "fivecells" ? 5 : 4);
+			var odd = (col * row) % (this.pid === "fourcells" ? 4 : 5);
 			if (odd >= 1) {
 				this.getc(this.minbx + 1, this.minby + 1).ques = 7;
 			}
@@ -219,7 +258,17 @@
 				this.drawChassis();
 			}
 
-			this.drawTarget();
+			if (this.pid === "pentominous") {
+				this.drawAnsNumbers();
+				// TODO redraw cursor when changing any mouse mode
+				this.drawCursor(
+					true,
+					this.puzzle.editmode ||
+						this.puzzle.mouse.inputMode.indexOf("letter") === 0
+				);
+			} else {
+				this.drawTarget();
+			}
 		},
 
 		getQuesBorderColor: function(border) {
@@ -259,6 +308,12 @@
 				return "black";
 			}
 			return this.getBGCellColor_error1(cell);
+		}
+	},
+
+	"Graphic@pentominous": {
+		getNumberTextCore: function(num) {
+			return num === -2 ? "?" : this.klass.Cell.prototype.letters[num] || "";
 		}
 	},
 
@@ -338,6 +393,24 @@
 			this.outbstr += cm;
 		}
 	},
+	"Encode@pentominous": {
+		decodePzpr: function(type) {
+			var bd = this.board;
+			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+				if (val === 12) {
+					bd.cell[c].ques = 7;
+				} else {
+					bd.cell[c].qnum = val;
+				}
+			});
+		},
+		encodePzpr: function(type) {
+			var bd = this.board;
+			this.genericEncodeNumber16(bd.cell.length, function(c) {
+				return bd.cell[c].isEmpty() ? 12 : bd.cell[c].qnum;
+			});
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
@@ -352,6 +425,7 @@
 				}
 			});
 			this.decodeBorderAns();
+			// TODO save answer marks
 		},
 		encodeData: function() {
 			if (this.pid === "fourcells") {
@@ -369,6 +443,7 @@
 				}
 			});
 			this.encodeBorderAns();
+			// TODO save answer marks
 		}
 	},
 
@@ -381,12 +456,13 @@
 			"checkDoubleNumber@nawabari",
 			"checkOverThreeCells@heteromino",
 			"checkOverFourCells@fourcells",
-			"checkOverFiveCells@fivecells",
-			"checkdir4BorderAns@!heteromino",
+			"checkOverFiveCells@fivecells,pentominous",
+			"checkdir4BorderAns@!heteromino,!pentominous",
+			"checkDifferentShapeBlock@pentominous",
 			"checkBorderDeadend+",
 			"checkLessThreeCells@heteromino",
 			"checkLessFourCells@fourcells",
-			"checkLessFiveCells@fivecells",
+			"checkLessFiveCells@fivecells,pentominous",
 			"checkTouchDifferent@heteromino"
 		],
 
@@ -479,6 +555,27 @@
 				}
 				l1.seterr(1);
 				l2.seterr(1);
+			}
+		},
+
+		checkDifferentShapeBlock: function() {
+			var sides = this.board.roommgr.getSideAreaInfo();
+			for (var i = 0; i < sides.length; i++) {
+				var area1 = sides[i][0],
+					area2 = sides[i][1];
+				if (area1.clist.length !== 5 || area2.clist.length !== 5) {
+					continue;
+				}
+				if (this.isDifferentShapeBlock(area1, area2)) {
+					continue;
+				}
+
+				this.failcode.add("bsSameShape");
+				if (this.checkOnly) {
+					break;
+				}
+				area1.clist.seterr(1);
+				area2.clist.seterr(1);
 			}
 		}
 	}
