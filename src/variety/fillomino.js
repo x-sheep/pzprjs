@@ -270,6 +270,10 @@
 		initBoardSize: function(col, row) {
 			this.common.initBoardSize.call(this, col, row);
 
+			if (this.puzzle.playeronly) {
+				return;
+			}
+
 			var odd = (col * row) % 5;
 			if (odd >= 1) {
 				this.getc(this.minbx + 1, this.minby + 1).ques = 7;
