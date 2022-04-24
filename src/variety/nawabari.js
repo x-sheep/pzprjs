@@ -100,28 +100,25 @@
 
 	"KeyEvent@pentominous": {
 		enableplay: true,
+
 		keyinput: function(ca) {
-			// TODO add subnumber support
-			var cell = this.cursor.getc();
-			var idx = this.klass.Cell.prototype.letters.toLowerCase().indexOf(ca);
-			if (this.puzzle.playmode) {
-				if (idx !== -1) {
-					cell.setQans(idx);
-				} else if (ca === "BS" || ca === "-") {
-					cell.setQans(-1);
-				}
+			if (this.puzzle.editmode && ca === "q") {
+				this.key_inputvalid();
 			} else {
-				if (idx !== -1) {
-					cell.setQnum(idx);
-				} else if (ca === "q") {
-					this.key_inputvalid();
-				} else if (ca === "-") {
-					cell.setQnum(-2);
-				} else if (ca === "BS" || ca === "-") {
-					cell.setQnum(-1);
-				}
+				this.key_inputqnum(ca);
 			}
-			cell.draw();
+		},
+
+		getNewNumber: function(cell, ca, cur) {
+			var idx = this.klass.Cell.prototype.letters.toLowerCase().indexOf(ca);
+			if (idx !== -1) {
+				return idx;
+			} else if (ca === "-") {
+				return -2;
+			} else if (ca === "BS" || ca === "-") {
+				return -1;
+			}
+			return null;
 		}
 	},
 
@@ -164,6 +161,7 @@
 		minnum: 0
 	},
 	"Cell@pentominous": {
+		enableSubNumberArray: true,
 		letters: "FILNPTUVWXYZ",
 		lettershapes: [
 			"3:001111010",
@@ -247,6 +245,13 @@
 		}
 	},
 
+	"Board@pentominous#1": {
+		subclear: function() {
+			this.cell.ansclear();
+			this.common.subclear.call(this);
+		}
+	},
+
 	AreaRoomGraph: {
 		enabled: true
 	},
@@ -273,6 +278,8 @@
 			}
 
 			if (this.pid === "pentominous") {
+				this.drawTargetSubNumber();
+				this.drawSubNumbers();
 				this.drawAnsNumbers();
 				// TODO redraw cursor when changing any mouse mode
 				this.drawCursor(
@@ -328,6 +335,10 @@
 	"Graphic@pentominous": {
 		getNumberTextCore: function(num) {
 			return num === -2 ? "?" : this.klass.Cell.prototype.letters[num] || "";
+		},
+
+		getAnsNumberColor: function(cell) {
+			return !cell.trial ? this.subcolor : this.trialcolor;
 		}
 	},
 
@@ -439,7 +450,7 @@
 				}
 			});
 			this.decodeBorderAns();
-			// TODO save answer marks
+			this.decodeCellAnumsub();
 		},
 		encodeData: function() {
 			if (this.pid === "fourcells") {
@@ -457,7 +468,7 @@
 				}
 			});
 			this.encodeBorderAns();
-			// TODO save answer marks
+			this.encodeCellAnumsub();
 		}
 	},
 
