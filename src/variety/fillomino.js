@@ -79,12 +79,16 @@
 	},
 	"MouseEvent@pentominous": {
 		inputModes: {
-			edit: ["empty", "number", "clear"],
-			play: ["copynum", "number", "clear", "border", "subline"]
+			edit: ["empty", "letter", "letter-", "clear"],
+			play: ["copyletter", "letter", "letter-", "clear", "border", "subline"]
 		},
 
 		mouseinput_other: function() {
-			if (this.inputMode === "empty") {
+			if (this.inputMode.indexOf("letter") === 0) {
+				this.inputqnum();
+			} else if (this.inputMode === "copyletter") {
+				this.dragnumber_fillomino();
+			} else if (this.inputMode === "empty") {
 				this.inputempty();
 			}
 		},
@@ -195,7 +199,7 @@
 				return idx;
 			} else if (ca === "-") {
 				return -2;
-			} else if (ca === "BS" || ca === "-") {
+			} else if (ca === "BS" || ca === " ") {
 				return -1;
 			}
 			return null;
