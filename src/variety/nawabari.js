@@ -165,6 +165,20 @@
 	},
 	"Cell@pentominous": {
 		letters: "FILNPTUVWXYZ",
+		lettershapes: [
+			"3:001111010",
+			"1:11111",
+			"2:01010111",
+			"2:01011110",
+			"2:011111",
+			"3:001111001",
+			"2:110111",
+			"3:001001111",
+			"3:001011110",
+			"3:010111010",
+			"2:01011101",
+			"3:001111100"
+		],
 
 		minnum: 0,
 		maxnum: 11
@@ -458,6 +472,7 @@
 			"checkOverFourCells@fourcells",
 			"checkOverFiveCells@fivecells,pentominous",
 			"checkdir4BorderAns@!heteromino,!pentominous",
+			"checkLetterBlock@pentominous",
 			"checkDifferentShapeBlock@pentominous",
 			"checkBorderDeadend+",
 			"checkLessThreeCells@heteromino",
@@ -556,6 +571,17 @@
 				l1.seterr(1);
 				l2.seterr(1);
 			}
+		},
+
+		checkLetterBlock: function() {
+			this.checkAllCell(function(cell) {
+				return (
+					cell.qnum >= 0 &&
+					cell.room.clist.length === 5 &&
+					cell.lettershapes[cell.qnum] !==
+						cell.room.clist.getBlockShapes().canon
+				);
+			}, "nmShapeNe");
 		},
 
 		checkDifferentShapeBlock: function() {
