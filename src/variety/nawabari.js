@@ -33,8 +33,6 @@
 		mouseinput_other: function() {
 			if (this.inputMode === "empty") {
 				this.inputempty();
-			} else if (this.inputMode.indexOf("letter") === 0 && this.mousestart) {
-				this.inputqnum();
 			}
 		},
 		inputempty: function() {
@@ -60,12 +58,6 @@
 			play: ["border", "subline"]
 		}
 	},
-	"MouseEvent@pentominous": {
-		inputModes: {
-			edit: ["empty", "letter", "letter-", "clear"],
-			play: ["border", "letter", "letter-", "subline"]
-		}
-	},
 	"MouseEvent@heteromino": {
 		inputModes: { edit: ["empty", "clear"], play: ["border", "subline"] }
 	},
@@ -79,21 +71,23 @@
 	//---------------------------------------------------------
 	// キーボード入力系
 	KeyEvent: {
-		enablemake: true,
-		key_inputvalid: function() {
-			var cell = this.cursor.getc();
-			if (!cell.isnull) {
-				cell.setValid(cell.ques !== 7 ? 7 : 0);
-			}
-		}
+		enablemake: true
 	},
 
 	"KeyEvent@fourcells,fivecells,heteromino": {
 		keyinput: function(ca) {
 			if (ca === "w") {
-				this.key_inputvalid();
+				this.key_inputvalid(ca);
 			} else if (this.pid !== "heteromino") {
 				this.key_inputqnum(ca);
+			}
+		},
+		key_inputvalid: function(ca) {
+			if (ca === "w") {
+				var cell = this.cursor.getc();
+				if (!cell.isnull) {
+					cell.setValid(cell.ques !== 7 ? 7 : 0);
+				}
 			}
 		}
 	},
