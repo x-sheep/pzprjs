@@ -252,7 +252,7 @@
 				cell2 = this.sidecell[1];
 			var num1 = cell1.getNum(),
 				num2 = cell2.getNum();
-			return num1 > 0 && num2 > 0 && num1 !== num2;
+			return num1 >= 0 && num2 >= 0 && num1 !== num2;
 		},
 
 		isQuesBorder: function() {
