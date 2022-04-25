@@ -229,6 +229,12 @@
 			"3:001111100"
 		],
 
+		prehook: {
+			anum: function(num) {
+				return !this.isValid();
+			}
+		},
+
 		setValid: function(inputData) {
 			this.setQues(inputData);
 			this.setQnum(-1);
