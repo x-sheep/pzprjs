@@ -616,9 +616,9 @@
 		checkLetterBlock: function() {
 			this.checkAllCell(function(cell) {
 				return (
-					cell.qnum >= 0 &&
+					cell.isNum() &&
 					cell.nblk.clist.length === 5 &&
-					cell.lettershapes[cell.qnum] !==
+					cell.lettershapes[cell.getNum()] !==
 						cell.nblk.clist.getBlockShapes().canon
 				);
 			}, "nmShapeNe");
