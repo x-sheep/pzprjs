@@ -1203,6 +1203,18 @@ pzpr.classmgr.makeCommon({
 			}
 
 			return errclist;
+		},
+
+		//--------------------------------------------------------------------------------
+		// ans.checkBankPiecesAvailable(): Check if all pieces on the board are
+		// represented in the Bank, and no counts are exceeded.
+		// ans.checkBankPiecesUsed(): Check if all piece count requirements are met.
+		//--------------------------------------------------------------------------------
+		checkBankPiecesAvailable: function() {
+			// TODO implement
+		},
+		checkBankPiecesUsed: function() {
+			// TODO implement
 		}
 	}
 });

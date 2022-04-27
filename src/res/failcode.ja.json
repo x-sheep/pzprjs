@@ -280,6 +280,8 @@
     "ciNotOnCnr.loute": "白丸がブロックの角にありません。",
     "circleNotPromontory.kurodoko": "丸のマスが岬になっていません。",
     "circleUnshade.snake": "塗られていない丸があります。",
+    "circleShade.statuepark": "A white circle is shaded.",
+    "circleUnshade.statuepark": "A black circle is not shaded.",
     "circNoLine.balance": "線が通っていない丸があります。",
     "complete": "正解です！",
     "crConnSlNe.gokigen": "数字に繋がる線の数が間違っています。",

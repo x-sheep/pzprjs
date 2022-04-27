@@ -57,6 +57,10 @@ pzpr.classmgr.makeCommon({
 			this.ublkmgr = this.addInfoList(classes.AreaUnshadeGraph); // 白マス情報を保持する
 			this.nblkmgr = this.addInfoList(classes.AreaNumberGraph); // 数字情報を保持する
 
+			if (classes.Bank.prototype.enabled) {
+				this.bank = new classes.Bank();
+			}
+
 			this.addExtraInfo();
 
 			this.exec = new classes.BoardExec();
@@ -124,6 +128,14 @@ pzpr.classmgr.makeCommon({
 		},
 		createExtraObject: function() {},
 		initExtraObject: function(col, row) {},
+
+		//---------------------------------------------------------------------------
+		// bd.getBankPiecesInGrid(): Returns an array of [strings, PieceList] tuples
+		// which can be compared to the pieces inside the bank.
+		//---------------------------------------------------------------------------
+		getBankPiecesInGrid: function() {
+			return [];
+		},
 
 		//---------------------------------------------------------------------------
 		// bd.initGroup()     数を比較して、オブジェクトの追加か削除を行う

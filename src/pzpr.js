@@ -18,6 +18,7 @@ exports.files = [
 	"puzzle/Piece",
 	"puzzle/PieceList",
 	"puzzle/Board",
+	"puzzle/Bank",
 	"puzzle/BoardExec",
 	"puzzle/GraphBase",
 	"puzzle/LineManager",
