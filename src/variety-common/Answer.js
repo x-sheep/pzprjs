@@ -1210,10 +1210,38 @@ pzpr.classmgr.makeCommon({
 		// represented in the Bank, and no counts are exceeded.
 		// ans.checkBankPiecesUsed(): Check if all piece count requirements are met.
 		//--------------------------------------------------------------------------------
+		checkBankPiecesInvalid: function() {
+			if (!this._info.boardpieces) {
+				this._info.boardpieces = this.board.getBankPiecesInGrid();
+			}
+
+			for (var p = 0; p < this._info.boardpieces.length; p++) {
+				var piece = this._info.boardpieces[p];
+				var found = false;
+				for (var b = 0; b < this.board.bank.pieces.length; b++ && !found) {
+					if (piece[0] === this.board.bank.pieces[b].canonize()) {
+						found = true;
+					}
+				}
+				if (!found) {
+					this.failcode.add("bankInvalid");
+					if (this.checkOnly) {
+						break;
+					}
+					piece[1].seterr(1);
+				}
+			}
+		},
 		checkBankPiecesAvailable: function() {
+			if (!this._info.boardpieces) {
+				this._info.boardpieces = this.board.getBankPiecesInGrid();
+			}
 			// TODO implement
 		},
 		checkBankPiecesUsed: function() {
+			if (!this._info.boardpieces) {
+				this._info.boardpieces = this.board.getBankPiecesInGrid();
+			}
 			// TODO implement
 		}
 	}

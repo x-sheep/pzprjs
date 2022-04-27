@@ -8,22 +8,34 @@ pzpr.classmgr.makeCommon({
 		// Valid values are: boolean | function(): boolean
 		allowAdd: false,
 
-		// One entry object contains the following:
+		// One entry contains one of these:
 		// {
+		//   title: string
+		//   shortkey: string
+		//   constant: [string]
+		// } | {
 		//   title: string
 		//   allowsInput: boolean
 		//   func: string
 		// }
 		presets: [],
 
-		pieces: [],
+		// The current list of BankPiece objects.
+		pieces: null,
 
-		canonize: function(piece) {
-			return this.serialize(piece);
+		defaultPreset: function() {
+			return [];
 		},
 
-		serialize: function(piece) {
-			return "";
+		initialize: function(pieces) {
+			this.pieces = [];
+			if (!pieces) {
+				return;
+			}
+
+			for (var p in pieces) {
+				this.pieces.push(this.deserialize(pieces[p]));
+			}
 		},
 
 		deserialize: function(str) {
@@ -37,6 +49,14 @@ pzpr.classmgr.makeCommon({
 		// For editing purposes. The amount that the count can vary between when editing.
 		mincount: 1,
 		maxcount: 1,
+
+		canonize: function() {
+			return this.serialize();
+		},
+
+		serialize: function() {
+			return "";
+		},
 
 		width: 1,
 		height: 1

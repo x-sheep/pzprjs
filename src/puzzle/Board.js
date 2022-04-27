@@ -59,6 +59,7 @@ pzpr.classmgr.makeCommon({
 
 			if (classes.Bank.prototype.enabled) {
 				this.bank = new classes.Bank();
+				this.bank.initialize(this.bank.defaultPreset());
 			}
 
 			this.addExtraInfo();

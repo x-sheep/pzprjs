@@ -31,8 +31,57 @@
 		enablemake: true
 	},
 
+	Board: {
+		getBankPiecesInGrid: function() {
+			var ret = [];
+			var shapes = this.board.sblkmgr.components;
+			for (var r = 0; r < shapes.length; r++) {
+				var block = shapes[r];
+				ret.push([block.clist.getBlockShapes().canon, block.clist]);
+			}
+			return ret;
+		}
+	},
+
 	Bank: {
-		enabled: true
+		enabled: true,
+
+		defaultPreset: function() {
+			return this.presets[0].constant;
+		},
+
+		presets: [
+			{
+				name: "statuepark_pentominoes",
+				shortkey: "p",
+				constant: [
+					"3:001111010",
+					"1:11111",
+					"2:01010111",
+					"2:01011110",
+					"2:011111",
+					"3:001111001",
+					"2:110111",
+					"3:001001111",
+					"3:001011110",
+					"3:010111010",
+					"2:01011101",
+					"3:001111100"
+				]
+			}
+		],
+
+		deserialize: function(str) {
+			var piece = new this.klass.BankPiece();
+			piece.key = str;
+			return piece;
+		}
+	},
+
+	BankPiece: {
+		serialize: function() {
+			return this.key;
+		}
 	},
 
 	Cell: {
@@ -91,6 +140,7 @@
 			"checkShadeOnCircle",
 			"checkUnshadeOnCircle",
 			"checkConnectUnshade",
+			"checkBankPiecesInvalid",
 			"checkBankPiecesAvailable",
 			"checkBankPiecesUsed"
 		],
