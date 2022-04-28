@@ -59,6 +59,12 @@ pzpr.classmgr.makeCommon({
 		},
 
 		width: 1,
-		height: 1
+		height: 1,
+
+		seterr: function(num) {
+			if (this.board.isenableSetError()) {
+				// TODO implement
+			}
+		}
 	}
 });

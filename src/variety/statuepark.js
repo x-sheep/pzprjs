@@ -87,7 +87,15 @@
 	Cell: {
 		numberAsObject: true,
 		disInputHatena: true,
-		maxnum: 2
+		maxnum: 2,
+
+		allowShade: function() {
+			return this.qnum !== 1;
+		},
+
+		allowUnshade: function() {
+			return this.qnum !== 2;
+		}
 	},
 
 	AreaShadeGraph: {
@@ -130,18 +138,25 @@
 	},
 
 	FileIO: {
-		// TODO implement
-		decodeData: function() {},
-		encodeData: function() {}
+		decodeData: function() {
+			// TODO encode piece bank
+			this.decodeCellQnum();
+			this.decodeCellAns();
+		},
+		encodeData: function() {
+			// TODO encode piece bank
+			this.encodeCellQnum();
+			this.encodeCellAns();
+		}
 	},
 
 	AnsCheck: {
 		checklist: [
-			"checkShadeOnCircle",
 			"checkUnshadeOnCircle",
 			"checkConnectUnshade",
-			"checkBankPiecesInvalid",
 			"checkBankPiecesAvailable",
+			"checkBankPiecesInvalid",
+			"checkShadeOnCircle",
 			"checkBankPiecesUsed"
 		],
 
