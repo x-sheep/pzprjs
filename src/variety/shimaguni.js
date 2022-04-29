@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["shimaguni", "chocona", "stostone"], {
+})(["shimaguni", "chocona", "stostone", "hinge"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -54,7 +54,7 @@
 			return Math.min(999, this.room.clist.length);
 		}
 	},
-	"Cell@chocona": {
+	"Cell@chocona,hinge": {
 		minnum: 0
 	},
 	"Cell@stostone": {
@@ -76,6 +76,17 @@
 				len++;
 			}
 			return len;
+		}
+	},
+	"Border@hinge": {
+		posthook: {
+			ques: function(num) {
+				for (var i = 0; i <= 1; i++) {
+					if (this.sidecell[i].sblk) {
+						this.sidecell[i].sblk.hinge = null;
+					}
+				}
+			}
 		}
 	},
 
@@ -178,6 +189,14 @@
 
 	"AreaShadeGraph@chocona": {
 		enabled: true
+	},
+	"AreaShadeGraph@hinge": {
+		enabled: true,
+
+		setExtraData: function(component) {
+			component.clist = new this.klass.CellList(component.getnodeobjs());
+			component.hinge = null;
+		}
 	},
 	"AreaStoneGraph:AreaShadeGraph@shimaguni,stostone": {
 		// Same as LITS AreaTetrominoGraph
@@ -376,6 +395,15 @@
 	"AnsCheck@chocona#1": {
 		checklist: ["checkShadeCellExist", "checkShadeRect", "checkShadeCellCount"]
 	},
+	"AnsCheck@hinge#1": {
+		checklist: [
+			"checkShadeCellExist",
+			"checkCrossRegionGt",
+			"checkMirrorShape",
+			"checkCrossRegionLt",
+			"checkShadeCellCount"
+		]
+	},
 	"AnsCheck@shimaguni,stostone": {
 		checkSideAreaShadeCell: function() {
 			this.checkSideAreaCell(
@@ -482,6 +510,100 @@
 				},
 				"csNotRect"
 			);
+		}
+	},
+	"AnsCheck@hinge": {
+		getHingeData: function(component) {
+			if (component.hinge) {
+				return component.hinge;
+			}
+
+			var d = component.clist.getRectSize();
+			var bds = this.board
+				.borderinside(d.x1, d.y1, d.x2, d.y2)
+				.filter(function(bd) {
+					return (
+						bd &&
+						!bd.isnull &&
+						bd.ques === 1 &&
+						bd.sidecell[0].isShade() &&
+						bd.sidecell[1].isShade() &&
+						bd.sidecell[0].sblk === component
+					);
+				});
+
+			var hinge = null;
+
+			for (var i = 0; i < bds.length; i++) {
+				var bd = bds[i];
+				if (!hinge) {
+					hinge = bd.isvert ? { x: bd.bx } : { y: bd.by };
+				} else if (bd.isvert ? hinge.x !== bd.bx : hinge.y !== bd.by) {
+					return (component.hinge = "bkHingeGt");
+				}
+			}
+
+			if (!hinge) {
+				return (component.hinge = "bkHingeLt");
+			}
+
+			if (
+				(hinge.x && hinge.x !== (d.x1 + d.x2) / 2) ||
+				(hinge.y && hinge.y !== (d.y1 + d.y2) / 2)
+			) {
+				return (component.hinge = "bkHingeMirror");
+			}
+
+			if (
+				component.clist.some(function(c) {
+					// Check if there's two consecutive shaded cells along the middle without a border
+					if (
+						(c.bx + 1 === hinge.x &&
+							c.adjacent.right.isShade() &&
+							c.adjborder.right.ques !== 1) ||
+						(c.by + 1 === hinge.y &&
+							c.adjacent.bottom.isShade() &&
+							c.adjborder.bottom.ques !== 1)
+					) {
+						return true;
+					}
+
+					if (hinge.x) {
+						return c.board.getc(d.x2 - (c.bx - d.x1), c.by).isUnshade();
+					}
+					return c.board.getc(c.bx, d.y2 - (c.by - d.y1)).isUnshade();
+				})
+			) {
+				return (component.hinge = "bkHingeMirror");
+			}
+
+			return (component.hinge = true);
+		},
+
+		checkHinge: function(code) {
+			var areas = this.board.sblkmgr.components;
+			for (var id = 0; id < areas.length; id++) {
+				var area = areas[id];
+				if (this.getHingeData(area) === code) {
+					this.failcode.add(code);
+					if (this.checkOnly) {
+						break;
+					}
+					area.clist.seterr(1);
+				}
+			}
+		},
+
+		checkCrossRegionGt: function() {
+			this.checkHinge("bkHingeGt");
+		},
+
+		checkMirrorShape: function() {
+			this.checkHinge("bkHingeMirror");
+		},
+
+		checkCrossRegionLt: function() {
+			this.checkHinge("bkHingeLt");
 		}
 	},
 

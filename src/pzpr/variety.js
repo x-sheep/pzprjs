@@ -213,6 +213,7 @@
 				"heyawake",
 				{ alias: "heyawacky" }
 			],
+			hinge: [0, 0, "ちょうつがい", "Hinge", "shimaguni"],
 			hitori: [0, 1, "ひとりにしてくれ", "Hitori"],
 			icebarn: [1, 0, "アイスバーン", "Icebarn", "icebarn"],
 			icelom: [0, 0, "アイスローム", "Icelom", "icebarn"],
