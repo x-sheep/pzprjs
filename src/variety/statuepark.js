@@ -46,6 +46,9 @@
 	Bank: {
 		enabled: true,
 
+		width: 40,
+		height: 20,
+
 		defaultPreset: function() {
 			return this.presets[0].constant;
 		},
@@ -74,6 +77,11 @@
 		deserialize: function(str) {
 			var piece = new this.klass.BankPiece();
 			piece.key = str;
+
+			var tokens = str.split(":");
+			piece.w = +tokens[0];
+			piece.h = tokens[1].length / piece.w;
+
 			return piece;
 		}
 	},
@@ -121,6 +129,7 @@
 			this.drawCircles();
 
 			this.drawChassis();
+			this.drawBank();
 
 			this.drawTarget();
 		}

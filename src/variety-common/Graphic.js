@@ -2542,6 +2542,15 @@ pzpr.classmgr.makeCommon({
 					}
 				}
 			}
+		},
+		drawBank: function() {
+			if (!this.range.bank && this.range.bankPieces.length === 0) {
+				return;
+			}
+			// TODO implement
+		},
+		drawBankPiece: function(g, piece) {
+			// TODO implement
 		}
 	}
 });

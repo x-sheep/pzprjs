@@ -36,17 +36,40 @@ pzpr.classmgr.makeCommon({
 			for (var p in pieces) {
 				this.pieces.push(this.deserialize(pieces[p]));
 			}
+
+			this.performLayout();
 		},
 
 		deserialize: function(str) {
 			return new this.klass.BankPiece();
+		},
+
+		width: 1,
+		height: 1,
+
+		performLayout: function() {
+			if (!this.pieces || !this.width) {
+				return;
+			}
+
+			for (var i = 0; i < this.pieces.length; i++) {
+				// TODO implement
+				var p = this.pieces[i];
+				p.x = i === 0 ? 0 : this.pieces[i - 1].x + this.pieces[i - 1].w + 1;
+				p.y = 0;
+			}
+		},
+
+		draw: function() {
+			this.puzzle.painter.range.bank = true;
+			this.puzzle.painter.prepaint();
 		}
 	},
 
 	BankPiece: {
 		count: 1,
 
-		// For editing purposes. The amount that the count can vary between when editing.
+		// For editor purposes. The amount that the count can vary between.
 		mincount: 1,
 		maxcount: 1,
 
@@ -61,10 +84,19 @@ pzpr.classmgr.makeCommon({
 		width: 1,
 		height: 1,
 
+		x: 0,
+		y: 0,
+
 		seterr: function(num) {
 			if (this.board.isenableSetError()) {
 				// TODO implement
+				this.draw();
 			}
+		},
+
+		draw: function() {
+			this.puzzle.painter.range.bankPieces.add(this);
+			this.puzzle.painter.prepaint();
 		}
 	}
 });

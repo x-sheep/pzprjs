@@ -513,7 +513,9 @@
 					cells: new classes.CellList(),
 					crosses: new classes.CrossList(),
 					borders: new classes.BorderList(),
-					excells: new classes.ExCellList()
+					excells: new classes.ExCellList(),
+					bank: false,
+					bankPieces: []
 				};
 			},
 
@@ -564,6 +566,7 @@
 					this.suspendedAll = true;
 				}
 				var bd = this.board;
+				this.range.bank = true;
 				this.paintRange(bd.minbx - 2, bd.minby - 2, bd.maxbx + 2, bd.maxby + 2);
 			},
 
