@@ -32,6 +32,9 @@
 	},
 
 	Board: {
+		rows: 12,
+		cols: 12,
+
 		getBankPiecesInGrid: function() {
 			var ret = [];
 			var shapes = this.board.sblkmgr.components;
@@ -47,7 +50,7 @@
 		enabled: true,
 
 		width: 40,
-		height: 20,
+		height: 6,
 
 		defaultPreset: function() {
 			return this.presets[0].constant;
@@ -132,6 +135,28 @@
 			this.drawBank();
 
 			this.drawTarget();
+		},
+
+		drawBankPiece: function(g, piece, idx) {
+			var str = piece ? piece.key.split(":")[1] : "";
+			var r = this.bankratio;
+
+			// TODO if length is shorter than last time, not all blocks are updated
+			var count = str.length;
+			for (var i = 0; i < count; i++) {
+				g.vid = "pb_piece_" + idx + "_" + i;
+
+				if (str[i] === "1") {
+					var px = this.cw * r * (piece.x + 0.25 + (i % piece.w));
+					var py = this.ch * r * (piece.y + 0.25 + ((i / piece.w) | 0));
+					py += (this.board.rows + 0.5) * this.ch;
+
+					g.fillStyle = "black";
+					g.fillRect(px, py, this.cw * r, this.ch * r);
+				} else {
+					g.vhide();
+				}
+			}
 		}
 	},
 

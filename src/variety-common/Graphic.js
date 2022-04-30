@@ -2547,10 +2547,20 @@ pzpr.classmgr.makeCommon({
 			if (!this.range.bank && this.range.bankPieces.length === 0) {
 				return;
 			}
-			// TODO implement
+
+			var g = this.vinc("piecebank", "crispEdges", true),
+				bd = this.board;
+
+			// TODO call drawBankPiece with null/undefined if amount of shapes has shrunk since last time
+			for (var p in bd.bank.pieces) {
+				var piece = bd.bank.pieces[p];
+				if (!this.range.bank && this.range.bankPieces.indexOf(piece) === -1) {
+					continue;
+				}
+
+				this.drawBankPiece(g, piece, p);
+			}
 		},
-		drawBankPiece: function(g, piece) {
-			// TODO implement
-		}
+		drawBankPiece: function(g, piece, idx) {}
 	}
 });

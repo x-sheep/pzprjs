@@ -134,6 +134,7 @@
 
 			// 枠外の一辺のmargin(セル数換算)
 			margin: 0.15,
+			bankratio: 0.75,
 
 			// canvasの大きさを保持する
 			canvasWidth: null,
@@ -373,7 +374,11 @@
 				return this.getBoardCols() + 2 * this.margin;
 			},
 			getCanvasRows: function() {
-				return this.getBoardRows() + 2 * this.margin;
+				var rows = this.getBoardRows() + 2 * this.margin;
+				if (this.board.bank) {
+					rows += this.board.bank.height * this.bankratio;
+				}
+				return rows;
 			},
 
 			getBoardCols: function() {
@@ -391,7 +396,11 @@
 			},
 			getOffsetRows: function() {
 				/* 下にずらしたい分プラス、上にずらしたい分マイナス */
-				return (0 - this.board.minby) / 2;
+				var rows = (0 - this.board.minby) / 2;
+				if (this.board.bank) {
+					rows -= (this.board.bank.height * this.bankratio) / 2;
+				}
+				return rows;
 			},
 
 			//---------------------------------------------------------------------------
@@ -415,6 +424,7 @@
 
 				if (this.suspendedAll) {
 					var bd = this.board;
+					this.range.bank = true;
 					this.setRange(bd.minbx - 2, bd.minby - 2, bd.maxbx + 2, bd.maxby + 2);
 					this.suspendedAll = false;
 				}
@@ -680,6 +690,7 @@
 
 				g.vid = "BG";
 				g.fillStyle = this.bgcolor;
+				// TODO test if piecebank is flushed
 				g.fillRect(
 					minbx * bw - 0.5,
 					minby * bh - 0.5,
