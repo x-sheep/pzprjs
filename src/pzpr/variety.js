@@ -78,7 +78,8 @@
 		"parquet",
 		"lapaz",
 		"tren",
-		"pentominous"
+		"pentominous",
+		"hinge"
 	]);
 
 	(function(Genre, obj) {
