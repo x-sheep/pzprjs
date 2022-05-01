@@ -438,6 +438,28 @@ pzpr.classmgr.makeCommon({
 		getcross: function() {
 			return this.getpos(0.5).getx();
 		},
+		getbank: function() {
+			var r = this.puzzle.painter.bankratio;
+			var bx = this.inputPoint.bx / (r * 2);
+			var by = (this.inputPoint.by - (this.board.maxby + 1)) / (r * 2);
+
+			if (bx < 0 || by < 0) {
+				return null;
+			}
+
+			for (var p = 0; p < this.board.bank.pieces.length; p++) {
+				var piece = this.board.bank.pieces[p];
+				if (
+					bx >= piece.x &&
+					by >= piece.y &&
+					bx < piece.x + piece.w + 0.5 &&
+					by < piece.y + piece.h + 0.5
+				) {
+					return piece;
+				}
+			}
+			return null;
+		},
 
 		getpos: function(spc) {
 			var addr = this.inputPoint,

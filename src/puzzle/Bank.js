@@ -107,17 +107,14 @@ pzpr.classmgr.makeCommon({
 		qcmp: 0,
 
 		seterr: function(num) {
-			if ((this.board.isenableSetError() || !num) && this.error !== num) {
+			if (this.board.isenableSetError()) {
 				this.error = num;
-				this.draw();
 			}
 		},
 
 		setQcmp: function(num) {
-			if (this.qcmp !== num) {
-				this.qcmp = num;
-				this.draw();
-			}
+			// TODO add Operation subclass
+			this.qcmp = num;
 		},
 
 		draw: function() {

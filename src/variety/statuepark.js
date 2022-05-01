@@ -12,8 +12,8 @@
 	MouseEvent: {
 		use: true,
 		inputModes: {
-			edit: ["circle-shade", "circle-unshade", "clear"],
-			play: ["shade", "unshade"]
+			edit: ["circle-shade", "circle-unshade", "clear", "completion"],
+			play: ["shade", "unshade", "completion"]
 		},
 
 		mouseinput_auto: function() {
@@ -21,8 +21,22 @@
 				if (this.mousestart || this.mousemove) {
 					this.inputcell();
 				}
+				if (this.notInputted() && this.mousestart) {
+					this.inputqcmp();
+				}
 			} else if (this.puzzle.editmode) {
 				this.inputqnum();
+				if (this.notInputted() && this.mousestart) {
+					this.inputqcmp();
+				}
+			}
+		},
+
+		inputqcmp: function() {
+			var piece = this.getbank();
+			if (piece) {
+				piece.setQcmp(piece.qcmp ? 0 : 1);
+				piece.draw();
 			}
 		}
 	},
