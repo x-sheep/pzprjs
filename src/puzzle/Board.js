@@ -441,6 +441,9 @@ pzpr.classmgr.makeCommon({
 				this.cross.errclear();
 				this.border.errclear();
 				this.excell.errclear();
+				if (this.bank) {
+					this.bank.errclear();
+				}
 				this.haserror = false;
 				this.hasinfo = false;
 			}

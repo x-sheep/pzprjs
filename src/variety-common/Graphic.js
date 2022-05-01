@@ -2561,6 +2561,13 @@ pzpr.classmgr.makeCommon({
 				this.drawBankPiece(g, piece, p);
 			}
 		},
-		drawBankPiece: function(g, piece, idx) {}
+		drawBankPiece: function(g, piece, idx) {},
+		getBankPieceColor: function(piece) {
+			return piece.error
+				? this.errcolor1
+				: piece.qcmp
+				? this.qcmpcolor
+				: this.quescolor;
+		}
 	}
 });

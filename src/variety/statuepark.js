@@ -151,8 +151,8 @@
 					var py = this.ch * r * (piece.y + 0.25 + ((i / piece.w) | 0));
 					py += (this.board.rows + 0.5) * this.ch;
 
-					g.fillStyle = "black";
-					g.fillRect(px, py, this.cw * r, this.ch * r);
+					g.fillStyle = this.getBankPieceColor(piece);
+					g.fillRect(px + 1, py + 1, this.cw * r - 2, this.ch * r - 2);
 				} else {
 					g.vhide();
 				}

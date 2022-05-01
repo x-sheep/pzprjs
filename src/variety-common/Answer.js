@@ -1268,7 +1268,12 @@ pzpr.classmgr.makeCommon({
 					if (this.checkOnly) {
 						break;
 					}
-					// TODO mark Piece as errored
+					this.board.bank.pieces.forEach(function(piece) {
+						if (piece.canonize() === key) {
+							piece.seterr(1);
+						}
+					});
+
 					pieces[key].forEach(function(list) {
 						list.seterr(1);
 					});
@@ -1292,7 +1297,11 @@ pzpr.classmgr.makeCommon({
 					if (this.checkOnly) {
 						break;
 					}
-					// TODO mark Piece as errored
+					this.board.bank.pieces.forEach(function(piece) {
+						if (piece.canonize() === key) {
+							piece.seterr(1);
+						}
+					});
 				}
 			}
 		}

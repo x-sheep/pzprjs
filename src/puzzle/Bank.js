@@ -63,6 +63,12 @@ pzpr.classmgr.makeCommon({
 		draw: function() {
 			this.puzzle.painter.range.bank = true;
 			this.puzzle.painter.prepaint();
+		},
+
+		errclear: function() {
+			for (var i = 0; i < this.pieces.length; i++) {
+				this.pieces[i].seterr(0);
+			}
 		}
 	},
 
@@ -87,15 +93,18 @@ pzpr.classmgr.makeCommon({
 		x: 0,
 		y: 0,
 
+		error: 0,
+		qcmp: 0,
+
 		seterr: function(num) {
-			if (this.board.isenableSetError()) {
-				// TODO implement
+			if (this.board.isenableSetError() && this.error !== num) {
+				this.error = num;
 				this.draw();
 			}
 		},
 
 		draw: function() {
-			this.puzzle.painter.range.bankPieces.add(this);
+			this.puzzle.painter.range.bankPieces.push(this);
 			this.puzzle.painter.prepaint();
 		}
 	}
