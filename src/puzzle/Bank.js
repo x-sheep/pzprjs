@@ -69,6 +69,16 @@ pzpr.classmgr.makeCommon({
 			for (var i = 0; i < this.pieces.length; i++) {
 				this.pieces[i].seterr(0);
 			}
+		},
+
+		ansclear: function() {
+			this.subclear();
+		},
+
+		subclear: function() {
+			for (var i = 0; i < this.pieces.length; i++) {
+				this.pieces[i].setQcmp(0);
+			}
 		}
 	},
 
@@ -97,8 +107,15 @@ pzpr.classmgr.makeCommon({
 		qcmp: 0,
 
 		seterr: function(num) {
-			if (this.board.isenableSetError() && this.error !== num) {
+			if ((this.board.isenableSetError() || !num) && this.error !== num) {
 				this.error = num;
+				this.draw();
+			}
+		},
+
+		setQcmp: function(num) {
+			if (this.qcmp !== num) {
+				this.qcmp = num;
 				this.draw();
 			}
 		},

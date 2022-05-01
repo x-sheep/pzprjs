@@ -421,6 +421,9 @@ pzpr.classmgr.makeCommon({
 			this.cross.ansclear();
 			this.border.ansclear();
 			this.excell.ansclear();
+			if (this.bank) {
+				this.bank.ansclear();
+			}
 			this.rebuildInfo();
 		},
 		// 呼び出し元：補助消去ボタン押した時
@@ -431,6 +434,9 @@ pzpr.classmgr.makeCommon({
 			this.cross.subclear();
 			this.border.subclear();
 			this.excell.subclear();
+			if (this.bank) {
+				this.bank.subclear();
+			}
 			this.rebuildInfo();
 		},
 
