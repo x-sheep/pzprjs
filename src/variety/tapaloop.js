@@ -2,18 +2,6 @@
 // Tapa-Like Loop / tapaloop.js
 //
 (function() {
-	function sameArray(array1, array2) {
-		if (array1.length !== array2.length) {
-			return false;
-		}
-		for (var k = 0; k < array2.length; k++) {
-			if (array1[k] !== array2[k]) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	(function(pidlist, classbase) {
 		if (typeof module === "object" && module.exports) {
 			module.exports = [pidlist, classbase];
@@ -122,14 +110,14 @@
 				this.setQsub(0);
 			},
 			setQnums: function(val) {
-				if (sameArray(this.qnums, val)) {
+				if (pzpr.util.sameArray(this.qnums, val)) {
 					return;
 				}
 				this.addOpeQnums(this.qnums, val);
 				this.qnums = val;
 			},
 			addOpeQnums: function(old, val) {
-				if (sameArray(old, val)) {
+				if (pzpr.util.sameArray(old, val)) {
 					return;
 				}
 				this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, val));
@@ -253,7 +241,7 @@
 					lastope.property === this.property &&
 					lastope.bx === this.bx &&
 					lastope.by === this.by &&
-					sameArray(lastope.val, this.old)
+					pzpr.util.sameArray(lastope.val, this.old)
 				) {
 					lastope.val = this.val;
 					return true;

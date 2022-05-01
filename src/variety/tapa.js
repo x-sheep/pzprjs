@@ -2,18 +2,6 @@
 // パズル固有スクリプト部 Tapa版 tapa.js
 //
 (function() {
-	function sameArray(array1, array2) {
-		if (array1.length !== array2.length) {
-			return false;
-		}
-		for (var k = 0; k < array2.length; k++) {
-			if (array1[k] !== array2[k]) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	(function(pidlist, classbase) {
 		if (typeof module === "object" && module.exports) {
 			module.exports = [pidlist, classbase];
@@ -59,7 +47,7 @@
 				var states = cell.qnum_states,
 					state = 0;
 				for (var i = 0; i < states.length; i++) {
-					if (sameArray(cell.qnums, states[i])) {
+					if (pzpr.util.sameArray(cell.qnums, states[i])) {
 						state = i;
 						break;
 					}
@@ -194,14 +182,14 @@
 				this.setQsub(0);
 			},
 			setQnums: function(val) {
-				if (sameArray(this.qnums, val)) {
+				if (pzpr.util.sameArray(this.qnums, val)) {
 					return;
 				}
 				this.addOpeQnums(this.qnums, val);
 				this.qnums = val;
 			},
 			addOpeQnums: function(old, val) {
-				if (sameArray(old, val)) {
+				if (pzpr.util.sameArray(old, val)) {
 					return;
 				}
 				this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, val));
@@ -314,7 +302,7 @@
 					lastope.property === this.property &&
 					lastope.bx === this.bx &&
 					lastope.by === this.by &&
-					sameArray(lastope.val, this.old)
+					pzpr.util.sameArray(lastope.val, this.old)
 				) {
 					lastope.val = this.val;
 					return true;
@@ -465,7 +453,7 @@
 							396
 						).toString(36);
 					} else if (qn.length === 4) {
-						if (sameArray(qn, [1, 1, 1, 1])) {
+						if (pzpr.util.sameArray(qn, [1, 1, 1, 1])) {
 							pstr = "9";
 						} else {
 							pstr = (
