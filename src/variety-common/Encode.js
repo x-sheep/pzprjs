@@ -959,16 +959,41 @@ pzpr.classmgr.makeCommon({
 
 				this.outbstr = this.outbstr.substr(3);
 			} else {
-				// TODO implement custom
+				var tokens = this.outbstr.split("/", 2);
+				var count = +tokens[0];
+				this.outbstr = tokens[1];
+				var pieces = [];
+
+				for (var i = 0; i < count; i++) {
+					var tokens = this.outbstr.split("/", 2);
+					pieces.push(tokens[0]);
+					this.outbstr = tokens[1];
+				}
+				bank.initialize(pieces);
 			}
 		},
 		encodePieceBank: function() {
 			this.outbstr += "/";
 			var bank = this.board.bank;
 
-			// TODO implement preset
-			// TODO implement custom
-			this.outbstr += "/" + bank.presets[0].shortkey;
+			var pieces = bank.pieces.map(function(p) {
+				return p.serialize();
+			});
+
+			for (var i = 0; i < bank.presets.length; i++) {
+				if (!bank.presets[i].constant) {
+					continue;
+				}
+				if (pzpr.util.sameArray(bank.presets[i].constant, pieces)) {
+					this.outbstr += "/" + bank.presets[i].shortkey;
+					return;
+				}
+			}
+
+			this.outbstr += pieces.length;
+			for (var i = 0; i < pieces.length; i++) {
+				this.outbstr += "/" + pieces[i];
+			}
 		}
 	}
 });
