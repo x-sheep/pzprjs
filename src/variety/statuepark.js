@@ -208,14 +208,16 @@
 
 	FileIO: {
 		decodeData: function() {
-			// TODO encode piece bank
+			this.decodePieceBank();
 			this.decodeCellQnum();
 			this.decodeCellAns();
+			// TODO load qcmp in piece bank
 		},
 		encodeData: function() {
-			// TODO encode piece bank
+			this.encodePieceBank();
 			this.encodeCellQnum();
 			this.encodeCellAns();
+			// TODO save qcmp in piece bank
 		}
 	},
 

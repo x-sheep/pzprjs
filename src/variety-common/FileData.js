@@ -531,6 +531,52 @@ pzpr.classmgr.makeCommon({
 		},
 
 		//---------------------------------------------------------------------------
+		// fio.decodePieceBank() Decode piece bank preset/custom
+		// fio.encodePieceBank() Encode piece bank preset/custom
+		//---------------------------------------------------------------------------
+		decodePieceBank: function() {
+			var bank = this.board.bank;
+			var head = this.readLine();
+			if (isNaN(head)) {
+				for (var i = 0; i < bank.presets.length; i++) {
+					if (bank.presets[i].shortkey === head) {
+						bank.initialize(bank.presets[i].constant);
+						break;
+					}
+				}
+			} else {
+				var pieces = [];
+				for (var i = 0; i < +head; i++) {
+					pieces.push(this.readLine());
+				}
+
+				bank.initialize(pieces);
+			}
+		},
+		encodePieceBank: function() {
+			var bank = this.board.bank;
+
+			var pieces = bank.pieces.map(function(p) {
+				return p.serialize();
+			});
+
+			for (var i = 0; i < bank.presets.length; i++) {
+				if (!bank.presets[i].constant) {
+					continue;
+				}
+				if (pzpr.util.sameArray(bank.presets[i].constant, pieces)) {
+					this.writeLine(bank.presets[i].shortkey);
+					return;
+				}
+			}
+
+			this.writeLine("" + pieces.length);
+			for (var i = 0; i < pieces.length; i++) {
+				this.writeLine(pieces[i]);
+			}
+		},
+
+		//---------------------------------------------------------------------------
 		// fio.decodeCellQnum_kanpen() pencilbox用問題数字のデコードを行う
 		// fio.encodeCellQnum_kanpen() pencilbox用問題数字のエンコードを行う
 		//---------------------------------------------------------------------------
