@@ -88,6 +88,27 @@
 					"2:01011101",
 					"3:001111100"
 				]
+			},
+			{
+				name: "statuepark_tetrominoes",
+				shortkey: "t",
+				constant: ["1:1111", "2:010111", "2:1111", "2:011110", "2:011101"]
+			},
+			{
+				name: "statuepark_double_tetrominoes",
+				shortkey: "d",
+				constant: [
+					"1:1111",
+					"1:1111",
+					"2:010111",
+					"2:010111",
+					"2:1111",
+					"2:1111",
+					"2:011110",
+					"2:011110",
+					"2:011101",
+					"2:011101"
+				]
 			}
 		],
 
@@ -177,11 +198,11 @@
 	Encode: {
 		decodePzpr: function(type) {
 			this.decodeCircle();
-			// TODO decode piece bank
+			this.decodePieceBank();
 		},
 		encodePzpr: function(type) {
 			this.encodeCircle();
-			// TODO encode piece bank
+			this.encodePieceBank();
 		}
 	},
 

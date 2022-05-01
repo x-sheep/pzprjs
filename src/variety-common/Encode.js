@@ -939,6 +939,36 @@ pzpr.classmgr.makeCommon({
 			}
 
 			this.outbstr += cm;
+		},
+
+		//---------------------------------------------------------------------------
+		// enc.decodePieceBank() Decode piece bank preset/custom
+		// enc.encodePieceBank() Encode piece bank preset/custom
+		//---------------------------------------------------------------------------
+		decodePieceBank: function() {
+			var bank = this.board.bank;
+			if (this.outbstr.substr(0, 2) === "//") {
+				var shortkey = this.outbstr[2];
+
+				for (var i = 0; i < bank.presets.length; i++) {
+					if (bank.presets[i].shortkey === shortkey) {
+						bank.initialize(bank.presets[i].constant);
+						break;
+					}
+				}
+
+				this.outbstr = this.outbstr.substr(3);
+			} else {
+				// TODO implement custom
+			}
+		},
+		encodePieceBank: function() {
+			this.outbstr += "/";
+			var bank = this.board.bank;
+
+			// TODO implement preset
+			// TODO implement custom
+			this.outbstr += "/" + bank.presets[0].shortkey;
 		}
 	}
 });
