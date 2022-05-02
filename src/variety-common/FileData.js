@@ -575,6 +575,21 @@ pzpr.classmgr.makeCommon({
 				this.writeLine(pieces[i]);
 			}
 		},
+		decodePieceBankQcmp: function() {
+			var nums = this.readLine().split(" ");
+			var count = Math.min(nums.length, this.board.bank.pieces.length);
+			for (var i = 0; i < count; i++) {
+				this.board.bank.pieces[i].qcmp = +nums[i];
+			}
+		},
+		encodePieceBankQcmp: function() {
+			var data = this.board.bank.pieces
+				.map(function(piece) {
+					return piece.qcmp + " ";
+				})
+				.join("");
+			this.writeLine(data);
+		},
 
 		//---------------------------------------------------------------------------
 		// fio.decodeCellQnum_kanpen() pencilbox用問題数字のデコードを行う

@@ -211,13 +211,13 @@
 			this.decodePieceBank();
 			this.decodeCellQnum();
 			this.decodeCellAns();
-			// TODO load qcmp in piece bank
+			this.decodePieceBankQcmp();
 		},
 		encodeData: function() {
 			this.encodePieceBank();
 			this.encodeCellQnum();
 			this.encodeCellAns();
-			// TODO save qcmp in piece bank
+			this.encodePieceBankQcmp();
 		}
 	},
 
