@@ -57,6 +57,7 @@ pzpr.classmgr.makeCommon({
 				var p = this.pieces[i];
 				p.x = i === 0 ? 0 : this.pieces[i - 1].x + this.pieces[i - 1].w + 1;
 				p.y = 0;
+				p.index = i;
 			}
 		},
 
@@ -100,6 +101,7 @@ pzpr.classmgr.makeCommon({
 		width: 1,
 		height: 1,
 
+		index: 0,
 		x: 0,
 		y: 0,
 
@@ -113,13 +115,78 @@ pzpr.classmgr.makeCommon({
 		},
 
 		setQcmp: function(num) {
-			// TODO add Operation subclass
-			this.qcmp = num;
+			this.addOpe("qcmp", num);
 		},
 
 		draw: function() {
 			this.puzzle.painter.range.bankPieces.push(this);
 			this.puzzle.painter.prepaint();
+		},
+
+		addOpe: function(property, num) {
+			var ope = new this.klass.BankPieceOperation(
+				this.index,
+				property,
+				this[property],
+				num
+			);
+			if (!ope.isNoop()) {
+				ope.redo();
+				this.puzzle.opemgr.add(ope);
+			}
+		}
+	},
+
+	"BankPieceOperation:Operation": {
+		index: 0,
+		num: 0,
+		old: 0,
+		property: "",
+
+		STRPROP: {
+			K: "qcmp"
+		},
+
+		isNoop: function() {
+			return this.num === this.old;
+		},
+
+		setData: function(index, property, old, num) {
+			this.index = index;
+			this.property = property;
+			this.old = old;
+			this.num = num;
+		},
+
+		exec: function(num) {
+			var piece = this.board.bank.pieces[this.index];
+			piece[this.property] = num;
+			piece.draw();
+		},
+
+		toString: function() {
+			var prefix = "P";
+			for (var i in this.STRPROP) {
+				if (this.property === this.STRPROP[i]) {
+					prefix += i;
+					break;
+				}
+			}
+
+			return [prefix, this.index, this.num, this.old].join(",");
+		},
+
+		decode: function(strs) {
+			this.property = this.STRPROP[strs[0].charAt(1)];
+			if (!this.property || strs[0].charAt(0) !== "P") {
+				return false;
+			}
+
+			this.index = +strs[1];
+			this.num = +strs[2];
+			this.old = +strs[3];
+
+			return true;
 		}
 	}
 });
