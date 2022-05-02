@@ -47,7 +47,7 @@
 				var states = cell.qnum_states,
 					state = 0;
 				for (var i = 0; i < states.length; i++) {
-					if (pzpr.util.sameArray(cell.qnums, states[i])) {
+					if (this.puzzle.pzpr.util.sameArray(cell.qnums, states[i])) {
 						state = i;
 						break;
 					}
@@ -182,14 +182,14 @@
 				this.setQsub(0);
 			},
 			setQnums: function(val) {
-				if (pzpr.util.sameArray(this.qnums, val)) {
+				if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
 					return;
 				}
 				this.addOpeQnums(this.qnums, val);
 				this.qnums = val;
 			},
 			addOpeQnums: function(old, val) {
-				if (pzpr.util.sameArray(old, val)) {
+				if (this.puzzle.pzpr.util.sameArray(old, val)) {
 					return;
 				}
 				this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, val));
@@ -302,7 +302,7 @@
 					lastope.property === this.property &&
 					lastope.bx === this.bx &&
 					lastope.by === this.by &&
-					pzpr.util.sameArray(lastope.val, this.old)
+					this.puzzle.pzpr.util.sameArray(lastope.val, this.old)
 				) {
 					lastope.val = this.val;
 					return true;
@@ -453,7 +453,7 @@
 							396
 						).toString(36);
 					} else if (qn.length === 4) {
-						if (pzpr.util.sameArray(qn, [1, 1, 1, 1])) {
+						if (this.puzzle.pzpr.util.sameArray(qn, [1, 1, 1, 1])) {
 							pstr = "9";
 						} else {
 							pstr = (

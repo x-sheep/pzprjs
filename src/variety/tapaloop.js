@@ -110,14 +110,14 @@
 				this.setQsub(0);
 			},
 			setQnums: function(val) {
-				if (pzpr.util.sameArray(this.qnums, val)) {
+				if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
 					return;
 				}
 				this.addOpeQnums(this.qnums, val);
 				this.qnums = val;
 			},
 			addOpeQnums: function(old, val) {
-				if (pzpr.util.sameArray(old, val)) {
+				if (this.puzzle.pzpr.util.sameArray(old, val)) {
 					return;
 				}
 				this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, val));
@@ -241,7 +241,7 @@
 					lastope.property === this.property &&
 					lastope.bx === this.bx &&
 					lastope.by === this.by &&
-					pzpr.util.sameArray(lastope.val, this.old)
+					this.puzzle.pzpr.util.sameArray(lastope.val, this.old)
 				) {
 					lastope.val = this.val;
 					return true;

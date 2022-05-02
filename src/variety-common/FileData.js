@@ -564,7 +564,7 @@ pzpr.classmgr.makeCommon({
 				if (!bank.presets[i].constant) {
 					continue;
 				}
-				if (pzpr.util.sameArray(bank.presets[i].constant, pieces)) {
+				if (this.puzzle.pzpr.util.sameArray(bank.presets[i].constant, pieces)) {
 					this.writeLine(bank.presets[i].shortkey);
 					return;
 				}

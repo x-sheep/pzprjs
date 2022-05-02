@@ -314,7 +314,7 @@
 
 			var lines = this.getLines(clist);
 
-			if (!pzpr.util.sameArray(nums, lines)) {
+			if (!this.puzzle.pzpr.util.sameArray(nums, lines)) {
 				clist.seterr(1);
 				excells.seterr(1);
 				return false;
