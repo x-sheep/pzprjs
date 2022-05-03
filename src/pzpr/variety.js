@@ -78,7 +78,8 @@
 		"parquet",
 		"lapaz",
 		"tren",
-		"pentominous"
+		"pentominous",
+		"statuepark"
 	]);
 
 	(function(Genre, obj) {
