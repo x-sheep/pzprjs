@@ -54,7 +54,7 @@ pzpr.classmgr.makeCommon({
 
 			var x = 0,
 				y = 0,
-				nexty = 0;
+				nexty = 1;
 
 			for (var i = 0; i < this.pieces.length; i++) {
 				var p = this.pieces[i];
