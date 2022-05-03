@@ -187,6 +187,26 @@
 		}
 	},
 
+	"BorderList@hinge": {
+		applyTopLines: function() {
+			for (var i = 0; i < this.length; i++) {
+				var bd = this[i];
+				if (bd.isBorder()) {
+					var other = bd.isvert
+						? this.board.getb(bd.bx, bd.by - 2)
+						: this.board.getb(bd.bx - 2, bd.by);
+					if (other.isBorder()) {
+						bd.topline = other.topline;
+					} else {
+						bd.topline = bd;
+					}
+				} else {
+					bd.topline = null;
+				}
+			}
+		}
+	},
+
 	"AreaShadeGraph@chocona": {
 		enabled: true
 	},
@@ -518,6 +538,11 @@
 				return component.hinge;
 			}
 
+			if (!this._info.topdata) {
+				this.board.border.applyTopLines();
+				this._info.topdata = true;
+			}
+
 			var d = component.clist.getRectSize();
 			var bds = this.board
 				.borderinside(d.x1, d.y1, d.x2, d.y2)
@@ -537,8 +562,10 @@
 			for (var i = 0; i < bds.length; i++) {
 				var bd = bds[i];
 				if (!hinge) {
-					hinge = bd.isvert ? { x: bd.bx } : { y: bd.by };
-				} else if (bd.isvert ? hinge.x !== bd.bx : hinge.y !== bd.by) {
+					hinge = bd.isvert
+						? { x: bd.bx, top: bd.topline }
+						: { y: bd.by, top: bd.topline };
+				} else if (hinge.top !== bd.topline) {
 					return (component.hinge = "bkHingeGt");
 				}
 			}
