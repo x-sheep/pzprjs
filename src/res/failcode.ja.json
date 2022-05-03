@@ -72,6 +72,7 @@
     "bkHingeGt.hinge": "A block goes through multiple borders.",
     "bkHingeLt.hinge": "A block does not go through any borders.",
     "bkHingeMirror.hinge": "A block is not symmetric along the region border.",
+    "bkHingeSplit.hinge": "The region border which separates a block is not continuous.",
     "bkLenGt4.fillmat": "「幅１マス、長さ１～４マス」ではないタタミがあります。",
     "bkLessThan2Num.araf": "1つしか数字を含まないブロックがあります。",
     "bkLiarNe1.usoone": "部屋に含まれる嘘つきの数字が1つでありません。",

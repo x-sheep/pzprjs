@@ -79,6 +79,14 @@
 		}
 	},
 	"Border@hinge": {
+		isHinge: function() {
+			return (
+				this.ques === 1 &&
+				this.sidecell[0].isShade() &&
+				this.sidecell[1].isShade()
+			);
+		},
+
 		posthook: {
 			ques: function(num) {
 				for (var i = 0; i <= 1; i++) {
@@ -191,11 +199,11 @@
 		applyTopLines: function() {
 			for (var i = 0; i < this.length; i++) {
 				var bd = this[i];
-				if (bd.isBorder()) {
+				if (bd.isHinge()) {
 					var other = bd.isvert
 						? this.board.getb(bd.bx, bd.by - 2)
 						: this.board.getb(bd.bx - 2, bd.by);
-					if (other.isBorder()) {
+					if (other.isHinge()) {
 						bd.topline = other.topline;
 					} else {
 						bd.topline = bd;
@@ -419,6 +427,7 @@
 		checklist: [
 			"checkShadeCellExist",
 			"checkCrossRegionGt",
+			"checkSplit",
 			"checkMirrorShape",
 			"checkCrossRegionLt",
 			"checkShadeCellCount"
@@ -550,9 +559,7 @@
 					return (
 						bd &&
 						!bd.isnull &&
-						bd.ques === 1 &&
-						bd.sidecell[0].isShade() &&
-						bd.sidecell[1].isShade() &&
+						bd.isHinge() &&
 						bd.sidecell[0].sblk === component
 					);
 				});
@@ -565,13 +572,18 @@
 					hinge = bd.isvert
 						? { x: bd.bx, top: bd.topline }
 						: { y: bd.by, top: bd.topline };
-				} else if (hinge.top !== bd.topline) {
+				} else if (bd.isvert ? hinge.x !== bd.bx : hinge.y !== bd.by) {
 					return (component.hinge = "bkHingeGt");
+				} else if (hinge.top !== bd.topline) {
+					hinge.top = null;
 				}
 			}
 
 			if (!hinge) {
 				return (component.hinge = "bkHingeLt");
+			}
+			if (!hinge.top) {
+				return (component.hinge = "bkHingeSplit");
 			}
 
 			if (
@@ -627,6 +639,10 @@
 
 		checkMirrorShape: function() {
 			this.checkHinge("bkHingeMirror");
+		},
+
+		checkSplit: function() {
+			this.checkHinge("bkHingeSplit");
 		},
 
 		checkCrossRegionLt: function() {
