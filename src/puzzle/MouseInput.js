@@ -450,10 +450,10 @@ pzpr.classmgr.makeCommon({
 			for (var p = 0; p < this.board.bank.pieces.length; p++) {
 				var piece = this.board.bank.pieces[p];
 				if (
-					bx >= piece.x &&
-					by >= piece.y &&
-					bx < piece.x + piece.w + 0.5 &&
-					by < piece.y + piece.h + 0.5
+					bx >= piece.x - 0.25 &&
+					by >= piece.y - 0.25 &&
+					bx < piece.x + piece.w + 0.75 &&
+					by < piece.y + piece.h + 0.75
 				) {
 					return piece;
 				}
