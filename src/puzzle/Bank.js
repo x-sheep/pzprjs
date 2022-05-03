@@ -52,13 +52,25 @@ pzpr.classmgr.makeCommon({
 				return;
 			}
 
+			var x = 0,
+				y = 0,
+				nexty = 0;
+
 			for (var i = 0; i < this.pieces.length; i++) {
-				// TODO implement
 				var p = this.pieces[i];
-				p.x = i === 0 ? 0 : this.pieces[i - 1].x + this.pieces[i - 1].w + 1;
-				p.y = 0;
+				if (x + p.w + 1 > this.width) {
+					x = 0;
+					y = nexty;
+				}
+
+				p.x = x;
+				p.y = y;
+				nexty = Math.max(nexty, y + p.h + 1);
 				p.index = i;
+				x += p.w + 1;
 			}
+
+			this.height = nexty - 0.5;
 		},
 
 		draw: function() {

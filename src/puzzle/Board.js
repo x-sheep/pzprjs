@@ -122,6 +122,11 @@ pzpr.classmgr.makeCommon({
 
 			this.initExtraObject(col, row);
 
+			if (this.bank) {
+				this.bank.width = this.cols / this.puzzle.painter.bankratio;
+				this.bank.performLayout();
+			}
+
 			this.rebuildInfo();
 
 			this.puzzle.cursor.initCursor();

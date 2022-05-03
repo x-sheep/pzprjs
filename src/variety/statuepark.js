@@ -63,9 +63,6 @@
 	Bank: {
 		enabled: true,
 
-		width: 40,
-		height: 6,
-
 		defaultPreset: function() {
 			return this.presets[0].constant;
 		},
