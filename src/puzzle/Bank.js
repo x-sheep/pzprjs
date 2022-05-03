@@ -54,7 +54,7 @@ pzpr.classmgr.makeCommon({
 
 			var x = 0,
 				y = 0,
-				nexty = 1;
+				nexty = 0;
 
 			for (var i = 0; i < this.pieces.length; i++) {
 				var p = this.pieces[i];
@@ -70,7 +70,7 @@ pzpr.classmgr.makeCommon({
 				x += p.w + 1;
 			}
 
-			this.height = nexty - 0.5;
+			this.height = nexty;
 		},
 
 		draw: function() {
