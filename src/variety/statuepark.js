@@ -72,39 +72,39 @@
 				name: "preset.pentominoes",
 				shortkey: "p",
 				constant: [
-					"3:001111010",
-					"1:11111",
-					"2:01010111",
-					"2:01011110",
-					"2:011111",
-					"3:001111001",
-					"2:110111",
-					"3:001001111",
-					"3:001011110",
-					"3:010111010",
-					"2:01011101",
-					"3:001111100"
+					"337k",
+					"15v",
+					"24as",
+					"24bo",
+					"23fg",
+					"337i",
+					"23rg",
+					"334u",
+					"335s",
+					"33bk",
+					"24bk",
+					"337o"
 				]
 			},
 			{
 				name: "preset.tetrominoes",
 				shortkey: "t",
-				constant: ["1:1111", "2:010111", "2:1111", "2:011110", "2:011101"]
+				constant: ["14u", "23bg", "22u", "23f", "23eg"]
 			},
 			{
 				name: "preset.double_tetrominoes",
 				shortkey: "d",
 				constant: [
-					"1:1111",
-					"1:1111",
-					"2:010111",
-					"2:010111",
-					"2:1111",
-					"2:1111",
-					"2:011110",
-					"2:011110",
-					"2:011101",
-					"2:011101"
+					"14u",
+					"14u",
+					"23bg",
+					"23bg",
+					"22u",
+					"22u",
+					"23f",
+					"23f",
+					"23eg",
+					"23eg"
 				]
 			},
 			{
@@ -116,12 +116,23 @@
 
 		deserialize: function(str) {
 			var piece = new this.klass.BankPiece();
-			piece.key = str;
 
-			var tokens = str.split(":");
-			piece.w = +tokens[0];
-			piece.h = tokens[1].length / piece.w;
-			piece.str = tokens[1];
+			if (str.length < 3) {
+				throw new Error("Invalid piece");
+			}
+
+			piece.w = parseInt(str[0], 36);
+			piece.h = parseInt(str[1], 36);
+			var len = piece.w * piece.h;
+
+			var bits = "";
+			for (var i = 2; i < str.length; i++) {
+				bits += parseInt(str[i], 32)
+					.toString(2)
+					.padStart(5, "0");
+			}
+
+			piece.str = bits.substring(0, len).padEnd(len, "0");
 
 			return piece;
 		}
@@ -129,6 +140,7 @@
 
 	BankPiece: {
 		canon: null,
+		compressed: null,
 
 		canonize: function() {
 			if (this.canon) {
@@ -174,7 +186,22 @@
 		},
 
 		serialize: function() {
-			return this.key;
+			if (this.compressed) {
+				return this.compressed;
+			}
+
+			var ret = this.w.toString(36) + this.h.toString(36);
+
+			for (var i = 0; i < this.str.length; i += 5) {
+				var sub = this.str.substr(i, 5).padEnd(5, "0");
+				ret += parseInt(sub, 2).toString(32);
+			}
+
+			while (ret.lastIndexOf("0") === ret.length - 1) {
+				ret = ret.substring(0, ret.length - 1);
+			}
+
+			return (this.compressed = ret);
 		}
 	},
 
