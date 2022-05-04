@@ -233,6 +233,7 @@
 		bgcellcolor_func: "qsub1",
 
 		circlefillcolor_func: "qnum2",
+		circleratio: [0.3, 0.25],
 
 		paint: function() {
 			this.drawBGCells();
