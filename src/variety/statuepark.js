@@ -121,12 +121,58 @@
 			var tokens = str.split(":");
 			piece.w = +tokens[0];
 			piece.h = tokens[1].length / piece.w;
+			piece.str = tokens[1];
 
 			return piece;
 		}
 	},
 
 	BankPiece: {
+		canon: null,
+
+		canonize: function() {
+			if (this.canon) {
+				return this.canon;
+			}
+
+			var data = [this.str, "", "", "", "", "", "", ""];
+
+			for (var y = 0; y < this.h; y++) {
+				for (var x = 0; x < this.w; x++) {
+					data[1] += this.str[(this.h - y - 1) * this.w + x];
+				}
+			}
+			for (var x = 0; x < this.w; x++) {
+				for (var y = 0; y < this.h; y++) {
+					data[4] += this.str[y * this.w + x];
+					data[5] += this.str[(this.h - y - 1) * this.w + x];
+				}
+			}
+			data[2] = data[1]
+				.split("")
+				.reverse()
+				.join("");
+			data[3] = data[0]
+				.split("")
+				.reverse()
+				.join("");
+			data[6] = data[5]
+				.split("")
+				.reverse()
+				.join("");
+			data[7] = data[4]
+				.split("")
+				.reverse()
+				.join("");
+
+			for (var i = 0; i < 8; i++) {
+				data[i] = (i < 4 ? this.w : this.h) + ":" + data[i];
+			}
+
+			data.sort();
+			return (this.canon = data[0]);
+		},
+
 		serialize: function() {
 			return this.key;
 		}
@@ -175,7 +221,7 @@
 		},
 
 		drawBankPiece: function(g, piece, idx) {
-			var str = piece ? piece.key.split(":")[1] : "";
+			var str = piece ? piece.str : "";
 			var r = this.bankratio;
 
 			// TODO if length is shorter than last time, not all blocks are updated
