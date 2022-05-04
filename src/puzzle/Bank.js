@@ -149,6 +149,54 @@ pzpr.classmgr.makeCommon({
 		}
 	},
 
+	"BankEditOperation:Operation": {
+		old: [],
+		num: [],
+
+		setData: function(value, index) {
+			this.old = this.board.bank.pieces.map(function(p) {
+				return p.serialize();
+			});
+
+			if (value && typeof value !== "string") {
+				this.num = value;
+			} else {
+				this.num = this.old.concat();
+				if (!value) {
+					this.num.splice(index, 1);
+				} else if (index === this.old.length) {
+					this.num.push(value);
+				} else {
+					this.num[index] = value;
+				}
+			}
+		},
+
+		exec: function(num) {
+			this.board.bank.initialize(num);
+			this.board.bank.draw();
+		},
+
+		isNoop: function() {
+			return this.puzzle.pzpr.util.sameArray(this.old, this.num);
+		},
+
+		toString: function() {
+			return ["PP", this.num.join("/"), this.old.join("/")].join(",");
+		},
+
+		decode: function(strs) {
+			if (strs[0] !== "PP") {
+				return false;
+			}
+
+			this.num = strs[1].split("/");
+			this.old = strs[2].split("/");
+
+			return true;
+		}
+	},
+
 	"BankPieceOperation:Operation": {
 		index: 0,
 		num: 0,

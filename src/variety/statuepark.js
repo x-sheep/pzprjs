@@ -27,7 +27,7 @@
 			} else if (this.puzzle.editmode) {
 				this.inputqnum();
 				if (this.notInputted() && this.mousestart) {
-					this.inputqcmp();
+					this.inputpiece();
 				}
 			}
 		},
@@ -37,6 +37,18 @@
 			if (piece) {
 				piece.setQcmp(piece.qcmp ? 0 : 1);
 				piece.draw();
+			}
+		},
+
+		inputpiece: function() {
+			var piece = this.getbank();
+			if (piece) {
+				var ope = new this.klass.BankEditOperation(null, piece.index);
+				// TODO remember qcmp values
+				if (!ope.isNoop()) {
+					ope.redo();
+					this.puzzle.opemgr.add(ope);
+				}
 			}
 		}
 	},
@@ -248,13 +260,14 @@
 			this.drawTarget();
 		},
 
+		maxpiececount: 0,
+
 		drawBankPiece: function(g, piece, idx) {
 			var str = piece ? piece.str : "";
 			var r = this.bankratio;
 
-			// TODO if length is shorter than last time, not all blocks are updated
-			var count = str.length;
-			for (var i = 0; i < count; i++) {
+			this.maxpiececount = Math.max(str.length, this.maxpiececount);
+			for (var i = 0; i < this.maxpiececount; i++) {
 				g.vid = "pb_piece_" + idx + "_" + i;
 
 				if (str[i] === "1") {

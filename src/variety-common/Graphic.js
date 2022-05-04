@@ -2543,16 +2543,19 @@ pzpr.classmgr.makeCommon({
 				}
 			}
 		},
+
+		lastBankPieceCount: 0,
 		drawBank: function() {
 			if (!this.range.bank && this.range.bankPieces.length === 0) {
 				return;
 			}
 
-			var g = this.vinc("piecebank", "crispEdges", true),
+			var g = this.vinc("piecebank", "crispEdges"),
 				bd = this.board;
 
-			// TODO call drawBankPiece with null/undefined if amount of shapes has shrunk since last time
-			for (var p in bd.bank.pieces) {
+			var count = Math.max(bd.bank.pieces.length, this.lastBankPieceCount);
+
+			for (var p = 0; p < count; p++) {
 				var piece = bd.bank.pieces[p];
 				if (!this.range.bank && this.range.bankPieces.indexOf(piece) === -1) {
 					continue;
@@ -2560,6 +2563,8 @@ pzpr.classmgr.makeCommon({
 
 				this.drawBankPiece(g, piece, p);
 			}
+
+			this.lastBankPieceCount = bd.bank.pieces.length;
 		},
 		drawBankPiece: function(g, piece, idx) {},
 		getBankPieceColor: function(piece) {
