@@ -27,7 +27,11 @@
 			} else if (this.puzzle.editmode) {
 				this.inputqnum();
 				if (this.notInputted() && this.mousestart) {
-					this.inputpiece();
+					if (this.btn === "left") {
+						this.inputpiece();
+					} else {
+						this.inputqcmp();
+					}
 				}
 			}
 		},
