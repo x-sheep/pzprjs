@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["statuepark"], {
+})(["statuepark", "statuepark-aux"], {
 	MouseEvent: {
 		use: true,
 		inputModes: {
@@ -46,14 +46,30 @@
 
 		inputpiece: function() {
 			var piece = this.getbank();
-			if (piece) {
-				var ope = new this.klass.BankEditOperation(null, piece.index);
-				// TODO remember qcmp values
+			if (!piece) {
+				return;
+			}
+
+			// TODO the piece index will be invalid when switching popups, and the first popup is a deletion
+			var s = Math.max(this.puzzle.board.cols, this.puzzle.board.rows);
+			var data = [s, s, piece.serialize()];
+
+			var thiz = this;
+			var args = {
+				pid: "statuepark-aux",
+				key: piece.index,
+				url: data.join("/")
+			};
+
+			this.puzzle.emit("request-aux-editor", args, function(auxpuzzle) {
+				var shape = auxpuzzle.board.getShape();
+				var ope = new thiz.klass.BankEditOperation(shape, piece.index);
+				// // TODO remember qcmp values
 				if (!ope.isNoop()) {
 					ope.redo();
-					this.puzzle.opemgr.add(ope);
+					thiz.puzzle.opemgr.add(ope);
 				}
-			}
+			});
 		}
 	},
 
@@ -73,6 +89,36 @@
 				ret.push([block.clist.getBlockShapes().canon, block.clist]);
 			}
 			return ret;
+		}
+	},
+
+	"Board@statuepark-aux": {
+		setShape: function(shape) {
+			if (!shape) {
+				return;
+			}
+
+			var w = shape.w;
+			var h = shape.h;
+			var sx = (this.cols - w) | 1;
+			var sy = (this.rows - h) | 1;
+			for (var y = 0; y < h; y++) {
+				for (var x = 0; x < w; x++) {
+					var cell = this.getc(x * 2 + sx, y * 2 + sy);
+					if (!cell || cell.isnull) {
+						continue;
+					}
+					cell.setQans(+shape.str[y * w + x]);
+				}
+			}
+		},
+
+		getShape: function() {
+			var clist = this.cell.filter(function(cell) {
+				return cell.qans;
+			});
+
+			return clist.length > 0 ? clist.getBlockShapes().id : null;
 		}
 	},
 
@@ -128,18 +174,46 @@
 				shortkey: "z",
 				constant: []
 			}
-		],
+		]
+	},
+
+	"Bank@statuepark-aux": {
+		enabled: false
+	},
+
+	BankPiece: {
+		canon: null,
+		compressed: null,
+
+		deserializeRaw: function(str) {
+			var tokens = str.split(":");
+			this.w = +tokens[0];
+			this.str = tokens[1];
+			this.h = this.str.length / this.w;
+		},
 
 		deserialize: function(str) {
-			var piece = new this.klass.BankPiece();
+			this.canon = null;
+			this.compressed = null;
+
+			if (!str) {
+				this.w = this.h = 1;
+				this.str = "0";
+				return;
+			}
+
+			if (str.indexOf(":") !== -1) {
+				this.deserializeRaw(str);
+				return;
+			}
 
 			if (str.length < 3) {
 				throw new Error("Invalid piece");
 			}
 
-			piece.w = parseInt(str[0], 36);
-			piece.h = parseInt(str[1], 36);
-			var len = piece.w * piece.h;
+			this.w = parseInt(str[0], 36);
+			this.h = parseInt(str[1], 36);
+			var len = this.w * this.h;
 
 			var bits = "";
 			for (var i = 2; i < str.length; i++) {
@@ -148,15 +222,8 @@
 					.padStart(5, "0");
 			}
 
-			piece.str = bits.substring(0, len).padEnd(len, "0");
-
-			return piece;
-		}
-	},
-
-	BankPiece: {
-		canon: null,
-		compressed: null,
+			this.str = bits.substring(0, len).padEnd(len, "0");
+		},
 
 		canonize: function() {
 			if (this.canon) {
@@ -238,11 +305,11 @@
 	AreaShadeGraph: {
 		enabled: true
 	},
-	AreaUnshadeGraph: {
+	"AreaUnshadeGraph@statuepark": {
 		enabled: true
 	},
 
-	Graphic: {
+	"Graphic@statuepark": {
 		enablebcolor: true,
 
 		shadecolor: "rgb(80, 80, 80)",
@@ -288,6 +355,15 @@
 		}
 	},
 
+	"Graphic@statuepark-aux": {
+		paint: function() {
+			this.drawBGCells();
+			this.drawShadedCells();
+			this.drawGrid();
+			this.drawChassis();
+		}
+	},
+
 	Encode: {
 		decodePzpr: function(type) {
 			if (this.outbstr[0] !== "/") {
@@ -298,6 +374,18 @@
 		encodePzpr: function(type) {
 			this.encodeCircle();
 			this.encodePieceBank();
+		}
+	},
+
+	"Encode@statuepark-aux": {
+		decodePzpr: function(type) {
+			var shape = new this.klass.BankPiece();
+			shape.deserialize(this.outbstr);
+			this.board.setShape(shape);
+		},
+
+		encodePzpr: function(type) {
+			this.outbstr = this.board.getShape() || "1:0";
 		}
 	},
 

@@ -34,14 +34,12 @@ pzpr.classmgr.makeCommon({
 			}
 
 			for (var p in pieces) {
-				this.pieces.push(this.deserialize(pieces[p]));
+				var piece = new this.klass.BankPiece();
+				piece.deserialize(pieces[p]);
+				this.pieces.push(piece);
 			}
 
 			this.performLayout();
-		},
-
-		deserialize: function(str) {
-			return new this.klass.BankPiece();
 		},
 
 		width: 1,
@@ -101,6 +99,8 @@ pzpr.classmgr.makeCommon({
 		// For editor purposes. The amount that the count can vary between.
 		mincount: 1,
 		maxcount: 1,
+
+		deserialize: function(str) {},
 
 		canonize: function() {
 			return this.serialize();
@@ -174,7 +174,8 @@ pzpr.classmgr.makeCommon({
 
 		exec: function(num) {
 			this.board.bank.initialize(num);
-			this.board.bank.draw();
+			this.puzzle.painter.resizeCanvas();
+			this.puzzle.emit("adjust");
 		},
 
 		isNoop: function() {

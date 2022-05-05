@@ -79,7 +79,8 @@
 		"lapaz",
 		"tren",
 		"pentominous",
-		"statuepark"
+		"statuepark",
+		"statuepark-aux"
 	]);
 
 	(function(Genre, obj) {
@@ -345,6 +346,7 @@
 			snake: [0, 0, "Snake", "Snake"],
 			starbattle: [0, 0, "スターバトル", "Star Battle"],
 			statuepark: [0, 0, "Statue Park", "Statue Park"],
+			"statuepark-aux": [0, 0, "図形の編集", "Edit shape"],
 			stostone: [0, 0, "ストストーン", "Stostone", "shimaguni"],
 			sudoku: [0, 1, "数独", "Sudoku"],
 			sukoro: [1, 0, "数コロ", "Sukoro", "sukoro"],
