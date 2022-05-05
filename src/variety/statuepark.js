@@ -404,7 +404,18 @@
 		}
 	},
 
-	AnsCheck: {
+	"FileIO@statuepark-aux": {
+		decodeData: function() {
+			var shape = new this.klass.BankPiece();
+			shape.deserialize(this.readLine());
+			this.board.setShape(shape);
+		},
+		encodeData: function() {
+			this.writeLine(this.board.getShape() || "1:0");
+		}
+	},
+
+	"AnsCheck@statuepark": {
 		checklist: [
 			"checkUnshadeOnCircle",
 			"checkConnectUnshade",
