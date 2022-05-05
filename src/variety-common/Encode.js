@@ -959,15 +959,18 @@ pzpr.classmgr.makeCommon({
 
 				this.outbstr = this.outbstr.substr(3);
 			} else {
-				var tokens = this.outbstr.split("/", 2);
-				var count = +tokens[0];
-				this.outbstr = tokens[1];
+				// Trim slash
+				this.outbstr = this.outbstr.substr(1);
+
+				var next = this.outbstr.indexOf("/");
+				var count = +this.outbstr.substr(0, next);
+				this.outbstr = this.outbstr.substr(next + 1);
 				var pieces = [];
 
 				for (var i = 0; i < count; i++) {
-					var tokens = this.outbstr.split("/", 2);
-					pieces.push(tokens[0]);
-					this.outbstr = tokens[1];
+					next = this.outbstr.indexOf("/");
+					pieces.push(next >= 0 ? this.outbstr.substr(0, next) : this.outbstr);
+					this.outbstr = next >= 0 ? this.outbstr.substr(next + 1) : "";
 				}
 				bank.initialize(pieces);
 			}
