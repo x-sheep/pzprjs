@@ -2011,15 +2011,27 @@ pzpr.classmgr.makeCommon({
 			var g = this.vinc(layerid, "crispEdges");
 
 			var px = cursor.bx * this.bw,
-				py = cursor.by * this.bh,
-				w,
-				size;
+				py = cursor.by * this.bh;
+			var t, w, h;
 			if (islarge !== false) {
-				w = Math.max(this.cw / 16, 2) | 0;
-				size = this.bw - 0.5;
+				t = Math.max(this.cw / 16, 2) | 0;
+				w = this.bw - 0.5;
+				h = w;
 			} else {
-				w = Math.max(this.cw / 24, 1) | 0;
-				size = this.bw * 0.56;
+				t = Math.max(this.cw / 24, 1) | 0;
+				w = this.bw * 0.56;
+				h = w;
+			}
+
+			if (cursor.bankpiece !== null) {
+				var piece = this.board.bank.pieces[cursor.bankpiece];
+				var r = this.puzzle.painter.bankratio;
+
+				px = (piece.x + 0.25 + piece.w / 2) * this.cw * r;
+				py = (piece.y + 0.25 + piece.h / 2) * this.ch * r;
+				py += (this.board.rows + 0.5) * this.ch;
+				w = (piece.w + 0.25) * this.cw * r * 0.5;
+				h = (piece.h + 0.25) * this.ch * r * 0.5;
 			}
 
 			isdraw = isdraw !== false && !this.outputImage;
@@ -2027,25 +2039,25 @@ pzpr.classmgr.makeCommon({
 
 			g.vid = prefix + "ti1_";
 			if (isdraw) {
-				g.fillRect(px - size, py - size, size * 2, w);
+				g.fillRect(px - w, py - h, w * 2, t);
 			} else {
 				g.vhide();
 			}
 			g.vid = prefix + "ti2_";
 			if (isdraw) {
-				g.fillRect(px - size, py - size, w, size * 2);
+				g.fillRect(px - w, py - h, t, h * 2);
 			} else {
 				g.vhide();
 			}
 			g.vid = prefix + "ti3_";
 			if (isdraw) {
-				g.fillRect(px - size, py + size - w, size * 2, w);
+				g.fillRect(px - w, py + h - t, w * 2, t);
 			} else {
 				g.vhide();
 			}
 			g.vid = prefix + "ti4_";
 			if (isdraw) {
-				g.fillRect(px + size - w, py - size, w, size * 2);
+				g.fillRect(px + w - t, py - h, t, h * 2);
 			} else {
 				g.vhide();
 			}

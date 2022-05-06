@@ -50,6 +50,10 @@
 				return;
 			}
 
+			var pos0 = this.cursor.getaddr();
+			this.cursor.bankpiece = piece.index;
+			pos0.draw();
+
 			// TODO the piece index will be invalid when switching popups, and the first popup is a deletion
 			var s = Math.max(this.puzzle.board.cols, this.puzzle.board.rows);
 			var data = [s, s, piece.serialize()];

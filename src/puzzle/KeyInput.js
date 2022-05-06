@@ -417,6 +417,7 @@ pzpr.classmgr.makeCommon({
 		initialize: function() {
 			this.bx = 1;
 			this.by = 1;
+			this.bankpiece = null;
 			this.mode51 = this.puzzle.klass.ExCell.prototype.ques === 51;
 			this.modesnum = this.puzzle.klass.Cell.prototype.enableSubNumberArray;
 			this.targetdirs = this.puzzle.klass.Cell.prototype.dirs51;
@@ -427,6 +428,7 @@ pzpr.classmgr.makeCommon({
 		init: function(bx, by) {
 			this.bx = bx;
 			this.by = by;
+			this.bankpiece = null;
 			if (!this.mode51) {
 				this.targetdir = 0;
 			}
@@ -548,6 +550,7 @@ pzpr.classmgr.makeCommon({
 		// tc.getaddr() ターゲットの位置を移動する
 		//---------------------------------------------------------------------------
 		movedir: function(dir, mv) {
+			this.bankpiece = null;
 			this.puzzle.klass.Address.prototype.movedir.call(this, dir, mv);
 			if (this.modesnum && this.puzzle.playmode) {
 				this.targetdir = 0;
@@ -569,6 +572,7 @@ pzpr.classmgr.makeCommon({
 			) {
 				return;
 			}
+			this.bankpiece = null;
 			this.set(pos);
 			if (this.modesnum && this.puzzle.playmode) {
 				this.targetdir = 0;
