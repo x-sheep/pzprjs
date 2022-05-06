@@ -357,10 +357,30 @@
 
 	"Graphic@statuepark-aux": {
 		paint: function() {
-			this.drawBGCells();
 			this.drawShadedCells();
-			this.drawGrid();
+			this.drawDashedGrid();
 			this.drawChassis();
+		},
+
+		drawCells_common: function(header, colorfunc) {
+			var g = this.context;
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i],
+					color = colorfunc.call(this, cell);
+				g.vid = header + cell.id;
+				if (!!color) {
+					g.fillStyle = color;
+					g.fillRectCenter(
+						cell.bx * this.bw,
+						cell.by * this.bh,
+						this.bw - 1.5,
+						this.bh - 1.5
+					);
+				} else {
+					g.vhide();
+				}
+			}
 		}
 	},
 
