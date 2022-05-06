@@ -376,7 +376,7 @@
 			getCanvasRows: function() {
 				var rows = this.getBoardRows() + 2 * this.margin;
 				if (this.board.bank) {
-					rows += this.board.bank.height * this.bankratio;
+					rows += this.board.bank.height * this.bankratio + 1 / 16;
 				}
 				return rows;
 			},
