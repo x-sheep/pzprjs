@@ -55,6 +55,11 @@ ui.auxeditor = {
 	cb: null,
 
 	open: function(sender, args, cb) {
+		if (!args) {
+			ui.popupmgr.popups.auxeditor.close();
+			return;
+		}
+
 		if (ui.auxeditor.current === args.key) {
 			return;
 		}

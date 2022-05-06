@@ -435,6 +435,12 @@ pzpr.classmgr.makeCommon({
 			return this;
 		},
 
+		getc: function() {
+			return this.bankpiece === null
+				? this.board.getc(this.bx, this.by)
+				: this.board.emptycell;
+		},
+
 		// 有効な範囲(minx,miny)-(maxx,maxy)
 		minx: null,
 		miny: null,
@@ -550,7 +556,12 @@ pzpr.classmgr.makeCommon({
 		// tc.getaddr() ターゲットの位置を移動する
 		//---------------------------------------------------------------------------
 		movedir: function(dir, mv) {
-			this.bankpiece = null;
+			if (this.bankpiece !== null) {
+				// TODO implement moving from board to bank
+				// TODO implement moving between bankpieces
+				return this;
+			}
+
 			this.puzzle.klass.Address.prototype.movedir.call(this, dir, mv);
 			if (this.modesnum && this.puzzle.playmode) {
 				this.targetdir = 0;

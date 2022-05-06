@@ -80,6 +80,14 @@
 	KeyEvent: {
 		enablemake: true
 	},
+	TargetCursor: {
+		setaddr: function(pos) {
+			if (this.bankpiece !== null) {
+				this.puzzle.emit("request-aux-editor");
+			}
+			this.common.setaddr.call(this, pos);
+		}
+	},
 
 	Board: {
 		rows: 12,
