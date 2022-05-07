@@ -1419,6 +1419,66 @@
 			this.outbstr += cm;
 		}
 	},
+	"Encode@tajmahal": {
+		decodePzpr: function(type) {
+			this.decodeDot_tajmahal();
+		},
+		encodePzpr: function(type) {
+			this.encodeDot_tajmahal();
+		},
+
+		decodeDot_tajmahal: function() {
+			var bd = this.board;
+			bd.disableInfo();
+			var s = 0,
+				bstr = this.outbstr;
+			for (var i = 0; i < bstr.length; i++) {
+				var dot = bd.dots[s],
+					ca = bstr.charAt(i);
+				if (this.include(ca, "0", "8")) {
+					var val = parseInt(ca, 10);
+					dot.setDot(val === 0 ? -2 : val);
+					s++;
+				} else if (this.include(ca, "a", "z")) {
+					s += parseInt(ca, 36) - 9;
+				}
+
+				if (s >= bd.dotsmax) {
+					break;
+				}
+			}
+			bd.enableInfo();
+			this.outbstr = bstr.substr(i + 1);
+		},
+
+		encodeDot_tajmahal: function() {
+			var count = 0,
+				cm = "",
+				bd = this.board;
+			for (var s = 0; s < bd.dotsmax; s++) {
+				var pstr = "",
+					dot = bd.dots[s],
+					num = dot.getDot() === -2 ? 0 : dot.getDot();
+				if (num !== -1) {
+					pstr += num;
+				} else {
+					count++;
+				}
+
+				if (count === 0) {
+					cm += pstr;
+				} else if (pstr || count === 26) {
+					cm += (count + 9).toString(36) + pstr;
+					count = 0;
+				}
+			}
+			if (count > 0) {
+				cm += (count + 9).toString(36);
+			}
+
+			this.outbstr += cm;
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
