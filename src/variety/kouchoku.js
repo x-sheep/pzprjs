@@ -148,9 +148,8 @@
 		sourcePoint: null,
 
 		inputsegment: function() {
-			var pos = this.getpos(0.25);
-			var cross = this.getcross(); // TODO source from cell
-			// TODO nudge pos into overlapping the nearest clue
+			var pos = this.getpos(0.25).moveToNearbyClue();
+			var cross = this.getcross();
 			// TODO grab source when clicking on existing square with 1 possibility
 			if (cross.isnull || cross === this.mouseCell) {
 				return;
@@ -160,7 +159,8 @@
 				this.inputData = 1;
 				this.sourcePoint = pos;
 				cross.draw();
-			} else if (this.mousemove && this.inputData === 1) {
+			}
+			if (this.inputData === 1) {
 				var prev = this.targetPoint;
 				this.targetPoint = new Array(4);
 
@@ -323,6 +323,27 @@
 	},
 	"Cell@tajmahal": {
 		maxnum: 8
+	},
+	"Address@tajmahal": {
+		moveToNearbyClue: function() {
+			if (this.getDot().getDot() !== -1) {
+				return this;
+			}
+
+			var dots = this.board.dotinside(
+				this.bx - 1,
+				this.by - 1,
+				this.bx + 1,
+				this.by + 1
+			);
+			for (var i = 0; i < dots.length; i++) {
+				if (dots[i].getDot() !== -1) {
+					this.set(dots[i]);
+					return this;
+				}
+			}
+			return this;
+		}
 	},
 	Segment: {
 		group: "segment",
