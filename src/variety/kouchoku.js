@@ -142,13 +142,64 @@
 	},
 
 	"MouseEvent@tajmahal": {
-		// TODO mouse support for typing on cell/cross
-
 		targetPoint: [null, null, null, null],
 		sourcePoint: null,
 
-		inputsegment: function() {
+		mouseinput_number: function() {
+			if (this.mousestart) {
+				this.inputqnum_tajmahal();
+			}
+		},
+		mouseinput_clear: function() {
+			this.inputdot();
+		},
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart || this.mousemove) {
+					this.inputsegment();
+				} else if (this.mouseend) {
+					this.inputsegment_up();
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.inputqnum_tajmahal();
+				}
+			}
+		},
+
+		inputqnum_tajmahal: function() {
 			var pos = this.getpos(0.25).moveToNearbyClue();
+			if (!pos || pos.isnull || pos.onborder()) {
+				return;
+			}
+
+			if (!pos.equals(this.cursor)) {
+				this.setcursor(pos);
+			} else {
+				this.inputdot();
+			}
+		},
+
+		inputdot: function() {
+			var pos = this.getpos(0.25).moveToNearbyClue();
+			if (this.prevPos.equals(pos)) {
+				return;
+			}
+
+			var dot = pos.getDot();
+			if (dot !== null && dot.piece.group !== "border") {
+				if (this.inputMode === "clear") {
+					dot.setDot(-1);
+				} else {
+					dot.setDot(this.getNewNumber(dot.piece, dot.getDot()));
+				}
+				dot.draw();
+			}
+			this.prevPos = pos;
+		},
+
+		inputsegment: function() {
+			var pos = this.getpos(0.25);
 			var cross = this.getcross();
 			// TODO grab source when clicking on existing square with 1 possibility
 			if (cross.isnull || cross === this.mouseCell) {
@@ -326,7 +377,7 @@
 	},
 	"Address@tajmahal": {
 		moveToNearbyClue: function() {
-			if (this.getDot().getDot() !== -1) {
+			if (this.getDot() && this.getDot().getDot() !== -1) {
 				return this;
 			}
 
