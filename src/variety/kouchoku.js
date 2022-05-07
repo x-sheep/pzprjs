@@ -199,14 +199,19 @@
 		},
 
 		inputsegment: function() {
-			var pos = this.getpos(0.25);
+			var pos = this.getpos(0.25).moveToNearbyClue();
 			var cross = this.getcross();
 			// TODO grab source when clicking on existing square with 1 possibility
 			if (cross.isnull || cross === this.mouseCell) {
 				return;
 			}
 
-			if (this.mousestart && !pos.isnull && !pos.onborder()) {
+			if (
+				this.mousestart &&
+				!pos.isnull &&
+				!pos.onborder() &&
+				(!this.puzzle.getConfig("ensquare") || pos.getobj().qnum !== -1)
+			) {
 				this.inputData = 1;
 				this.sourcePoint = pos;
 				cross.draw();
