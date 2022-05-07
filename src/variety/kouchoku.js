@@ -435,8 +435,8 @@
 		},
 		setLattices: function() {
 			// ユークリッドの互助法で最大公約数を求める
-			var div = this.dx >> 1,
-				n = this.dy >> 1,
+			var div = this.dx,
+				n = this.dy,
 				tmp;
 			div = div < 0 ? -div : div;
 			n = n < 0 ? -n : n;
@@ -456,8 +456,8 @@
 			for (var a = 1; a < div; a++) {
 				var bx = this.bx1 + this.dx * (a / div);
 				var by = this.by1 + this.dy * (a / div);
-				var cross = this.board.getx(bx, by);
-				this.lattices.push([bx, by, cross.id]);
+				var obj = this.board.getobj(bx, by);
+				this.lattices.push([bx, by, obj.id, obj.group]);
 			}
 		},
 
@@ -808,8 +808,12 @@
 				lattice = [];
 			for (var i = 0; i < seg.lattices.length; i++) {
 				var xc = seg.lattices[i][2];
-				if (xc !== null && this.cross[xc].qnum !== -1) {
-					lattice.push(xc);
+				var group = seg.lattices[i][3];
+				if (xc !== null) {
+					var obj = this[group][xc];
+					if (obj.qnum !== -1) {
+						lattice.push(obj);
+					}
 				}
 			}
 			return lattice;
@@ -1330,7 +1334,7 @@
 		},
 		getDotFillColor: function(dot) {
 			if (dot.getDot() !== -1) {
-				return dot.error === 1 ? this.errcolor1 : this.quescolor;
+				return dot.piece.error === 1 ? this.errcolor1 : this.quescolor;
 			}
 			return null;
 		},
@@ -1603,7 +1607,7 @@
 				var lattice = bd.getLatticePoint(seg.bx1, seg.by1, seg.bx2, seg.by2);
 				for (var n = 0; n < lattice.length; n++) {
 					seg.seterr(1);
-					bd.cross[lattice[n]].seterr(1);
+					lattice[n].seterr(1);
 					result = false;
 				}
 			});
@@ -1863,5 +1867,27 @@
 			"checkCrossLine",
 			"checkAngle"
 		]
+	},
+
+	"AnsCheck@tajmahal": {
+		checklist: [
+			"checkSegmentOverClue",
+			"checkDuplicateSegment",
+			"checkCrossLine",
+			"checkCornerOverClue",
+			"checkOneSegmentLoop"
+		],
+
+		// TODO check corners on top of segments
+		// TODO check square integrity (exactly 0 or 4 segments per source)
+		// TODO check square existing (segments with a source that is qnum -1)
+		// TODO check source existing (segments with no source set)
+		// TODO check clue numbers (sum of lcnts for all 4 corners)
+
+		checkCornerOverClue: function() {
+			this.checkSegment(function(cross) {
+				return cross.lcnt > 0 && cross.qnum !== -1;
+			}, "lnOnClue");
+		}
 	}
 });
