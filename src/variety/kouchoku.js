@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["kouchoku", "angleloop"], {
+})(["kouchoku", "angleloop", "tajmahal"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -49,7 +49,7 @@
 				var cross0 = this.targetPoint[1];
 				this.targetPoint[1] = cross;
 				cross.draw();
-				if (cross0 !== null) {
+				if (cross0) {
 					cross0.draw();
 				}
 			}
@@ -65,13 +65,13 @@
 			var cross1 = this.targetPoint[0],
 				cross2 = this.targetPoint[1];
 			this.targetPoint = [null, null];
-			if (cross1 !== null) {
+			if (cross1) {
 				cross1.draw();
 			}
-			if (cross2 !== null) {
+			if (cross2) {
 				cross2.draw();
 			}
-			if (cross1 !== null && cross2 !== null) {
+			if (cross1 && cross2) {
 				if (
 					!puzzle.getConfig("enline") ||
 					(cross1.qnum !== -1 && cross2.qnum !== -1)
@@ -129,17 +129,106 @@
 
 		mousereset: function(e) {
 			if (this.inputData === 1) {
-				var cross1 = this.targetPoint[0],
-					cross2 = this.targetPoint[1];
-				this.targetPoint = [null, null];
-				if (cross1 !== null) {
-					cross1.draw();
-				}
-				if (cross2 !== null) {
-					cross2.draw();
-				}
+				var points = this.targetPoint;
+				this.targetPoint = new Array(points.length);
+				points.forEach(function(p) {
+					if (p) {
+						p.draw();
+					}
+				});
 			}
 			this.common.mousereset.call(this);
+		}
+	},
+
+	"MouseEvent@tajmahal": {
+		// TODO mouse support for typing on cell/cross
+
+		targetPoint: [null, null, null, null],
+		sourcePoint: null,
+
+		inputsegment: function() {
+			var pos = this.getpos(0.25);
+			var cross = this.getcross(); // TODO source from cell
+			// TODO nudge pos into overlapping the nearest clue
+			// TODO grab source when clicking on existing square with 1 possibility
+			if (cross.isnull || cross === this.mouseCell) {
+				return;
+			}
+
+			if (this.mousestart && !pos.isnull && !pos.onborder()) {
+				this.inputData = 1;
+				this.sourcePoint = pos;
+				cross.draw();
+			} else if (this.mousemove && this.inputData === 1) {
+				var prev = this.targetPoint;
+				this.targetPoint = new Array(4);
+
+				prev.forEach(function(c) {
+					if (c) {
+						c.draw();
+					}
+				});
+
+				this.targetPoint[0] = cross;
+				this.targetPoint[1] = this.sourcePoint.relcross(
+					this.sourcePoint.by - cross.by,
+					cross.bx - this.sourcePoint.bx
+				);
+				this.targetPoint[2] = this.sourcePoint.relcross(
+					this.sourcePoint.bx - cross.bx,
+					this.sourcePoint.by - cross.by
+				);
+				this.targetPoint[3] = this.sourcePoint.relcross(
+					cross.by - this.sourcePoint.by,
+					this.sourcePoint.bx - cross.bx
+				);
+
+				this.targetPoint.forEach(function(c) {
+					if (c) {
+						c.draw();
+					}
+				});
+			}
+
+			this.mouseCell = cross;
+		},
+
+		inputsegment_up: function() {
+			if (this.inputData !== 1) {
+				return;
+			}
+
+			var puzzle = this.puzzle;
+			var prev = this.targetPoint;
+			this.targetPoint = new Array(4);
+			var valid = true;
+			for (var i = 0; i < 4; i++) {
+				var c = prev[i];
+				if (c && !c.isnull) {
+					c.draw();
+				} else {
+					valid = false;
+				}
+			}
+			if (valid) {
+				var sx = this.sourcePoint.bx,
+					sy = this.sourcePoint.by;
+				for (var i = 0; i < 4; i++) {
+					this.inputsegment_main(
+						prev[i].bx,
+						prev[i].by,
+						prev[(i + 1) % 4].bx,
+						prev[(i + 1) % 4].by
+					);
+				}
+
+				var dist =
+					Math.max(Math.abs(sx - prev[0].bx), Math.abs(sy - prev[0].by)) + 1;
+
+				puzzle.painter.paintRange(sx - dist, sy - dist, sx + dist, sy + dist);
+			}
+			this.sourcePoint = null;
 		}
 	},
 
@@ -202,7 +291,20 @@
 		}
 	},
 
-	TargetCursor: {
+	"KeyEvent@tajmahal": {
+		moveTarget: function(ca) {
+			return this.moveTBorder(ca);
+		},
+
+		key_inputqnum: function(ca) {
+			var obj = this.cursor.getobj();
+			if (obj.group !== "border") {
+				this.key_inputqnum_main(obj, ca);
+			}
+		}
+	},
+
+	"TargetCursor@kouchoku,angleloop": {
 		crosstype: true
 	},
 
@@ -215,6 +317,12 @@
 		disInputHatena: true,
 		maxnum: 3,
 		minnum: 1
+	},
+	"Cross@tajmahal": {
+		maxnum: 8
+	},
+	"Cell@tajmahal": {
+		maxnum: 8
 	},
 	Segment: {
 		group: "segment",
@@ -496,6 +604,8 @@
 			}
 		},
 		remove: function(seg) {
+			// TODO remove all segments with the same source
+
 			var bd = this.board;
 			if (this === bd.segment) {
 				seg.isnull = true;
@@ -667,6 +777,11 @@
 			return seg;
 		}
 	},
+
+	"Board@tajmahal": {
+		hasdots: 1
+	},
+
 	BoardExec: {
 		adjustBoardData: function(key, d) {
 			var bd = this.board,
@@ -960,7 +1075,9 @@
 				g.vid = "x_point_" + cross.id;
 				if (
 					this.puzzle.mouse.targetPoint[0] === cross ||
-					this.puzzle.mouse.targetPoint[1] === cross
+					this.puzzle.mouse.targetPoint[1] === cross ||
+					this.puzzle.mouse.targetPoint[2] === cross ||
+					this.puzzle.mouse.targetPoint[3] === cross
 				) {
 					g.strokeCircle(cross.bx * this.bw, cross.by * this.bh, csize);
 				} else {
@@ -1118,6 +1235,55 @@
 		}
 	},
 
+	"Graphic@tajmahal": {
+		fontShadecolor: "white",
+		numbercolor_func: "fixed_shaded",
+
+		paint: function() {
+			this.drawBaseMarks();
+
+			this.drawSegments();
+
+			this.drawDots();
+			this.drawNumbers_tajmahal();
+
+			this.drawSegmentTarget();
+			this.drawTarget();
+		},
+
+		getDotOutlineColor: function() {
+			return null;
+		},
+		getDotFillColor: function(dot) {
+			if (dot.getDot() !== -1) {
+				return dot.error === 1 ? this.errcolor1 : this.quescolor;
+			}
+			return null;
+		},
+		getDotRadius: function(dot) {
+			return 0.4;
+		},
+
+		drawNumbers_tajmahal: function() {
+			var g = this.context;
+			var d = this.range;
+			var dlist = this.board.dotinside(d.x1, d.y1, d.x2, d.y2);
+			for (var i = 0; i < dlist.length; i++) {
+				var dot = dlist[i];
+				var text = this.getQuesNumberText(dot.piece);
+				g.vid = "dot_text_" + dot.id;
+				if (!!text) {
+					g.fillStyle = this.getQuesNumberColor(dot.piece);
+					var x = dot.bx * this.bw;
+					var y = dot.by * this.bh;
+					this.disptext(text, x, y, { ratio: 0.65 });
+				} else {
+					g.vhide();
+				}
+			}
+		}
+	},
+
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
 	Encode: {
@@ -1211,6 +1377,17 @@
 			segs.each(function(seg) {
 				fio.writeLine([seg.bx1, seg.by1, seg.bx2, seg.by2].join(" "));
 			});
+		}
+	},
+
+	"FileIO@tajmahal": {
+		decodeData: function() {
+			this.decodeDotFile();
+			this.decodeSegment();
+		},
+		encodeData: function() {
+			this.encodeDotFile();
+			this.encodeSegment();
 		}
 	},
 
