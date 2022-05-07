@@ -851,6 +851,8 @@
 	},
 
 	"Board@tajmahal": {
+		cols: 10,
+		rows: 10,
 		hasdots: 1
 	},
 
