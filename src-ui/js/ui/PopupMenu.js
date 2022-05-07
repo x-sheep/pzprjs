@@ -218,7 +218,9 @@ ui.popupmgr.addpopup("template", {
 		}
 	},
 	close: function() {
-		this.pop.style.display = "none";
+		if (this.pop) {
+			this.pop.style.display = "none";
+		}
 		if (!this.multipopup) {
 			ui.popupmgr.popup = null;
 		}
