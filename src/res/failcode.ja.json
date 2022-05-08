@@ -409,6 +409,7 @@
     "lnIsolate.dotchi": "線の通っていない○があります。",
     "lnIsolate.kouchoku": "線がマークのないところから出ています。",
     "lnIsolate.onsen": "線の通っていない○があります。",
+    "lnIsolate.tajmahal": "A square does not have a clue at the center.",
     "lnLenGt.reflect": "三角形の数字とそこから延びる線の長さが一致していません。",
     "lnLengthGt.pencils": "鉛筆から引かれた線が軸よりも長くなっているところがあります。",
     "lnLengthLt.pencils": "鉛筆から引かれた線が軸よりも短くなっているところがあります。",

@@ -101,7 +101,7 @@
 				}
 			}
 		},
-		inputsegment_main: function(bx1, by1, bx2, by2) {
+		inputsegment_main: function(bx1, by1, bx2, by2, ox, oy) {
 			var tmp;
 			if (bx1 > bx2) {
 				tmp = bx1;
@@ -118,10 +118,15 @@
 				return;
 			}
 
+			if (isNaN(ox)) {
+				ox = null;
+				oy = null;
+			}
+
 			var bd = this.board,
 				seg = bd.getSegment(bx1, by1, bx2, by2);
 			if (seg === null) {
-				bd.segment.addSegmentByAddr(bx1, by1, bx2, by2);
+				bd.segment.addSegmentByAddr(bx1, by1, bx2, by2, ox, oy);
 			} else {
 				bd.segment.remove(seg);
 			}
@@ -275,7 +280,9 @@
 						prev[i].bx,
 						prev[i].by,
 						prev[(i + 1) % 4].bx,
-						prev[(i + 1) % 4].by
+						prev[(i + 1) % 4].by,
+						sx,
+						sy
 					);
 				}
 
@@ -403,7 +410,7 @@
 	},
 	Segment: {
 		group: "segment",
-		initialize: function(bx1, by1, bx2, by2) {
+		initialize: function(bx1, by1, bx2, by2, ox, oy) {
 			this.path = null;
 			this.isnull = true;
 
@@ -417,14 +424,17 @@
 			this.dx = 0; // X座標の差分を保持する
 			this.dy = 0; // Y座標の差分を保持する
 
+			this.ox = null;
+			this.oy = null;
+
 			this.lattices = []; // 途中で通過する格子点を保持する
 
 			this.error = 0;
 			this.trial = 0;
 
-			this.setpos(bx1, by1, bx2, by2);
+			this.setpos(bx1, by1, bx2, by2, ox, oy);
 		},
-		setpos: function(bx1, by1, bx2, by2) {
+		setpos: function(bx1, by1, bx2, by2, ox, oy) {
 			this.sideobj[0] = this.board.getx(bx1, by1);
 			this.sideobj[1] = this.board.getx(bx2, by2);
 
@@ -435,6 +445,9 @@
 
 			this.dx = bx2 - bx1;
 			this.dy = by2 - by1;
+
+			this.ox = !isNaN(ox) && ox !== null ? ox : null;
+			this.oy = !isNaN(ox) && oy !== null ? oy : null;
 
 			this.setLattices();
 		},
@@ -757,8 +770,8 @@
 		// segment.addSegmentByAddr()    線をアドレス指定で引く時に呼ぶ
 		// segment.removeSegmentByAddr() 線をアドレス指定で消す時に呼ぶ
 		//---------------------------------------------------------------------------
-		addSegmentByAddr: function(bx1, by1, bx2, by2) {
-			this.add(new this.klass.Segment(bx1, by1, bx2, by2));
+		addSegmentByAddr: function(bx1, by1, bx2, by2, ox, oy) {
+			this.add(new this.klass.Segment(bx1, by1, bx2, by2, ox, oy));
 		},
 		removeSegmentByAddr: function(bx1, by1, bx2, by2) {
 			this.remove(this.board.getSegment(bx1, by1, bx2, by2));
@@ -921,44 +934,50 @@
 				var bx1 = seg.bx1,
 					by1 = seg.by1,
 					bx2 = seg.bx2,
-					by2 = seg.by2;
+					by2 = seg.by2,
+					ox = seg.ox,
+					oy = seg.oy;
 				switch (key) {
 					case bexec.FLIPY:
-						seg.setpos(bx1, yy - by1, bx2, yy - by2);
+						seg.setpos(bx1, yy - by1, bx2, yy - by2, ox, yy - oy);
 						break;
 					case bexec.FLIPX:
-						seg.setpos(xx - bx1, by1, xx - bx2, by2);
+						seg.setpos(xx - bx1, by1, xx - bx2, by2, xx - ox, oy);
 						break;
 					case bexec.TURNR:
-						seg.setpos(yy - by1, bx1, yy - by2, bx2);
+						seg.setpos(yy - by1, bx1, yy - by2, bx2, yy - oy, ox);
 						break;
 					case bexec.TURNL:
-						seg.setpos(by1, xx - bx1, by2, xx - bx2);
+						seg.setpos(by1, xx - bx1, by2, xx - bx2, oy, xx - ox);
 						break;
 					case bexec.EXPANDUP:
-						seg.setpos(bx1, by1 + 2, bx2, by2 + 2);
+						seg.setpos(bx1, by1 + 2, bx2, by2 + 2, ox, oy + 2);
 						break;
 					case bexec.EXPANDDN:
-						seg.setpos(bx1, by1, bx2, by2);
+						seg.setpos(bx1, by1, bx2, by2, ox, oy);
 						break;
 					case bexec.EXPANDLT:
-						seg.setpos(bx1 + 2, by1, bx2 + 2, by2);
+						seg.setpos(bx1 + 2, by1, bx2 + 2, by2, ox + 2, oy);
 						break;
 					case bexec.EXPANDRT:
-						seg.setpos(bx1, by1, bx2, by2);
+						seg.setpos(bx1, by1, bx2, by2, ox, oy);
 						break;
 					case bexec.REDUCEUP:
-						seg.setpos(bx1, by1 - 2, bx2, by2 - 2);
+						seg.setpos(bx1, by1 - 2, bx2, by2 - 2, ox, oy - 2);
 						break;
 					case bexec.REDUCEDN:
-						seg.setpos(bx1, by1, bx2, by2);
+						seg.setpos(bx1, by1, bx2, by2, ox, oy);
 						break;
 					case bexec.REDUCELT:
-						seg.setpos(bx1 - 2, by1, bx2 - 2, by2);
+						seg.setpos(bx1 - 2, by1, bx2 - 2, by2, ox, oy - 2);
 						break;
 					case bexec.REDUCERT:
-						seg.setpos(bx1, by1, bx2, by2);
+						seg.setpos(bx1, by1, bx2, by2, ox, oy);
 						break;
+				}
+				if (ox === null) {
+					seg.ox = null;
+					seg.oy = null;
 				}
 			});
 		}
@@ -1001,6 +1020,8 @@
 			this.by2 = seg.by2;
 			this.old = old;
 			this.num = num;
+			this.ox = seg.ox;
+			this.oy = seg.oy;
 		},
 		decode: function(strs) {
 			if (strs[0] !== "SG") {
@@ -1012,10 +1033,17 @@
 			this.by2 = +strs[4];
 			this.old = +strs[5];
 			this.num = +strs[6];
+			if (!isNaN(strs[7])) {
+				this.ox = +strs[7];
+				this.oy = +strs[8];
+			} else {
+				this.ox = null;
+				this.oy = null;
+			}
 			return true;
 		},
 		toString: function() {
-			return [
+			var items = [
 				"SG",
 				this.bx1,
 				this.by1,
@@ -1023,7 +1051,12 @@
 				this.by2,
 				this.old,
 				this.num
-			].join(",");
+			];
+			if (this.ox !== null) {
+				items.push(this.ox);
+				items.push(this.oy);
+			}
+			return items.join(",");
 		},
 
 		exec: function(num) {
@@ -1031,10 +1064,12 @@
 				by1 = this.by1,
 				bx2 = this.bx2,
 				by2 = this.by2,
+				ox = this.ox,
+				oy = this.oy,
 				puzzle = this.puzzle,
 				tmp;
 			if (num === 1) {
-				puzzle.board.segment.addSegmentByAddr(bx1, by1, bx2, by2);
+				puzzle.board.segment.addSegmentByAddr(bx1, by1, bx2, by2, ox, oy);
 			} else if (num === 0) {
 				puzzle.board.segment.removeSegmentByAddr(bx1, by1, bx2, by2);
 			}
@@ -1505,11 +1540,15 @@
 			var len = +this.readLine();
 			for (var i = 0; i < len; i++) {
 				var data = this.readLine().split(" ");
+				var ox = !isNaN(data[4]) ? +data[4] : null;
+				var oy = !isNaN(data[4]) ? +data[5] : null;
 				this.board.segment.addSegmentByAddr(
 					+data[0],
 					+data[1],
 					+data[2],
-					+data[3]
+					+data[3],
+					ox,
+					oy
 				);
 			}
 		},
@@ -1518,7 +1557,12 @@
 				segs = this.board.segment;
 			this.writeLine(segs.length);
 			segs.each(function(seg) {
-				fio.writeLine([seg.bx1, seg.by1, seg.bx2, seg.by2].join(" "));
+				var items = [seg.bx1, seg.by1, seg.bx2, seg.by2];
+				if (seg.ox !== null) {
+					items.push(seg.ox);
+					items.push(seg.oy);
+				}
+				fio.writeLine(items.join(" "));
 			});
 		}
 	},
@@ -1880,19 +1924,38 @@
 			"checkDuplicateSegment",
 			"checkCrossLine",
 			"checkCornerOverClue",
+			"checkSourceIsClue",
 			"checkOneSegmentLoop"
 		],
 
 		// TODO check corners on top of segments
 		// TODO check square integrity (exactly 0 or 4 segments per source)
-		// TODO check square existing (segments with a source that is qnum -1)
-		// TODO check source existing (segments with no source set)
 		// TODO check clue numbers (sum of lcnts for all 4 corners)
 
 		checkCornerOverClue: function() {
 			this.checkSegment(function(cross) {
 				return cross.lcnt > 0 && cross.qnum !== -1;
 			}, "lnOnClue");
+		},
+
+		checkSourceIsClue: function() {
+			var result = true,
+				bd = this.board,
+				segs = bd.segment;
+			segs.each(function(seg) {
+				if (
+					seg.ox === null ||
+					seg.oy === null ||
+					bd.getc(seg.ox, seg.oy).qnum === -1
+				) {
+					seg.seterr(1);
+					result = false;
+				}
+			});
+			if (!result) {
+				this.failcode.add("lnIsolate");
+				segs.setnoerr();
+			}
 		}
 	}
 });

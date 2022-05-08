@@ -409,6 +409,7 @@
     "lnIsolate.dotchi": "A circle doesn't have a line.",
     "lnIsolate.kouchoku": "A segment starts outside a clue.",
     "lnIsolate.onsen": "A circle doesn't have a line.",
+    "lnIsolate.tajmahal": "A square does not have a clue at the center.",
     "lnLenGt.reflect": "The lines passing a triangle are too long.",
     "lnLengthGt.pencils": "A line is longer than the connected pencil.",
     "lnLengthLt.pencils": "A line is shorter than the connected pencil.",
