@@ -133,7 +133,7 @@
 
 			if (seg === null) {
 				bd.segment.addSegmentByAddr(bx1, by1, bx2, by2, ox, oy);
-			} else {
+			} else if (ox === null) {
 				bd.segment.remove(seg);
 			}
 		},
@@ -210,11 +210,23 @@
 		},
 
 		inputsegment: function() {
-			var pos = this.getpos(0.25).moveToNearbyClue();
+			var pos = this.getpos(0.25);
 			var cross = this.getcross();
-			// TODO grab source when clicking on existing square with 1 possibility
 			if (cross.isnull || cross === this.mouseCell) {
 				return;
+			}
+
+			// TODO cannot clear square with center on Cell
+
+			if (this.mousestart) {
+				if (cross.lcnt > 0) {
+					var seg = cross.seglist[cross.seglist.length - 1];
+					if (seg.ox !== null) {
+						pos.init(seg.ox, seg.oy);
+					}
+				} else {
+					pos.moveToNearbyClue();
+				}
 			}
 
 			if (
@@ -278,9 +290,23 @@
 					valid = false;
 				}
 			}
+
+			if (valid && prev[0].bx === prev[1].bx && prev[0].by === prev[1].by) {
+				valid = false;
+			}
+
+			var sx = this.sourcePoint.bx,
+				sy = this.sourcePoint.by;
+
+			if (
+				!valid ||
+				!prev[0].seglist.some(function(seg) {
+					return seg.ox === sx && seg.oy === sy;
+				})
+			) {
+				this.board.segment.removeSegmentsByOrigin(sx, sy);
+			}
 			if (valid) {
-				var sx = this.sourcePoint.bx,
-					sy = this.sourcePoint.by;
 				for (var i = 0; i < 4; i++) {
 					this.inputsegment_main(
 						prev[i].bx,
