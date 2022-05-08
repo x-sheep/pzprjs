@@ -969,7 +969,7 @@
 						seg.setpos(bx1, by1, bx2, by2, ox, oy);
 						break;
 					case bexec.REDUCELT:
-						seg.setpos(bx1 - 2, by1, bx2 - 2, by2, ox, oy - 2);
+						seg.setpos(bx1 - 2, by1, bx2 - 2, by2, ox - 2, oy);
 						break;
 					case bexec.REDUCERT:
 						seg.setpos(bx1, by1, bx2, by2, ox, oy);
