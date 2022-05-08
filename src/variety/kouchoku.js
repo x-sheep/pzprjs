@@ -1982,13 +1982,12 @@
 			"checkDuplicateSegment",
 			"checkCrossLine",
 			"checkCornerOverClue",
+			"checkSegmentOverCorner",
 			"checkSourceIsClue",
 			"checkOneSegmentLoop+",
 			"checkClueCount",
 			"checkClueHasSquare"
 		],
-
-		// TODO check corners on top of segments
 
 		checkCornerOverClue: function() {
 			this.checkSegment(function(cross) {
@@ -2078,6 +2077,34 @@
 					break;
 				}
 				dot.piece.seterr(1);
+			}
+		},
+
+		checkSegmentOverCorner: function() {
+			var result = true,
+				bd = this.board,
+				segs = bd.segment;
+			segs.each(function(seg) {
+				var lattice = [];
+				for (var i = 0; i < seg.lattices.length; i++) {
+					var xc = seg.lattices[i][2];
+					var group = seg.lattices[i][3];
+					if (xc !== null) {
+						var obj = bd[group][xc];
+						if (obj.lcnt > 0) {
+							lattice.push(obj);
+						}
+					}
+				}
+				for (var n = 0; n < lattice.length; n++) {
+					seg.seterr(1);
+					lattice[n].seterr(1);
+					result = false;
+				}
+			});
+			if (!result) {
+				this.failcode.add("lnOnCorner");
+				segs.setnoerr();
 			}
 		}
 	}

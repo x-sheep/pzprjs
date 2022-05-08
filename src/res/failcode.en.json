@@ -423,6 +423,7 @@
     "lnNotSq.tajmahal": "A segment doesn't form a square.",
     "lnOnCenter.midloop": "A circle is not the center point of a line.",
     "lnOnClue.tajmahal": "A corner is on top of a clue.",
+    "lnOnCorner.tajmahal": "A segment overlaps a corner.",
     "lnOnDot.midloop": "A line doesn't go over a circle.",
     "lnOnShade.dotchi": "A line goes over a shaded circle.",
     "lnOnShade": "There is a line on a shaded cell.",

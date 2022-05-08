@@ -423,6 +423,7 @@
     "lnNotSq.tajmahal": "A segment doesn't form a square.",
     "lnOnCenter.midloop": "線分の中点になっていない黒丸があります。",
     "lnOnClue.tajmahal": "A corner is on top of a clue.",
+    "lnOnCorner.tajmahal": "A segment overlaps a corner.",
     "lnOnDot.midloop": "ループが通過していない黒丸があります。",
     "lnOnShade.dotchi": "線が●のマスを通っています。",
     "lnOnShade": "黒マスの上に線が引かれています。",
