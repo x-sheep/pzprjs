@@ -125,6 +125,12 @@
 
 			var bd = this.board,
 				seg = bd.getSegment(bx1, by1, bx2, by2);
+
+			if (seg && seg.ox !== null && (seg.ox !== ox || seg.oy !== oy)) {
+				bd.segment.removeSegmentsByOrigin(seg.ox, seg.oy);
+				seg = null;
+			}
+
 			if (seg === null) {
 				bd.segment.addSegmentByAddr(bx1, by1, bx2, by2, ox, oy);
 			} else {
@@ -694,8 +700,6 @@
 			}
 		},
 		remove: function(seg) {
-			// TODO remove all segments with the same source
-
 			var bd = this.board;
 			if (this === bd.segment) {
 				seg.isnull = true;
@@ -775,6 +779,15 @@
 		},
 		removeSegmentByAddr: function(bx1, by1, bx2, by2) {
 			this.remove(this.board.getSegment(bx1, by1, bx2, by2));
+		},
+		removeSegmentsByOrigin: function(ox, oy) {
+			var list = this;
+			var others = this.filter(function(seg) {
+				return seg.ox === ox && seg.oy === oy;
+			});
+			others.each(function(seg) {
+				list.remove(seg);
+			});
 		}
 	},
 
