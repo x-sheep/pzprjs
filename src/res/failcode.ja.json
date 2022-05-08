@@ -289,7 +289,7 @@
     "crConnSlNe.gokigen": "数字に繋がる線の数が間違っています。",
     "crShadeGt.creek": "数字のまわりにある黒マスの数が間違っています。",
     "crShadeLt.creek": "数字のまわりにある黒マスの数が間違っています。",
-    "crNoSegment.tajmahal": "A clue is not the center point of a square.",
+    "crNoSegment.tajmahal": "A clue is not inside a square.",
     "crAdjacent.tajmahal": "A square does not touch the correct amount of other squares.",
     "cs2x2.snake": "スネークが自分自身とタテヨコナナメに接しています。",
     "cs2x2": "2x2の黒マスのカタマリがあります。",
