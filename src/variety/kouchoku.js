@@ -1921,16 +1921,17 @@
 	"AnsCheck@tajmahal": {
 		checklist: [
 			"checkSegmentOverClue",
+			"checkSquareIntegrity",
 			"checkDuplicateSegment",
 			"checkCrossLine",
 			"checkCornerOverClue",
 			"checkSourceIsClue",
-			"checkOneSegmentLoop"
+			"checkOneSegmentLoop+",
+			"checkClueCount",
+			"checkClueHasSquare"
 		],
 
 		// TODO check corners on top of segments
-		// TODO check square integrity (exactly 0 or 4 segments per source)
-		// TODO check clue numbers (sum of lcnts for all 4 corners)
 
 		checkCornerOverClue: function() {
 			this.checkSegment(function(cross) {
@@ -1938,23 +1939,88 @@
 			}, "lnOnClue");
 		},
 
-		checkSourceIsClue: function() {
-			var result = true,
-				bd = this.board,
-				segs = bd.segment;
-			segs.each(function(seg) {
-				if (
-					seg.ox === null ||
-					seg.oy === null ||
-					bd.getc(seg.ox, seg.oy).qnum === -1
-				) {
-					seg.seterr(1);
-					result = false;
+		getOriginMap: function() {
+			var bd = this.board;
+			if (!this._info.origins) {
+				var map = {};
+
+				bd.segment.each(function(seg) {
+					var key = seg.ox === null ? "null" : seg.ox + "," + seg.oy;
+					if (!(key in map)) {
+						map[key] = {
+							obj: seg.ox !== null ? bd.getobj(seg.ox, seg.oy) : null,
+							segs: new bd.klass.SegmentList()
+						};
+					}
+					map[key].segs.add(seg);
+				});
+
+				this._info.origins = map;
+			}
+			return this._info.origins;
+		},
+
+		checkOrigins: function(func, code) {
+			var origins = this.getOriginMap();
+			var bd = this.board;
+			for (var key in origins) {
+				var data = origins[key];
+				if (!func(data.obj, data.segs)) {
+					continue;
 				}
-			});
-			if (!result) {
-				this.failcode.add("lnIsolate");
-				segs.setnoerr();
+				this.failcode.add(code);
+				if (this.checkOnly) {
+					break;
+				}
+				data.obj.seterr(1);
+				data.segs.seterr(1);
+				bd.segment.setnoerr();
+			}
+		},
+
+		checkSourceIsClue: function() {
+			this.checkOrigins(function(obj, segs) {
+				return obj === null || obj.qnum === -1;
+			}, "lnIsolate");
+		},
+
+		checkSquareIntegrity: function() {
+			this.checkOrigins(function(obj, segs) {
+				return segs.length % 4;
+			}, "lnNotSq");
+		},
+
+		checkClueCount: function() {
+			this.checkOrigins(function(obj, segs) {
+				if (obj === null || obj.qnum < 0) {
+					return false;
+				}
+
+				var count = 0;
+				segs.each(function(seg) {
+					count += seg.sideobj[0].lcnt - 2;
+					count += seg.sideobj[1].lcnt - 2;
+				});
+				return obj.qnum !== count / 4;
+			}, "crAdjacent");
+		},
+
+		checkClueHasSquare: function() {
+			var origins = this.getOriginMap();
+
+			var bd = this.board;
+			for (var s = 0; s < bd.dotsmax; s++) {
+				var dot = bd.dots[s];
+				var key = dot.bx + "," + dot.by;
+				if (dot.getDot() === -1 || key in origins) {
+					continue;
+				}
+
+				this.failcode.add("crNoSegment");
+				if (this.checkOnly) {
+					break;
+				}
+				dot.piece.seterr(1);
 			}
 		}
 	}
