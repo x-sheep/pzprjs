@@ -212,17 +212,17 @@
 		inputsegment: function() {
 			var pos = this.getpos(0.25);
 			var cross = this.getcross();
-			if (cross.isnull || cross === this.mouseCell) {
+			var grabbing = false;
+			if (cross.isnull || cross === this.mouseCell || pos === this.mouseCell) {
 				return;
 			}
-
-			// TODO cannot clear square with center on Cell
 
 			if (this.mousestart) {
 				if (cross.lcnt > 0) {
 					var seg = cross.seglist[cross.seglist.length - 1];
 					if (seg.ox !== null) {
 						pos.init(seg.ox, seg.oy);
+						grabbing = true;
 					}
 				} else {
 					pos.moveToNearbyClue();
@@ -249,6 +249,14 @@
 					}
 				});
 
+				if (
+					!grabbing &&
+					(pos.equals(this.sourcePoint) || cross.equals(this.sourcePoint))
+				) {
+					this.sourcePoint.draw();
+					this.mouseCell = this.sourcePoint;
+					return;
+				}
 				this.targetPoint[0] = cross;
 				this.targetPoint[1] = this.sourcePoint.relcross(
 					this.sourcePoint.by - cross.by,
@@ -268,6 +276,7 @@
 						c.draw();
 					}
 				});
+				this.sourcePoint.draw();
 			}
 
 			this.mouseCell = cross;
@@ -297,6 +306,7 @@
 
 			var sx = this.sourcePoint.bx,
 				sy = this.sourcePoint.by;
+			this.sourcePoint = null;
 
 			if (
 				!valid ||
@@ -322,8 +332,9 @@
 					Math.max(Math.abs(sx - prev[0].bx), Math.abs(sy - prev[0].by)) + 1;
 
 				puzzle.painter.paintRange(sx - dist, sy - dist, sx + dist, sy + dist);
+			} else {
+				puzzle.painter.paintRange(sx, sy, sx, sy);
 			}
-			this.sourcePoint = null;
 		}
 	},
 
@@ -1412,13 +1423,20 @@
 			return null;
 		},
 		getDotFillColor: function(dot) {
-			if (dot.getDot() !== -1) {
-				return dot.piece.error === 1 ? this.errcolor1 : this.quescolor;
+			if (
+				this.puzzle.mouse.sourcePoint &&
+				!this.puzzle.mouse.targetPoint[0] &&
+				dot.equals(this.puzzle.mouse.sourcePoint)
+			) {
+				return "green";
 			}
-			return null;
+			if (dot.piece.error === 1) {
+				return this.errcolor1;
+			}
+			return dot.getDot() !== -1 ? this.quescolor : null;
 		},
 		getDotRadius: function(dot) {
-			return 0.4;
+			return dot.getDot() !== -1 ? 0.4 : 0.15;
 		},
 
 		drawNumbers_tajmahal: function() {
