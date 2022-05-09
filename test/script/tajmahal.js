@@ -49,6 +49,30 @@ ui.debug.addDebugData("tajmahal", {
 		]
 	],
 	inputs: [
-		// TODO input tests
+		{ input: ["newboard,6,3", "editmode"] },
+		{
+			label: "Can place clues",
+			input: ["cursor,3,3", "key,-", "cursor,8,4", "key,1"],
+			result:
+				"pzprv3/tajmahal/3/6/.........../.........../..-......../.......1.../.........../0/"
+		},
+		{
+			label: "Can input new squares",
+			input: ["playmode", "mouse,left, 3,3, 4,0", "mouse,left, 8,4, 8,2"],
+			result:
+				"pzprv3/tajmahal/3/6/.........../.........../..-......../.......1.../.........../8/4 0 6 4 3 3/2 6 6 4 3 3/0 2 2 6 3 3/0 2 4 0 3 3/8 2 10 4 8 4/8 6 10 4 8 4/6 4 8 6 8 4/6 4 8 2 8 4/"
+		},
+		{
+			label: "Inputting new square replaces old one",
+			input: ["mouse,left, 3,3, 0,0"],
+			result:
+				"pzprv3/tajmahal/3/6/.........../.........../..-......../.......1.../.........../8/8 2 10 4 8 4/8 6 10 4 8 4/6 4 8 6 8 4/6 4 8 2 8 4/0 0 6 0 3 3/6 0 6 6 3 3/0 6 6 6 3 3/0 0 0 6 3 3/"
+		},
+		{
+			label: "Can pick up existing square and move it",
+			input: ["mouse,left, 0,0, 2,0"],
+			result:
+				"pzprv3/tajmahal/3/6/.........../.........../..-......../.......1.../.........../8/8 2 10 4 8 4/8 6 10 4 8 4/6 4 8 6 8 4/6 4 8 2 8 4/2 0 6 2 3 3/4 6 6 2 3 3/0 4 4 6 3 3/0 4 2 0 3 3/"
+		}
 	]
 });
