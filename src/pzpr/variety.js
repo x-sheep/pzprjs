@@ -79,7 +79,8 @@
 		"lapaz",
 		"tren",
 		"pentominous",
-		"hinge"
+		"hinge",
+		"railpool"
 	]);
 
 	(function(Genre, obj) {
@@ -390,7 +391,8 @@
 			],
 			yajitatami: [0, 0, "ヤジタタミ", "Yajitatami"],
 			yinyang: [0, 0, "しろまるくろまる", "Yin-Yang"],
-			yosenabe: [0, 0, "よせなべ", "Yosenabe"]
+			yosenabe: [0, 0, "よせなべ", "Yosenabe"],
+			railpool: [0, 0, "Rail Pool", "Rail Pool"]
 		}
 	);
 })();

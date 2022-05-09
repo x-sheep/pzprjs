@@ -608,5 +608,8 @@
     "stopHalfway.roma": "A cell cannot reach a goal.",
     "tapaloopError.tapaloop": "The segments around a clue are not the same length as the numbers.",
     "tentAround.tents": "Some tents touch.",
-    "unusedCell.pencils": "A cell is unused."
+    "unusedCell.pencils": "A cell is unused.",
+    "segUnclued.railpool": "The segment is unclued",
+    "clueUnused.railpool": "No segment has the clued length",
+    "incompatibleSets.railpool": "Segment lengths don't match the clue"
 }
