@@ -179,7 +179,7 @@
 		},
 
 		inputqnum_tajmahal: function() {
-			var pos = this.getpos(0.25).moveToNearbyClue();
+			var pos = this.getcrossorcell().moveToNearbyClue();
 			if (!pos || pos.isnull || pos.onborder()) {
 				return;
 			}
@@ -192,7 +192,7 @@
 		},
 
 		inputdot: function() {
-			var pos = this.getpos(0.25).moveToNearbyClue();
+			var pos = this.getcrossorcell().moveToNearbyClue();
 			if (this.prevPos.equals(pos)) {
 				return;
 			}
@@ -210,7 +210,7 @@
 		},
 
 		inputsegment: function() {
-			var pos = this.getpos(0.25);
+			var pos = this.getcrossorcell();
 			var cross = this.getcross();
 			var grabbing = false;
 			if (cross.isnull || cross === this.mouseCell || pos === this.mouseCell) {
