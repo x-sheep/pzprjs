@@ -213,7 +213,7 @@
 			var pos = this.getcrossorcell();
 			var cross = this.getcross();
 			var grabbing = false;
-			if (cross.isnull || cross === this.mouseCell || pos === this.mouseCell) {
+			if (pos.getobj().isnull || pos.equals(this.mouseCell)) {
 				return;
 			}
 
@@ -279,7 +279,7 @@
 				this.sourcePoint.draw();
 			}
 
-			this.mouseCell = cross;
+			this.mouseCell = pos;
 		},
 
 		inputsegment_up: function() {
