@@ -384,11 +384,86 @@
 			this.encodeEmpty();
 			this.encodeNumber_railpool();
 		},
+		// each number cell can have up to 4 clues between 0..9, strictly increasing
+		// and non repeating (with the exception of 0, which we use to encode '?')
+		// in total, this is 438 possible options.
+		// Tapa clues are encoded using 2 chars, one in base 16 and 
+		// the other in base 36, giving 576 possible values.
+		// In other words, if we are very very smart about the encoding, 
+		// we could fit each number clues in just 2 chars.
+		// After wasting way too much time trying it (without a precomputed table),
+		// I'm surrendering and simply using 1 char per number
 		decodeNumber_railpool: function() {
-			// no idea how to do this
+			var c = 0,
+				i = 0,
+				bstr = this.outbstr,
+				bd = this.board;
+			for (i = 0; i < bstr.length; i++) {
+				var cell = bd.cell[c],
+					ca = bstr.charAt(i);
+
+				if (this.include(ca, "0", "j")) {
+					var val = [];
+					
+					while (!this.include(ca, "0", "9")) {
+						val.push(parseInt(ca, 36) - 10);
+						i++;
+						ca = bstr.charAt(i);
+					}
+					val.push(parseInt(ca, 36));
+					
+					for (var k = 0; k < 4; k++) {
+						if (val[k] === 0) {
+							val[k] = -2;
+						}
+					}
+					cell.qnums = val;					
+				} else if (ca >= "k" && ca <= "z") {
+					c += parseInt(ca, 36) - 20;
+				}
+
+				c++;
+				if (!bd.cell[c]) {
+					break;
+				}
+			}
+			this.outbstr = bstr.substr(i + 1);
 		},
 		encodeNumber_railpool: function() {
-			// no idea how to do this
+			var count = 0,
+				cm = "",
+				bd = this.board;
+			for (var c = 0; c < bd.cell.length; c++) {
+				// Since 0 isn't a valid clue, encode ? as 0
+				var pstr = "",
+					qn = bd.cell[c].qnums.map(function (n) {
+						if (n === -2) {
+							return 0;
+						}
+						return n;
+					});
+
+				if (qn.length === 0) {
+					count++;
+				} else {
+					for (var k=0; k<qn.length - 1; k++) {
+						pstr += (qn[k] + 10).toString(36);
+					}
+					pstr += (qn[qn.length - 1]).toString(10);
+				}
+
+				if (count === 0) {
+					cm += pstr;
+				} else if (pstr || count === 16) {
+					cm += (19 + count).toString(36) + pstr;
+					count = 0;
+				}
+			}
+			if (count > 0) {
+				cm += (19 + count).toString(36);
+			}
+
+			this.outbstr += cm;
 		}
 	},
 	//---------------------------------------------------------
