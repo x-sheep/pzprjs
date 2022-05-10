@@ -647,7 +647,7 @@
 				}
 			}
 			if (!result) {
-				this.failcode.add("clueUnused");
+				this.failcode.add("incompatibleSets");
 			}
 		}
 	}
