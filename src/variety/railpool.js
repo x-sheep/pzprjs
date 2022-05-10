@@ -536,7 +536,8 @@
 			"checkIncompatibleSets",
 
 			"checkDeadendLine+",
-			"checkOneLoop"
+			"checkOneLoop",
+			"checkNoLine"
 		],
 
 		checkUncluedLength: function() {
