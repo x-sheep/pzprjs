@@ -1154,6 +1154,7 @@
 		irowake: true,
 
 		gridcolor_type: "DLIGHT",
+		pointColor: "rgb(64,127,255)",
 
 		repaintLines: function(segs) {
 			if (!this.context.use.canvas) {
@@ -1234,7 +1235,7 @@
 			var g = this.vinc("cross_target_", "auto", true);
 
 			var csize = this.cw * 0.32;
-			g.strokeStyle = "rgb(64,127,255)";
+			g.strokeStyle = this.pointColor;
 			g.lineWidth = this.lw * 1.5;
 
 			var clist = this.range.crosses;
@@ -1428,7 +1429,7 @@
 				!this.puzzle.mouse.targetPoint[0] &&
 				dot.equals(this.puzzle.mouse.sourcePoint)
 			) {
-				return "green";
+				return this.pointColor;
 			}
 			if (dot.piece.error === 1) {
 				return this.errcolor1;
