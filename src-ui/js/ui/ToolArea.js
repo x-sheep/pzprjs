@@ -235,7 +235,11 @@ ui.toolarea = {
 			if (!!toolitem.children) {
 				var children = toolitem.children;
 				var validval =
-					idname === "inputmode" ? ui.puzzle.mouse.getInputModeList() : null;
+					idname === "inputmode"
+						? ui.puzzle.mouse.getInputModeList()
+						: idname === "auxeditor_inputmode"
+						? ui.auxeditor.puzzle.mouse.getInputModeList()
+						: null;
 				for (var i = 0; i < children.length; i++) {
 					var child = children[i],
 						value = ui.customAttr(child, "value"),
