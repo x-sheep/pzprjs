@@ -194,6 +194,12 @@
 				}
 			}
 			return llist;
+		},		
+		seterr: function(num) {
+			if (!this.board.isenableSetError()) {
+				return;
+			}
+			this.error |= num;
 		}
 	},
 	CellList: {
@@ -337,6 +343,16 @@
 	// 画像表示系
 	Graphic: {
 		irowake: true,
+		
+		// individual number error coloring inspired on lohkous.js
+		getQuesNumberColor: function(cell, i) {
+			if (cell.error & 1) {
+				return this.errcolor1;
+			} else if (cell.error & (8 << i)) {
+				return "red";
+			}
+			return this.quescolor;
+		},
 
 		paint: function() {
 			this.drawBGCells();
@@ -608,11 +624,12 @@
 							break;
 						}
 
-						// TODO: highlight actual number?
 						for (var i = 0; i < clist.length; i++) {
 							var cell = clist[i];
-							if (cell.qnums.includes(clueNum)) {
-								cell.seterr(1);
+							for (var j = 0; j < cell.qnums.length; j++) {
+								if (cell.qnums[j] === clueNum) {
+									cell.seterr(8 << j);
+								}
 							}
 						}
 					}
