@@ -47,6 +47,10 @@ ui.popupmgr.addpopup("auxeditor", {
 				}
 			}
 		});
+	},
+
+	adjust_aux: function(e) {
+		ui.auxeditor.puzzle.board.operate(e.target.name);
 	}
 });
 
