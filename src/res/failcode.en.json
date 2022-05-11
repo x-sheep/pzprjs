@@ -609,7 +609,7 @@
     "tapaloopError.tapaloop": "The segments around a clue are not the same length as the numbers.",
     "tentAround.tents": "Some tents touch.",
     "unusedCell.pencils": "A cell is unused.",
-    "segUnclued.railpool": "The segment is unclued",
-    "clueUnused.railpool": "No segment has the clued length",
-    "incompatibleSets.railpool": "Segment lengths don't match the clue"
+    "segUnclued.railpool": "The segment's length isn't in the region's set of numbers",
+    "clueUnused.railpool": "Some of the region's numbers don't match with any segment's length",
+    "incompatibleSets.railpool": "The set of lengths of the region's segments doesn't match the region's set of numbers"
 }

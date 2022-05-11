@@ -608,5 +608,8 @@
     "stopHalfway.roma": "ゴールにたどり着かないセルがあります。",
     "tapaloopError.tapaloop": "線の長さと数字が一致していません。",
     "tentAround.tents": "テント同士が接しています。",
-    "unusedCell.pencils": "何も書かれていないマスがあります。"
+    "unusedCell.pencils": "何も書かれていないマスがあります。",
+    "segUnclued.railpool": "The segment's length isn't in the region's set of numbers",
+    "clueUnused.railpool": "Some of the region's numbers don't match with any segment's length",
+    "incompatibleSets.railpool": "The set of lengths of the region's segments doesn't match the region's set of numbers"
 }
