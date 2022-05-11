@@ -105,3 +105,46 @@ ui.auxeditor = {
 		ui.menuconfig.set("auxeditor_inputmode", "auto");
 	}
 };
+
+ui.popupmgr.addpopup("applypreset", {
+	formname: "applypreset",
+
+	reset: function() {
+		this.loadpresets();
+	},
+
+	apply: function() {
+		if (!this.form.preset.value) {
+			this.close();
+			return;
+		}
+		alert("TODO implement " + this.form.preset.value);
+	},
+
+	loadpresets: function() {
+		var root = getEL("ap_preset");
+		root.replaceChildren();
+
+		var presets = ui.puzzle.board.bank.presets;
+		for (var i = 0; i < presets.length; i++) {
+			var div = document.createElement("div");
+			var label = document.createElement("label");
+			var input = document.createElement("input");
+
+			// TODO select a radio button by default in order:
+			// - Most recently selected since last URL load
+			// - Constant preset which matches this value
+			// - The first item
+
+			input.name = "preset";
+			input.value = presets[i].shortkey;
+			input.type = "radio";
+
+			label.textContent = ui.i18n(presets[i].name) || presets[i].name;
+			label.prepend(input);
+
+			div.replaceChildren(label);
+			root.appendChild(div);
+		}
+	}
+});

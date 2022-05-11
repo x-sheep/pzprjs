@@ -337,6 +337,16 @@ ui.toolarea = {
 	flushexcell: function() {
 		ui.puzzle.board.flushexcell();
 	},
+	applypreset: function(e) {
+		ui.popupmgr.open("applypreset", 0, 0);
+		var rect = pzpr.util.getRect(getEL("btnarea"));
+		var bounds = pzpr.util.getRect(getEL("popapplypreset"));
+		ui.popupmgr.open(
+			"applypreset",
+			rect.left + (rect.width - bounds.width) / 2,
+			Math.max(16, rect.top - bounds.height - 16)
+		);
+	},
 	enterTrial: function() {
 		if (ui.puzzle.board.trialstage === 0) {
 			ui.puzzle.enterTrial();
