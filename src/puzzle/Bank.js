@@ -2,9 +2,6 @@ pzpr.classmgr.makeCommon({
 	Bank: {
 		enabled: false,
 
-		// Valid values are: null | "auxeditor:*"
-		editmode: null,
-
 		// Valid values are: boolean | function(): boolean
 		allowAdd: false,
 
@@ -25,6 +22,20 @@ pzpr.classmgr.makeCommon({
 
 		defaultPreset: function() {
 			return [];
+		},
+
+		applyPreset: function(preset) {
+			var pieces;
+			if (preset.constant) {
+				pieces = preset.constant;
+			} else {
+				return;
+			}
+			var ope = new this.klass.BankEditOperation(pieces);
+			if (!ope.isNoop()) {
+				ope.redo();
+				this.puzzle.opemgr.add(ope);
+			}
 		},
 
 		initialize: function(pieces) {

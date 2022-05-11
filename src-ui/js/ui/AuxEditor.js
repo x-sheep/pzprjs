@@ -114,11 +114,13 @@ ui.popupmgr.addpopup("applypreset", {
 	},
 
 	apply: function() {
-		if (!this.form.preset.value) {
+		if (this.form.preset.value === "") {
 			this.close();
 			return;
 		}
-		alert("TODO implement " + this.form.preset.value);
+		var preset = ui.puzzle.board.bank.presets[+this.form.preset.value];
+		ui.puzzle.board.bank.applyPreset(preset);
+		this.close();
 	},
 
 	loadpresets: function() {
@@ -137,7 +139,7 @@ ui.popupmgr.addpopup("applypreset", {
 			// - The first item
 
 			input.name = "preset";
-			input.value = presets[i].shortkey;
+			input.value = i;
 			input.type = "radio";
 
 			label.textContent = ui.i18n(presets[i].name) || presets[i].name;
