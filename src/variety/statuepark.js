@@ -68,8 +68,8 @@
 
 			this.puzzle.emit("request-aux-editor", args, function(auxpuzzle) {
 				var shape = auxpuzzle.board.getShape();
+				// TODO get compressed data
 				var ope = new thiz.klass.BankEditOperation(shape, piece.index);
-				// // TODO remember qcmp values
 				if (!ope.isNoop()) {
 					ope.redo();
 					thiz.puzzle.opemgr.add(ope);

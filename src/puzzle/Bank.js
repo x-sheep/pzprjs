@@ -31,7 +31,7 @@ pzpr.classmgr.makeCommon({
 			} else {
 				return;
 			}
-			var ope = new this.klass.BankEditOperation(pieces);
+			var ope = new this.klass.BankReplaceOperation(pieces);
 			if (!ope.isNoop()) {
 				ope.redo();
 				this.puzzle.opemgr.add(ope);
@@ -161,6 +161,82 @@ pzpr.classmgr.makeCommon({
 	},
 
 	"BankEditOperation:Operation": {
+		old: null,
+		num: null,
+		index: null,
+
+		setData: function(value, index) {
+			if (index < 0 || index > this.board.bank.pieces.length) {
+				throw "Index out of range";
+			}
+
+			this.old =
+				index < this.board.bank.pieces.length
+					? this.board.bank.pieces[index].serialize()
+					: null;
+			this.num = value || null;
+			this.index = index;
+		},
+
+		undo: function() {
+			var piece = new this.klass.BankPiece();
+			if (this.old !== null) {
+				piece.deserialize(this.old);
+				if (this.num !== null) {
+					this.board.bank.pieces[this.index] = piece;
+				} else {
+					this.board.bank.pieces.splice(this.index, 0, piece);
+				}
+			} else {
+				this.board.bank.pieces.pop();
+			}
+
+			this.board.bank.performLayout();
+			this.puzzle.painter.resizeCanvas();
+			this.puzzle.emit("adjust");
+		},
+		redo: function() {
+			var piece = new this.klass.BankPiece();
+			if (this.num !== null) {
+				piece.deserialize(this.num);
+			}
+			if (this.index < this.board.bank.pieces.length) {
+				if (this.num !== null) {
+					this.board.bank.pieces[this.index] = piece;
+				} else {
+					this.board.bank.pieces.splice(this.index, 1);
+				}
+			} else {
+				this.board.bank.pieces.push(piece);
+			}
+
+			this.board.bank.performLayout();
+			this.puzzle.painter.resizeCanvas();
+			this.puzzle.emit("adjust");
+		},
+
+		isNoop: function() {
+			return this.old === this.num;
+		},
+
+		toString: function() {
+			return ["PP", this.index, this.num, this.old].join(",");
+		},
+
+		decode: function(strs) {
+			if (strs[0] !== "PP") {
+				return false;
+			}
+
+			this.index = +strs[0];
+			this.num = strs[1] || null;
+			this.old = strs[2] || null;
+
+			return true;
+		}
+	},
+
+	"BankReplaceOperation:Operation": {
 		old: [],
 		num: [],
 
@@ -194,11 +270,11 @@ pzpr.classmgr.makeCommon({
 		},
 
 		toString: function() {
-			return ["PP", this.num.join("/"), this.old.join("/")].join(",");
+			return ["PR", this.num.join("/"), this.old.join("/")].join(",");
 		},
 
 		decode: function(strs) {
-			if (strs[0] !== "PP") {
+			if (strs[0] !== "PR") {
 				return false;
 			}
 

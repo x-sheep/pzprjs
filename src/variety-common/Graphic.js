@@ -2025,13 +2025,17 @@ pzpr.classmgr.makeCommon({
 
 			if (cursor.bankpiece !== null) {
 				var piece = this.board.bank.pieces[cursor.bankpiece];
-				var r = this.puzzle.painter.bankratio;
+				if (piece) {
+					var r = this.puzzle.painter.bankratio;
 
-				px = (piece.x + 0.25 + piece.w / 2) * this.cw * r;
-				py = (piece.y + 0.25 + piece.h / 2) * this.ch * r;
-				py += (this.board.rows + 0.5) * this.ch;
-				w = (piece.w + 0.25) * this.cw * r * 0.5;
-				h = (piece.h + 0.25) * this.ch * r * 0.5;
+					px = (piece.x + 0.25 + piece.w / 2) * this.cw * r;
+					py = (piece.y + 0.25 + piece.h / 2) * this.ch * r;
+					py += (this.board.rows + 0.5) * this.ch;
+					w = (piece.w + 0.25) * this.cw * r * 0.5;
+					h = (piece.h + 0.25) * this.ch * r * 0.5;
+				} else {
+					isdraw = false;
+				}
 			}
 
 			isdraw = isdraw !== false && !this.outputImage;
