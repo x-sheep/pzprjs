@@ -24,9 +24,9 @@
 				if (this.notInputted() && this.mousestart) {
 					this.inputqcmp();
 				}
-			} else if (this.puzzle.editmode) {
+			} else if (this.puzzle.editmode && this.mousestart) {
 				this.inputqnum();
-				if (this.notInputted() && this.mousestart) {
+				if (this.notInputted()) {
 					if (this.btn === "left") {
 						this.inputpiece();
 					} else {
