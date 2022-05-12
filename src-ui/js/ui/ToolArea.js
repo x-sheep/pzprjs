@@ -143,6 +143,12 @@ ui.toolarea = {
 			ui.puzzle.pid === "tentaisho" ? "" : "none";
 		getEL("btnflush").style.display =
 			ui.puzzle.board.hasflush && !ui.puzzle.playeronly ? "" : "none";
+		getEL("btnpresets").style.display =
+			ui.puzzle.board.bank &&
+			ui.puzzle.board.bank.presets.length &&
+			!ui.puzzle.playeronly
+				? ""
+				: "none";
 		/* ボタンエリアの色分けボタンは、ツールパネル領域が消えている時に表示 */
 		getEL("btnirowake").style.display =
 			ui.puzzle.painter.irowake && !ui.menuconfig.get("toolarea") ? "" : "none";
