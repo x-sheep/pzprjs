@@ -68,6 +68,9 @@
 
 			this.puzzle.emit("request-aux-editor", args, function(auxpuzzle) {
 				var shape = auxpuzzle.board.getShape();
+				if (!shape) {
+					thiz.cursor.bankpiece = null;
+				}
 				// TODO get compressed data
 				var ope = new thiz.klass.BankEditOperation(shape, piece.index);
 				if (!ope.isNoop()) {
