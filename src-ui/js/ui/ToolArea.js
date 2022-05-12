@@ -344,6 +344,10 @@ ui.toolarea = {
 		ui.puzzle.board.flushexcell();
 	},
 	applypreset: function(e) {
+		if (ui.popupmgr.popups.auxeditor.pop) {
+			ui.popupmgr.popups.auxeditor.close();
+		}
+
 		ui.popupmgr.open("applypreset", 0, 0);
 		var rect = pzpr.util.getRect(getEL("btnarea"));
 		var bounds = pzpr.util.getRect(getEL("popapplypreset"));

@@ -68,6 +68,10 @@ ui.auxeditor = {
 			return;
 		}
 
+		if (ui.popupmgr.popups.applypreset.pop) {
+			ui.popupmgr.popups.applypreset.close();
+		}
+
 		var cellsize = ui.puzzle.painter.cw;
 		if (cellsize > 32) {
 			cellsize = Math.floor(cellsize * 0.75);
