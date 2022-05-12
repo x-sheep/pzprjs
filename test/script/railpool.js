@@ -1,7 +1,7 @@
 /* railpool.js */
 
 ui.debug.addDebugData("railpool", {
-	url: "5/5/5i40k8000000gkb2r1qda0p",
+	url: "5/5/k12s1r300q5i40k80g0000g",
 	failcheck: [
 		[
 			"lnBranch",
