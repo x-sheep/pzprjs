@@ -58,10 +58,14 @@
 		},
 
 		inputpiece: function() {
-			this.puzzle.emit("request-aux-editor");
-
 			var piece = this.getbank();
 			if (!piece) {
+				return;
+			}
+
+			this.puzzle.emit("request-aux-editor");
+
+			if (piece.index === null) {
 				return;
 			}
 

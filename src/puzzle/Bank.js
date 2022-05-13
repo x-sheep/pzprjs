@@ -188,7 +188,10 @@ pzpr.classmgr.makeCommon({
 					this.board.bank.pieces.splice(this.index, 0, piece);
 				}
 			} else {
-				this.board.bank.pieces.pop();
+				var popped = this.board.bank.pieces.pop();
+				if (popped) {
+					popped.index = null;
+				}
 			}
 
 			this.board.bank.performLayout();
@@ -204,6 +207,7 @@ pzpr.classmgr.makeCommon({
 				if (this.num !== null) {
 					this.board.bank.pieces[this.index] = piece;
 				} else {
+					this.board.bank.pieces[this.index].index = null;
 					this.board.bank.pieces.splice(this.index, 1);
 				}
 			} else {
