@@ -69,57 +69,38 @@
 		keyinput: function(ca) {
 			this.key_inputqnum_railpool(ca);
 		},
+		// taken from lohkous
 		key_inputqnum_railpool: function(ca) {
 			var cell = this.cursor.getc(),
 				nums = cell.qnums,
 				val = [];
 
-			// this is really weird and should be improved
 			if (("1" <= ca && ca <= "9") || ca === "-") {
 				var num = ca !== "-" ? +ca : -2;
-				if (num === -2) {
-					// typed a question mark
-					if (nums.length <= 3) {
-						// if there's space, add another question mark clue
-						val = nums.concat([num]);
-					} else {
-						// if there are already 4 clues...
-						if (
-							nums.every(function(n) {
-								return n === -2;
-							})
-						) {
-							// remove all of them, if they are all question marks
-							val = [];
+				var clear = false;
+				if (this.prev === cell) {
+					for (var i = 0; i < nums.length; i++) {
+						if (num === -2 || num !== nums[i]) {
+							val.push(nums[i]);
 						} else {
-							// if there are numbers, remove them to make space for question marks
-							val = nums.slice(1).concat([-2]);
+							clear = true;
 						}
-					}
-				} else {
-					// typed a number
-					if (nums.includes(num)) {
-						// if it's in the cell, remove it;
-						val = nums.filter(function(n) {
-							return n !== num;
-						});
-					} else {
-						// if not, add it (and if needed, remove a value to not exceed 4 clues per tile)
-						if (nums.length > 3) {
-							nums = nums.slice(0, 3);
-						}
-						val = nums.concat([num]).sort(function(a, b) {
-							if (a === -2) {
-								return 1;
-							}
-							if (b === -2) {
-								return -1;
-							}
-							return a - b;
-						});
 					}
 				}
-			} else if (ca === "BS" || ca === " ") {
+				if (!clear) {
+					if (nums.length < 4) {
+						val.push(num);
+					} else {
+						val = [num];
+					}
+				}
+			} else if (ca === "BS") {
+				if (nums.length > 1) {
+					for (var i = 0; i < nums.length - 1; i++) {
+						val.push(nums[i]);
+					}
+				}
+			} else if (ca === " ") {
 				val = [];
 			} else {
 				return;

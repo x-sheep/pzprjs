@@ -45,6 +45,17 @@ ui.debug.addDebugData("railpool", {
 		]
 	],
 	inputs: [
-		// TODO: add some tests
+		{
+			input: ["newboard,2,1", "key,1,2,3"],
+			result: "pzprv3/railpool/1/2/1,2,3 . /. . /1/0 0 /0 /"
+		},
+		{
+			input: ["newboard,2,1", "key,1,2,3,1,2"],
+			result: "pzprv3/railpool/1/2/3 . /. . /1/0 0 /0 /"
+		},
+		{
+			input: ["newboard,2,1", "key,3,-,2,-"],
+			result: "pzprv3/railpool/1/2/3,-,2,- . /. . /1/0 0 /0 /"
+		}		
 	]
 });
