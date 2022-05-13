@@ -14,6 +14,11 @@ ui.popupmgr.addpopup("auxeditor", {
 		ui.popupmgr.popups.template.close.apply(this);
 	},
 
+	delete: function() {
+		ui.auxeditor.puzzle.board.ansclear();
+		this.close();
+	},
+
 	init: function() {
 		ui.popupmgr.popups.template.init.call(this);
 
