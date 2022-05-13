@@ -84,7 +84,7 @@
 				if (!shape) {
 					thiz.cursor.bankpiece = null;
 				}
-				// TODO get compressed data
+				// TODO qcmp value is not preserved on undo
 				var ope = new thiz.klass.BankEditOperation(shape, piece.index);
 				if (!ope.isNoop()) {
 					ope.redo();
@@ -147,7 +147,12 @@
 				return cell.qans;
 			});
 
-			return clist.length > 0 ? clist.getBlockShapes().id : null;
+			if (clist.length === 0) {
+				return null;
+			}
+			var piece = new this.klass.BankPiece();
+			piece.deserializeRaw(clist.getBlockShapes().id);
+			return piece.serialize();
 		}
 	},
 
