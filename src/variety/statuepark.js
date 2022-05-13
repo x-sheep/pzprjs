@@ -88,12 +88,7 @@
 				if (!shape) {
 					thiz.cursor.bankpiece = null;
 				}
-				// TODO qcmp value is not preserved on undo
-				var ope = new thiz.klass.BankEditOperation(shape, piece.index);
-				if (!ope.isNoop()) {
-					ope.redo();
-					thiz.puzzle.opemgr.add(ope);
-				}
+				thiz.board.bank.setPiece(shape, piece.index);
 			});
 		}
 	},

@@ -33,6 +33,7 @@ pzpr.classmgr.makeCommon({
 			}
 			var ope = new this.klass.BankReplaceOperation(pieces);
 			if (!ope.isNoop()) {
+				this.ansclear();
 				ope.redo();
 				this.puzzle.opemgr.add(ope);
 			}
@@ -90,6 +91,19 @@ pzpr.classmgr.makeCommon({
 		errclear: function() {
 			for (var i = 0; i < this.pieces.length; i++) {
 				this.pieces[i].seterr(0);
+			}
+		},
+
+		setPiece: function(piece, index) {
+			var ope = new this.klass.BankEditOperation(piece, index);
+			if (!ope.isNoop()) {
+				if (index < this.pieces.length) {
+					var old = this.pieces[index];
+					old.setQcmp(0);
+				}
+
+				ope.redo();
+				this.puzzle.opemgr.add(ope);
 			}
 		},
 
