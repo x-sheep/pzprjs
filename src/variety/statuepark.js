@@ -13,7 +13,7 @@
 		use: true,
 		inputModes: {
 			edit: ["circle-shade", "circle-unshade", "clear", "completion"],
-			play: ["shade", "unshade", "completion"]
+			play: ["shade", "unshade", "clear", "completion"]
 		},
 
 		mouseinput_auto: function() {
@@ -34,6 +34,19 @@
 					}
 				}
 			}
+		},
+
+		mouseinput_clear: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+			if (this.puzzle.editmode) {
+				cell.setQnum(-1);
+			}
+			cell.setQans(0);
+			cell.setQsub(0);
+			cell.draw();
 		},
 
 		inputqcmp: function() {
