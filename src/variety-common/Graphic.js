@@ -2583,6 +2583,8 @@ pzpr.classmgr.makeCommon({
 				this.drawBankPiece(g, piece, p);
 			}
 
+			this.drawBankAddButton();
+
 			this.lastBankPieceCount = bd.bank.pieces.length;
 		},
 		drawBankPiece: function(g, piece, idx) {},
@@ -2592,6 +2594,56 @@ pzpr.classmgr.makeCommon({
 				: piece.qcmp
 				? this.qcmpcolor
 				: this.quescolor;
+		},
+		drawBankAddButton: function() {
+			var g = this.vinc("piecebank_add", "crispEdges"),
+				bd = this.board,
+				addButton = bd.bank.addButton;
+			var showAdd =
+				this.puzzle.editmode &&
+				addButton.index !== null &&
+				(this.range.bank || this.range.bankPieces.indexOf(addButton) !== -1);
+
+			if (
+				addButton.index !== null &&
+				(this.range.bank || this.range.bankPieces.indexOf(addButton) !== -1)
+			) {
+				var r = this.bankratio;
+				var px = this.cw * r * (addButton.x + 0.25) + 1;
+				var py = this.ch * r * (addButton.y + 0.25) + 1;
+				py += (this.board.rows + 0.5) * this.ch;
+				var px2 = px + this.cw * r * addButton.w - 1;
+				var py2 = py + this.ch * r * addButton.h - 1;
+				for (var i = 0; i < 4; i++) {
+					g.vid = "pb_piece_add_" + i;
+					if (showAdd) {
+						g.strokeStyle = "blue";
+						g.strokeDashedLine(
+							i < 2 ? px : px2,
+							i < 2 ? py : py2,
+							i % 2 ? px : px2,
+							i % 2 ? py2 : py,
+							[3]
+						);
+					} else {
+						g.vhide();
+					}
+				}
+
+				g.vid = "pb_piece_add_symbol";
+				if (showAdd) {
+					g.fillStyle = "blue";
+					var option = { style: "bold" };
+					this.disptext(
+						"+",
+						px + 0.5 * r * this.cw * addButton.w,
+						py + 0.5 * r * this.ch * addButton.h,
+						option
+					);
+				} else {
+					g.vhide();
+				}
+			}
 		}
 	}
 });

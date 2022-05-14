@@ -198,7 +198,9 @@ pzpr.classmgr.makeCommon({
 
 		serialize: function() {
 			return "";
-		}
+		},
+
+		addOpe: function() {}
 	},
 
 	"BankEditOperation:Operation": {
