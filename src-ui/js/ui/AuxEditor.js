@@ -63,9 +63,18 @@ ui.auxeditor = {
 	current: null,
 	cb: null,
 
-	open: function(sender, args, cb) {
-		if (!args) {
+	close: function(abort) {
+		if (ui.popupmgr.popups.auxeditor.pop) {
+			if (abort) {
+				this.cb = null;
+			}
 			ui.popupmgr.popups.auxeditor.close();
+		}
+	},
+
+	open: function(sender, args, cb) {
+		if (!args || args.abort) {
+			ui.auxeditor.close(args && args.abort);
 			return;
 		}
 

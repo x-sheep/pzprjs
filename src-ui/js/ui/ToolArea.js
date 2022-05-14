@@ -311,12 +311,14 @@ ui.toolarea = {
 		ui.menuarea.answercheck();
 	},
 	undo: function() {
+		ui.auxeditor.close(true);
 		ui.undotimer.startUndo();
 	},
 	undostop: function() {
 		ui.undotimer.stopUndo();
 	},
 	redo: function() {
+		ui.auxeditor.close(true);
 		ui.undotimer.startRedo();
 	},
 	redostop: function() {
@@ -344,9 +346,7 @@ ui.toolarea = {
 		ui.puzzle.board.flushexcell();
 	},
 	applypreset: function(e) {
-		if (ui.popupmgr.popups.auxeditor.pop) {
-			ui.popupmgr.popups.auxeditor.close();
-		}
+		ui.auxeditor.close();
 
 		ui.popupmgr.open("applypreset", 0, 0);
 		var rect = pzpr.util.getRect(getEL("btnarea"));
