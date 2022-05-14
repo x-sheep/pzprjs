@@ -157,6 +157,7 @@
 
 	Bank: {
 		enabled: true,
+		allowAdd: true,
 
 		defaultPreset: function() {
 			return this.presets[0].constant;

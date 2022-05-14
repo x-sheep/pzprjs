@@ -19,6 +19,11 @@ pzpr.classmgr.makeCommon({
 
 		// The current list of BankPiece objects.
 		pieces: null,
+		addButton: null,
+
+		init: function() {
+			this.addButton = new this.klass.BankAddButton();
+		},
 
 		defaultPreset: function() {
 			return [];
@@ -66,8 +71,15 @@ pzpr.classmgr.makeCommon({
 				y = 0,
 				nexty = 0;
 
-			for (var i = 0; i < this.pieces.length; i++) {
-				var p = this.pieces[i];
+			var showAdd =
+				this.puzzle.editmode &&
+				(typeof this.allowAdd === "function"
+					? this.allowAdd()
+					: !!this.allowAdd);
+			var len = this.pieces.length;
+
+			for (var i = 0; i < len + (showAdd ? 1 : 0); i++) {
+				var p = i < len ? this.pieces[i] : this.addButton;
 				if (x + p.w + 1 > this.width) {
 					x = 0;
 					y = nexty;
@@ -78,6 +90,10 @@ pzpr.classmgr.makeCommon({
 				nexty = Math.max(nexty, y + p.h + 1);
 				p.index = i;
 				x += p.w + 1;
+			}
+
+			if (!showAdd) {
+				this.addButton.index = null;
 			}
 
 			this.height = nexty;
@@ -135,8 +151,8 @@ pzpr.classmgr.makeCommon({
 			return "";
 		},
 
-		width: 1,
-		height: 1,
+		w: 1,
+		h: 1,
 
 		index: 0,
 		x: 0,
@@ -174,20 +190,29 @@ pzpr.classmgr.makeCommon({
 		}
 	},
 
+	"BankAddButton:BankPiece": {
+		isadd: true,
+
+		w: 2,
+		h: 2,
+
+		serialize: function() {
+			return "";
+		}
+	},
+
 	"BankEditOperation:Operation": {
 		old: null,
 		num: null,
 		index: null,
 
 		setData: function(value, index) {
-			if (index < 0 || index > this.board.bank.pieces.length) {
+			var len = this.board.bank.pieces.length;
+			if (index < 0 || index > len) {
 				throw "Index out of range";
 			}
 
-			this.old =
-				index < this.board.bank.pieces.length
-					? this.board.bank.pieces[index].serialize()
-					: null;
+			this.old = index < len ? this.board.bank.pieces[index].serialize() : null;
 			this.num = value || null;
 			this.index = index;
 		},

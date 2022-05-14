@@ -2025,6 +2025,9 @@ pzpr.classmgr.makeCommon({
 
 			if (cursor.bankpiece !== null) {
 				var piece = this.board.bank.pieces[cursor.bankpiece];
+				if (cursor.bankpiece === this.board.bank.pieces.length) {
+					piece = this.board.bank.addButton;
+				}
 				if (piece) {
 					var r = this.puzzle.painter.bankratio;
 

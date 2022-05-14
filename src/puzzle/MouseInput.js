@@ -447,9 +447,13 @@ pzpr.classmgr.makeCommon({
 				return null;
 			}
 
-			for (var p = 0; p < this.board.bank.pieces.length; p++) {
-				var piece = this.board.bank.pieces[p];
+			var len = this.board.bank.pieces.length;
+			var allowAdd = this.puzzle.editmode;
+			for (var p = 0; p < len + (allowAdd ? 1 : 0); p++) {
+				var piece =
+					p < len ? this.board.bank.pieces[p] : this.board.bank.addButton;
 				if (
+					piece.index !== null &&
 					bx >= piece.x - 0.25 &&
 					by >= piece.y - 0.25 &&
 					bx < piece.x + piece.w + 0.75 &&
