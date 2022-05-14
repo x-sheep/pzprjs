@@ -71,11 +71,7 @@ pzpr.classmgr.makeCommon({
 				y = 0,
 				nexty = 0;
 
-			var showAdd =
-				this.puzzle.editmode &&
-				(typeof this.allowAdd === "function"
-					? this.allowAdd()
-					: !!this.allowAdd);
+			var showAdd = !this.puzzle.playeronly && !!this.allowAdd;
 			var len = this.pieces.length;
 
 			for (var i = 0; i < len + (showAdd ? 1 : 0); i++) {
