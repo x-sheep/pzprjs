@@ -32,6 +32,12 @@ ui.debug.addDebugData("statuepark", {
 			"pzprv3/statuepark/7/7/t/. . . . 2 1 . /2 2 2 . . 2 . /. . 2 . . . . /. . . . . . . /. . . . . . . /. . . 2 1 . . /. . . 1 2 . . /+ + + + # + + /# # # + # # + /+ + # + + # + /# + + + + + + /# + # # + + + /# + # # + # + /# + + + # # # /1 1 1 1 1 /"
 		]
 	],
-	// TODO add input tests
-	inputs: []
+	inputs: [
+		{
+			label: "Can mark piece as complete",
+			input: ["newboard,3,3", "playmode", "mouse,left,bank,4"],
+			result:
+				"pzprv3/statuepark/3/3/p/. . . /. . . /. . . /. . . /. . . /. . . /0 0 0 0 1 0 0 0 0 0 0 0 /"
+		}
+	]
 });
