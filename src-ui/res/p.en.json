@@ -185,6 +185,7 @@
     "ansclear.confirm": "Do you want to erase the answer?",
     "subclear": "Erase aux. marks",
     "subclear.confirm": "Do you want to erase the auxiliary marks?",
+    "auxdelete.confirm": "Do you want to delete this piece?",
     "encolorall": "Color up",
     "flushexcell": "Flush clues",
     "applypreset": "Replace bank",

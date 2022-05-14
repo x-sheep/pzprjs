@@ -15,8 +15,16 @@ ui.popupmgr.addpopup("auxeditor", {
 	},
 
 	delete: function() {
-		ui.auxeditor.puzzle.board.ansclear();
-		this.close();
+		if (!ui.auxeditor.puzzle.opemgr.enableUndo) {
+			ui.auxeditor.puzzle.board.ansclear();
+			this.close();
+		} else {
+			var thiz = this;
+			ui.notify.confirm(ui.i18n("auxdelete.confirm"), function() {
+				ui.auxeditor.puzzle.board.ansclear();
+				thiz.close();
+			});
+		}
 	},
 
 	init: function() {

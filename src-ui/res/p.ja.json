@@ -185,6 +185,7 @@
     "ansclear.confirm": "解答を消去しますか？",
     "subclear": "補助消去",
     "subclear.confirm": "補助記号を消去しますか？",
+    "auxdelete.confirm": "Do you want to delete this piece?",
     "encolorall": "色をつける",
     "flushexcell": "ヒントを揃える",
     "applypreset": "Replace bank",
