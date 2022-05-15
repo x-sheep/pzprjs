@@ -186,9 +186,9 @@ rassi:
 
 
 statuepark:
-  Place every shape from the bank into the grid.
+  Place every shape from the bank into the grid. Shapes can be rotated or mirrored.
 
-  1. All shapes must be used exactly once. There cannot be shapes in the grid that aren't present in the bank. Shapes can be rotated or mirrored.
+  1. All shapes must be used exactly once. There cannot be shapes in the grid that aren't present in the bank.
 
   2. Two shapes cannot be orthogonally adjacent.
 
