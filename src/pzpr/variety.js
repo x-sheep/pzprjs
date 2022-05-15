@@ -79,7 +79,7 @@
 		"lapaz",
 		"tren",
 		"pentominous",
-		"hinge",		
+		"hinge",
 		"tajmahal",
 		"railpool"
 	]);

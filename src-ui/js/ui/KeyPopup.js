@@ -113,7 +113,7 @@ ui.keypopup = {
 		tontti: [10, 0],
 		lapaz: [10, 0],
 		tren: [10, 0],
-		pentominous: [119, 119],		
+		pentominous: [119, 119],
 		hinge: [10, 0],
 		tajmahal: [8, 0],
 		railpool: [10, 0]
