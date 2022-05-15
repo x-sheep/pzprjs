@@ -159,11 +159,6 @@ ui.popupmgr.addpopup("applypreset", {
 			var label = document.createElement("label");
 			var input = document.createElement("input");
 
-			// TODO select a radio button by default in order:
-			// - Most recently selected since last URL load
-			// - Constant preset which matches this value
-			// - The first item
-
 			input.name = "preset";
 			input.value = i;
 			input.type = "radio";

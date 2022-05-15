@@ -69,6 +69,7 @@
     "preset.pentominoes": "Pentominoes",
     "preset.tetrominoes": "Tetrominoes",
     "preset.double_tetrominoes": "Double tetrominoes",
+    "preset.copy_answer": "Copy answer to bank",
     "preset.zero": "No pieces",
     "inputmode": "Input Mode",
     "inputmode.auto": "Auto",

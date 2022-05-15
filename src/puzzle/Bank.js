@@ -33,6 +33,8 @@ pzpr.classmgr.makeCommon({
 			var pieces;
 			if (preset.constant) {
 				pieces = preset.constant;
+			} else if (preset.func) {
+				pieces = this[preset.func]();
 			} else {
 				return;
 			}

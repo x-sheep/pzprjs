@@ -204,11 +204,26 @@
 				]
 			},
 			{
+				name: "preset.copy_answer",
+				func: "copyAnswer"
+			},
+			{
 				name: "preset.zero",
 				shortkey: "z",
 				constant: []
 			}
-		]
+		],
+
+		copyAnswer: function() {
+			var p = new this.klass.BankPiece();
+			var pieces = this.board.getBankPiecesInGrid().map(function(pair) {
+				p.deserialize(pair[0]);
+				return p.serialize();
+			});
+
+			pieces.sort();
+			return pieces;
+		}
 	},
 
 	"Bank@statuepark-aux": {

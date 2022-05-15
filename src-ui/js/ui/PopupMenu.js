@@ -409,6 +409,9 @@ ui.popupmgr.addpopup("newboard", {
 
 		var presets = ui.puzzle.board.bank.presets;
 		for (var i = 0; i < presets.length; i++) {
+			if (!presets[i].constant) {
+				continue;
+			}
 			var option = document.createElement("option");
 			option.value = presets[i].shortkey;
 			option.textContent = ui.i18n(presets[i].name) || presets[i].name;
