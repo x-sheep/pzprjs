@@ -574,7 +574,7 @@ pzpr.classmgr.makeCommon({
 			}
 		},
 		decodePieceBankQcmp: function() {
-			var nums = this.readLine().split(" ");
+			var nums = (this.readLine() || "").split(" ");
 			var count = Math.min(nums.length, this.board.bank.pieces.length);
 			for (var i = 0; i < count; i++) {
 				this.board.bank.pieces[i].qcmp = +nums[i];
