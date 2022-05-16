@@ -327,10 +327,10 @@
 
 		// individual number error coloring inspired on lohkous.js
 		getQuesNumberColor: function(cell, i) {
-			if (cell.error & 1) {
-				return this.errcolor1;
-			} else if (cell.error & (8 << i)) {
+			if (cell.error & (8 << i)) {
 				return "red";
+			} else if (cell.error & 1) {
+				return this.errcolor1;
 			}
 			return this.quescolor;
 		},
@@ -349,6 +349,12 @@
 			this.drawTarget();
 		},
 
+		getBGCellColor_error1: function(cell) {
+			if (cell.error & 1 || cell.qinfo === 1) {
+				return this.errbcolor1;
+			}
+			return null;
+		},
 		// from simpleloop.js
 		getBGCellColor: function(cell) {
 			return cell.ques === 7 ? "black" : this.getBGCellColor_error1(cell);
@@ -613,6 +619,7 @@
 							break;
 						}
 
+						clist.seterr(1);
 						for (var i = 0; i < clist.length; i++) {
 							var cell = clist[i];
 							for (var j = 0; j < cell.qnums.length; j++) {
