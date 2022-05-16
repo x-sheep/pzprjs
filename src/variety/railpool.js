@@ -586,6 +586,7 @@
 			}
 			if (!result) {
 				this.failcode.add("segUnclued");
+				this.board.border.setnoerr();
 			}
 		},
 
