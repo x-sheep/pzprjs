@@ -306,6 +306,7 @@
 				"pipelink"
 			],
 			putteria: [0, 0, "プッテリア", "Putteria", "hanare"],
+			railpool: [0, 0, "Rail Pool", "Rail Pool"],
 			rassi: [0, 0, "Rassi Silai", "Rassi Silai", "country"],
 			rectslider: [0, 0, "四角スライダー", "Rectangle-Slider", "bonsan"],
 			reflect: [1, 0, "リフレクトリンク", "Reflect Link"],
@@ -393,8 +394,7 @@
 			],
 			yajitatami: [0, 0, "ヤジタタミ", "Yajitatami"],
 			yinyang: [0, 0, "しろまるくろまる", "Yin-Yang"],
-			yosenabe: [0, 0, "よせなべ", "Yosenabe"],
-			railpool: [0, 0, "Rail Pool", "Rail Pool"]
+			yosenabe: [0, 0, "よせなべ", "Yosenabe"]
 		}
 	);
 })();
