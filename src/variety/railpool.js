@@ -130,7 +130,7 @@
 			if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
 				return;
 			}
-			this.addOpeQnums(this.qnums, val); // i don't know what this is for
+			this.addOpeQnums(this.qnums, val);
 			this.qnums = val;
 		},
 		addOpeQnums: function(old, val) {
