@@ -535,7 +535,8 @@
 
 			"checkUncluedLength",
 			"checkMissingLength",
-			"checkIncompatibleSets",
+			"checkTooManyUnspecified",
+			"checkTooFewUnspecified",
 
 			"checkDeadendLine+",
 			"checkOneLoop",
@@ -552,7 +553,7 @@
 					continue;
 				}
 				if (clueSet.includes(-2)) {
-					// question marks are checked in checkIncompatibleSets
+					// question marks are checked in checkTooManyUnspecified & checkTooFewUnspecified
 					continue;
 				}
 				for (var i = 0; i < clist.length; i++) {
@@ -633,27 +634,85 @@
 			}
 		},
 
-		checkIncompatibleSets: function() {
+		checkTooManyUnspecified: function() {
 			var result = true,
 				rooms = this.board.roommgr.components;
 
 			for (var r = 0; r < rooms.length; r++) {
-				var clueSet = rooms[r].clist.getClueSet();
+				var clist = rooms[r].clist,
+					clueSet = clist.getClueSet();
 				if (clueSet.length === 0) {
 					continue;
 				}
-				var actualSet = rooms[r].clist.getSegmentLengthsSet();
+				var actualSet = clist.getSegmentLengthsSet();
 
-				if (clueSet.length !== actualSet.length) {
+				if (clueSet.length < actualSet.length) {
 					result = false;
 					if (this.checkOnly) {
 						break;
 					}
-					rooms[r].clist.seterr(1);
+					clist.seterr(1);
+
+					// Highlight segments with unspecified length
+					for (var i = 0; i < clist.length; i++) {
+						var cell = clist[i];
+
+						var horiz = cell.getSegment(true);
+						var vert = cell.getSegment(false);
+
+						if (horiz.length > 0 && !clueSet.includes(horiz.length)) {
+							horiz.seterr(1);
+						}
+
+						if (vert.length > 0 && !clueSet.includes(vert.length)) {
+							vert.seterr(1);
+						}
+					}
 				}
 			}
 			if (!result) {
-				this.failcode.add("incompatibleSets");
+				this.failcode.add("tooManyUnspecified");
+			}
+		},
+
+		checkTooFewUnspecified: function() {
+			var result = true,
+				rooms = this.board.roommgr.components;
+
+			for (var r = 0; r < rooms.length; r++) {
+				var clist = rooms[r].clist,
+					clueSet = clist.getClueSet();
+				if (clueSet.length === 0) {
+					continue;
+				}
+				var actualSet = clist.getSegmentLengthsSet();
+
+				if (clueSet.length > actualSet.length) {
+					result = false;
+					if (this.checkOnly) {
+						break;
+					}
+					clist.seterr(1);
+
+					// Highlight segments with unspecified length
+					for (var i = 0; i < clist.length; i++) {
+						var cell = clist[i];
+
+						var horiz = cell.getSegment(true);
+						var vert = cell.getSegment(false);
+
+						if (horiz.length > 0 && !clueSet.includes(horiz.length)) {
+							horiz.seterr(1);
+						}
+
+						if (vert.length > 0 && !clueSet.includes(vert.length)) {
+							vert.seterr(1);
+						}
+					}
+				}
+			}
+			if (!result) {
+				this.failcode.add("tooFewUnspecified");
 			}
 		}
 	}
