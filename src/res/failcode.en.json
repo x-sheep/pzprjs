@@ -285,6 +285,7 @@
     "circleNotPromontory.kurodoko": "A circle is not a dead end.",
     "circleUnshade.snake": "A circle is not shaded.",
     "circNoLine.balance": "A circle has no line.",
+    "clueUnused.railpool": "Some of the region's numbers don't match with any segment's length.",
     "complete": "Complete!",
     "crConnSlNe.gokigen": "A number is not equal to count of lines that is connected to it.",
     "crShadeGt.creek": "The number of shaded cells around a number on crossing is big.",
@@ -339,6 +340,7 @@
     "goishiRemains.goishi": "There is remaining Goishi.",
     "haisuError.haisu": "A number is not passed on the right visit.",
     "haisuSG.haisu": "The line goes through S/G.",
+    "incompatibleSets.railpool": "The set of lengths of the region's segments doesn't match the region's set of numbers.",
     "invalid": "Invalid Error",
     "kitamakura.shugaku": "There is a futon that faces down.",
     "laCurve.herugolf": "A ball curves halfway.",
@@ -592,6 +594,7 @@
     "segLong.geradeweg": "A segment is longer than a number.",
     "segShort.balance": "A segment is too short.",
     "segShort.geradeweg": "A segment is shorter than a number.",
+    "segUnclued.railpool": "The segment's length isn't in the region's set of numbers.",
     "segWhiteUneq.balance": "Segments through a white circle are different.",
     "shBranch.snake": "The snake branches off.",
     "shDiag.snake": "The snake touches itself diagonally.",
@@ -615,8 +618,5 @@
     "stopHalfway.roma": "A cell cannot reach a goal.",
     "tapaloopError.tapaloop": "The segments around a clue are not the same length as the numbers.",
     "tentAround.tents": "Some tents touch.",
-    "unusedCell.pencils": "A cell is unused.",
-    "segUnclued.railpool": "The segment's length isn't in the region's set of numbers",
-    "clueUnused.railpool": "Some of the region's numbers don't match with any segment's length",
-    "incompatibleSets.railpool": "The set of lengths of the region's segments doesn't match the region's set of numbers"
+    "unusedCell.pencils": "A cell is unused."
 }
