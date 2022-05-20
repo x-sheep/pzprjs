@@ -169,6 +169,14 @@ pentominous:
   2. A letter indicates the shape of the pentomino it's contained in. A pentomino may contain any number of identical letters.
 
 
+railpool:
+  Draw a loop that visits every cell, with the given segment lengths in each region.
+
+  1. There must be a single orthogonal, non-intersecting loop that visits every cell; it cannot branch off or cross itself.
+  
+  2. If a region contains any numbers, those numbers are the set of lengths of all line segments contained fully or partially within that region.
+
+
 rassi:
   Draw multiple lines through orthogonally adjacent cells.
 
