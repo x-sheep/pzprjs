@@ -217,6 +217,19 @@
 			this.board.roommgr.rebuild();
 		}
 	},
+	"Cell@nuriuzu": {
+		allowShade: function() {
+			if (this.qnum) {
+				return false;
+			}
+			for (var dir in this.adjborder) {
+				if (this.adjborder[dir].qnum) {
+					return false;
+				}
+			}
+			return true;
+		}
+	},
 	Cross: {
 		qnum: 0,
 		minnum: 0
