@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["tentaisho"], {
+})(["tentaisho", "nuriuzu"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -136,6 +136,24 @@
 		}
 	},
 
+	"MouseEvent@nuriuzu": {
+		use: true,
+		inputModes: {
+			edit: ["circle-unshade", "circle-shade"],
+			play: ["shade", "unshade"]
+		},
+
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart || this.mousemove) {
+					this.inputcell();
+				}
+			} else if (this.puzzle.editmode && this.mousestart) {
+				this.inputdot();
+			}
+		}
+	},
+
 	//---------------------------------------------------------
 	// キーボード入力系
 	KeyEvent: {
@@ -173,7 +191,7 @@
 		disInputHatena: true,
 
 		isEmpty: function() {
-			return this.ques === 7;
+			return this.ques === 7 || this.isShade();
 		},
 
 		setValid: function(inputData) {
@@ -247,6 +265,33 @@
 			} else if (piece.group === "cross" && piece.lcnt === 0) {
 				cell = piece.relcell(-1, -1);
 			} else if (piece.group === "border" && piece.qans === 0) {
+				cell = piece.sidecell[0];
+			}
+			return cell;
+		}
+	},
+	"Dot@nuriuzu": {
+		setDot: function(val) {
+			if (this.piece.group === "cross" && val) {
+				return;
+			}
+			this.puzzle.opemgr.disCombine = true;
+			this.piece.setQnum(val);
+			this.puzzle.opemgr.disCombine = false;
+			this.puzzle.board.ublkmgr.setExtraData(this.validcell().ublk);
+		},
+
+		// 星に線が通っていないなら、近くのセルを返す
+		validcell: function() {
+			var piece = this.piece,
+				cell = null;
+			if (piece.group === "cell" && piece.isUnshade()) {
+				cell = piece;
+			} else if (
+				piece.group === "border" &&
+				piece.sidecell[0].isUnshade() &&
+				piece.sidecell[1].isUnshade()
+			) {
 				cell = piece.sidecell[0];
 			}
 			return cell;
@@ -329,7 +374,18 @@
 			this.puzzle.redraw();
 		}
 	},
-	AreaRoomGraph: {
+	"AreaRoomGraph@tentaisho": {
+		enabled: true,
+
+		setExtraData: function(component) {
+			component.clist = new this.klass.CellList(component.getnodeobjs());
+			var ret = component.clist.getAreaDotInfo();
+			component.dot = ret.dot;
+			component.error = ret.err;
+		}
+	},
+
+	"AreaUnshadeGraph@nuriuzu": {
 		enabled: true,
 
 		setExtraData: function(component) {
@@ -362,9 +418,13 @@
 			this.drawBGCells();
 			this.drawDashedGrid();
 
-			this.drawQansBorders();
+			if (this.pid === "nuriuzu") {
+				this.drawShadedCells();
+			} else {
+				this.drawQansBorders();
+				this.drawBorderQsubs();
+			}
 			this.drawQuesBorders();
-			this.drawBorderQsubs();
 
 			this.drawDots();
 
@@ -379,6 +439,12 @@
 
 		drawTarget_tentaisho: function() {
 			this.drawCursor(false, this.puzzle.editmode);
+		}
+	},
+	"Graphic@nuriuzu": {
+		shadecolor: "rgb(108,108,108)",
+		getQuesBorderColor: function(border) {
+			return border.isQuesBorder() ? this.quescolor : null;
 		}
 	},
 
@@ -453,15 +519,28 @@
 			this.board.roommgr.rebuild();
 		}
 	},
+	"FileIO@nuriuzu": {
+		decodeData: function() {
+			this.decodeDotFile();
+			this.decodeCellAns();
+		},
+		encodeData: function() {
+			this.encodeDotFile();
+			this.encodeCellAns();
+		}
+	},
 
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
 			"checkStarOnLine",
+			"check2x2ShadeCell@nuriuzu",
 			"checkAvoidStar",
 			"checkFractal",
-			"checkStarRegion"
+			"check2x2UnshadeCell@nuriuzu",
+			"checkStarRegion",
+			"doneShadingDecided@nuriuzu"
 		],
 
 		checkStarOnLine: function() {
@@ -482,13 +561,25 @@
 						break;
 					case "border":
 						dot.piece.seterr(1);
+						new this.klass.CellList(dot.piece.sidecell)
+							.filter(function(cell) {
+								return cell.isShade();
+							})
+							.seterr(1);
+						break;
+					case "cell":
+						dot.piece.seterr(1);
 						break;
 				}
 			}
 		},
 
 		checkFractal: function() {
-			var rooms = this.board.roommgr.components;
+			this.checkFractalBase(this.board.roommgr);
+		},
+
+		checkFractalBase: function(graph) {
+			var rooms = graph.components;
 			allloop: for (var r = 0; r < rooms.length; r++) {
 				var clist = rooms[r].clist;
 				var dot = rooms[r].dot;
@@ -501,7 +592,10 @@
 						dot.bx * 2 - cell.bx,
 						dot.by * 2 - cell.by
 					);
-					if (!cell2.isnull && cell.room === cell2.room) {
+					if (
+						!cell2.isnull &&
+						graph.getComponentRefs(cell) === graph.getComponentRefs(cell2)
+					) {
 						continue;
 					}
 
@@ -515,13 +609,12 @@
 		},
 
 		checkAvoidStar: function() {
-			this.checkErrorFlag(-1, "bkNoStar");
+			this.checkErrorFlag(this.board.roommgr.components, -1, "bkNoStar");
 		},
 		checkStarRegion: function() {
-			this.checkErrorFlag(-2, "bkPlStar");
+			this.checkErrorFlag(this.board.roommgr.components, -2, "bkPlStar");
 		},
-		checkErrorFlag: function(val, code) {
-			var rooms = this.board.roommgr.components;
+		checkErrorFlag: function(rooms, val, code) {
 			for (var r = 0; r < rooms.length; r++) {
 				if (rooms[r].error !== val) {
 					continue;
@@ -533,6 +626,24 @@
 				}
 				rooms[r].clist.seterr(1);
 			}
+		}
+	},
+
+	"AnsCheck@nuriuzu": {
+		checkFractal: function() {
+			this.checkFractalBase(this.board.ublkmgr);
+		},
+		checkAvoidStar: function() {
+			this.checkErrorFlag(this.board.ublkmgr.components, -1, "bkNoStar");
+		},
+		checkStarRegion: function() {
+			this.checkErrorFlag(this.board.ublkmgr.components, -2, "bkPlStar");
+		},
+
+		check2x2UnshadeCell: function() {
+			this.check2x2Block(function(cell) {
+				return cell.isUnshade() && cell.ublk.dot;
+			}, "cu2x2");
 		}
 	}
 });

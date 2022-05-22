@@ -82,7 +82,8 @@
 		"hinge",
 		"tajmahal",
 		"statuepark",
-		"statuepark-aux"
+		"statuepark-aux",
+		"nuriuzu"
 	]);
 
 	(function(Genre, obj) {
@@ -291,6 +292,7 @@
 			nurikabe: [0, 1, "ぬりかべ", "Nurikabe", "nurikabe"],
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
 			nurimisaki: [0, 0, "ぬりみさき", "Nurimisaki", "kurodoko"],
+			nuriuzu: [0, 0, "ぬりうず", "Nuri-uzu", "tentaisho"],
 			ovotovata: [0, 0, "Ovotovata", "Ovotovata", "country"],
 			oneroom: [0, 0, "ワンルームワンドア", "One Room One Door", "heyawake"],
 			onsen: [0, 0, "温泉めぐり", "Onsen-meguri", "country"],
