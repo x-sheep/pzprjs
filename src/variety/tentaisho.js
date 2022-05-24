@@ -398,6 +398,9 @@
 		}
 	},
 
+	"AreaShadeGraph@nuriuzu": {
+		enabled: true
+	},
 	"AreaUnshadeGraph@nuriuzu": {
 		enabled: true,
 
@@ -465,10 +468,12 @@
 	// URLエンコード/デコード処理
 	Encode: {
 		decodePzpr: function(type) {
+			this.puzzle.setConfig("nuriuzu_connect", this.checkpflag("c"));
 			this.decodeDot();
 			this.decodeEmpty();
 		},
 		encodePzpr: function(type) {
+			this.outpflag = this.puzzle.getConfig("nuriuzu_connect") ? "c" : null;
 			this.encodeDot();
 			this.encodeEmpty();
 		},
@@ -534,12 +539,29 @@
 	},
 	"FileIO@nuriuzu": {
 		decodeData: function() {
+			this.decodeConfig();
 			this.decodeDotFile();
 			this.decodeCellAns();
 		},
 		encodeData: function() {
+			this.encodeConfig();
 			this.encodeDotFile();
 			this.encodeCellAns();
+		},
+
+		decodeConfig: function() {
+			if (this.dataarray[this.lineseek] === "c") {
+				this.puzzle.setConfig("nuriuzu_connect", true);
+				this.readLine();
+			} else {
+				this.puzzle.setConfig("nuriuzu_connect", false);
+			}
+		},
+
+		encodeConfig: function() {
+			if (this.puzzle.getConfig("nuriuzu_connect")) {
+				this.writeLine("c");
+			}
 		}
 	},
 
@@ -553,6 +575,7 @@
 			"checkFractal",
 			"check2x2UnshadeCell@nuriuzu",
 			"checkStarRegion",
+			"checkConnectShade_nuriuzu@nuriuzu",
 			"doneShadingDecided@nuriuzu"
 		],
 
@@ -657,6 +680,12 @@
 			this.check2x2Block(function(cell) {
 				return cell.isUnshade() && cell.ublk.dot;
 			}, "cu2x2");
+		},
+
+		checkConnectShade_nuriuzu: function() {
+			if (this.puzzle.getConfig("nuriuzu_connect")) {
+				this.checkConnectShade();
+			}
 		}
 	}
 });
