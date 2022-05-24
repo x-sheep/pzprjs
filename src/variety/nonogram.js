@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["nonogram", "corral"], {
+})(["nonogram", "coral"], {
 	MouseEvent: {
 		use: true,
 		inputModes: { edit: ["number"], play: ["shade", "unshade"] },
@@ -52,7 +52,7 @@
 		}
 	},
 
-	"MouseEvent@corral": {
+	"MouseEvent@coral": {
 		inputModes: {
 			edit: ["number", "clear", "info-blk"],
 			play: ["shade", "unshade", "info-blk"]
@@ -216,17 +216,17 @@
 		}
 	},
 
-	"BoardExec@corral": {
+	"BoardExec@coral": {
 		adjustBoardData2: function(key, d) {
 			this.adjustExCellTopLeft_2(key, d, true);
 		}
 	},
 
-	"AreaUnshadeGraph@corral": {
+	"AreaUnshadeGraph@coral": {
 		enabled: true
 	},
 
-	"AreaShadeGraph@corral": {
+	"AreaShadeGraph@coral": {
 		enabled: true
 	},
 
@@ -369,7 +369,7 @@
 		}
 	},
 
-	"AnsCheck@corral": {
+	"AnsCheck@coral": {
 		checklist: [
 			"check2x2ShadeCell",
 			"checkConnectUnshadeOutside",

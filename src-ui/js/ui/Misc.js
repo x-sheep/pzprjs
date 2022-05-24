@@ -115,7 +115,7 @@ function toBGimage(pid) {
 		"cbanana",
 		"chainedb",
 		"compass",
-		"corral",
+		"coral",
 		"curvedata",
 		"dbchoco",
 		"detour",
