@@ -170,11 +170,17 @@ pentominous:
 
 
 railpool:
-  Draw a loop that visits every cell, with the given segment lengths in each region.
+  Draw a loop that visits every cell.
 
-  1. There must be a single orthogonal, non-intersecting loop that visits every cell; it cannot branch off or cross itself.
+  1. The loop cannot branch off or cross itself.
   
-  2. If a region contains any numbers, those numbers are the set of lengths of all line segments contained fully or partially within that region.
+  2. A line segment that overlaps a region must have a length indicated by one of the numbers in that region. For segments contained partially in the region, the number still refers to the total length of the segment.
+  
+  3. Each number must be represented at least once by a horizontal or vertical segment overlapping the region. Regions without numbers can have line segments of any lengths.
+  
+  4. A question mark can replace any number, as long as no number is repeated in that region.
+  
+  This genre is invented by Martin Ender a.k.a. Menderbug.
 
 
 rassi:
