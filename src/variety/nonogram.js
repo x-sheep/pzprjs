@@ -347,6 +347,10 @@
 			var lines = this.getLines(clist);
 
 			if (this.excellsInUnknownOrder) {
+				if (nums.length === 0) {
+					return true;
+				}
+
 				nums.sort();
 				lines.sort();
 			}
