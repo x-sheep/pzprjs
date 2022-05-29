@@ -128,7 +128,7 @@
 						excell.setQnum(num);
 					}
 				}
-			} else if (ca === " " || ca === "-") {
+			} else if (ca === " " || ca === "-" || ca === "BS") {
 				excell.setQnum(-1);
 			} else {
 				return;
