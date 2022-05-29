@@ -470,18 +470,26 @@
 	// URLエンコード/デコード処理
 	Encode: {
 		decodePzpr: function(type) {
-			this.puzzle.setConfig("nuriuzu_connect", this.checkpflag("c"));
 			this.decodeDot();
 			this.decodeEmpty();
 		},
 		encodePzpr: function(type) {
-			this.outpflag = this.puzzle.getConfig("nuriuzu_connect") ? "c" : null;
 			this.encodeDot();
 			this.encodeEmpty();
 		},
 
 		decodeKanpen: function() {
 			this.fio.decodeStarFile();
+		}
+	},
+	"Encode@nuriuzu": {
+		decodePzpr: function(type) {
+			this.puzzle.setConfig("nuriuzu_connect", this.checkpflag("c"));
+			this.decodeDot();
+		},
+		encodePzpr: function(type) {
+			this.outpflag = this.puzzle.getConfig("nuriuzu_connect") ? "c" : null;
+			this.encodeDot();
 		}
 	},
 	//---------------------------------------------------------
