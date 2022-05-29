@@ -105,7 +105,7 @@
 
 			var dot = pos.getDot();
 			if (dot !== null) {
-				if (this.inputMode === "circle-unshade") {
+				if (this.inputMode === "circle-unshade" || dot.maxnum === 1) {
 					dot.setDot(dot.getDot() !== 1 ? 1 : 0);
 				} else if (this.inputMode === "circle-shade") {
 					dot.setDot(dot.getDot() !== 2 ? 2 : 0);
@@ -139,7 +139,7 @@
 	"MouseEvent@nuriuzu": {
 		use: true,
 		inputModes: {
-			edit: ["circle-unshade", "circle-shade"],
+			edit: ["circle-unshade"],
 			play: ["shade", "unshade"]
 		},
 
@@ -170,7 +170,7 @@
 			if (dot !== null) {
 				if (ca === "1") {
 					dot.setDot(1);
-				} else if (ca === "2") {
+				} else if (ca === "2" && dot.maxnum === 2) {
 					dot.setDot(2);
 				} else if (ca === " " || ca === "-" || ca === "0" || ca === "3") {
 					dot.setDot(0);
@@ -262,6 +262,7 @@
 	},
 
 	Dot: {
+		maxnum: 2,
 		setDot: function(val) {
 			this.puzzle.opemgr.disCombine = true;
 			this.piece.setQnum(val);
@@ -284,6 +285,7 @@
 		}
 	},
 	"Dot@nuriuzu": {
+		maxnum: 1,
 		setDot: function(val) {
 			if (this.piece.group === "cross" && val) {
 				return;
