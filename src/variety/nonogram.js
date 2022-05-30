@@ -251,6 +251,10 @@
 		},
 
 		getBorderColor: function(border) {
+			if (this.board.maxbx % 10 || this.board.maxby % 10) {
+				return null;
+			}
+
 			return border.bx % 10 === 0 || border.by % 10 === 0
 				? this.quescolor
 				: null;
