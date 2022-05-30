@@ -267,7 +267,11 @@
 			this.puzzle.opemgr.disCombine = true;
 			this.piece.setQnum(val);
 			this.puzzle.opemgr.disCombine = false;
-			this.puzzle.board.roommgr.setExtraData(this.validcell().room);
+
+			var cell = this.validcell();
+			if (cell) {
+				this.puzzle.board.roommgr.setExtraData(cell.room);
+			}
 		},
 
 		// 星に線が通っていないなら、近くのセルを返す
@@ -293,7 +297,10 @@
 			this.puzzle.opemgr.disCombine = true;
 			this.piece.setQnum(val);
 			this.puzzle.opemgr.disCombine = false;
-			this.puzzle.board.ublkmgr.setExtraData(this.validcell().ublk);
+			var cell = this.validcell();
+			if (cell) {
+				this.puzzle.board.ublkmgr.setExtraData(cell.ublk);
+			}
 		},
 
 		// 星に線が通っていないなら、近くのセルを返す
