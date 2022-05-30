@@ -83,7 +83,8 @@
 		"tajmahal",
 		"statuepark",
 		"statuepark-aux",
-		"railpool"
+		"railpool",
+		"coffeemilk"
 	]);
 
 	(function(Genre, obj) {
@@ -166,6 +167,7 @@
 			cbblock: [0, 0, "コンビブロック", "Combi Block"],
 			chainedb: [0, 0, "チェンブロ", "Chained Block"],
 			chocona: [0, 0, "チョコナ", "Chocona", "shimaguni"],
+			coffeemilk: [0, 0, "コーヒー牛乳", "Coffee Milk", "wblink"],
 			cojun: [0, 0, "コージュン", "Cojun", "ripple"],
 			compass: [0, 0, "Compass", "Compass", "compass"],
 			country: [1, 0, "カントリーロード", "Country Road"],

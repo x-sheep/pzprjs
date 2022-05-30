@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["wblink"], {
+})(["wblink", "coffeemilk"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -54,7 +54,9 @@
 				} else if (this.inputData === 0) {
 					borders.removeLine();
 				}
-				this.inputData = 2;
+				if (this.limitLine) {
+					this.inputData = 2;
+				}
 
 				this.puzzle.painter.paintRange(d.x1 - 1, d.y1 - 1, d.x2 + 1, d.y2 + 1);
 			}
@@ -85,6 +87,9 @@
 			border.draw();
 		}
 	},
+	"MouseEvent@wblink": {
+		limitLine: true
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
@@ -101,9 +106,9 @@
 				cell.setQnum(cell.qnum !== 1 ? 1 : -1);
 			} else if (ca === "2") {
 				cell.setQnum(cell.qnum !== 2 ? 2 : -1);
-			} else if (ca === "-") {
+			} else if (ca === "3" || ca === "-") {
 				cell.setQnum(cell.qnum !== -2 ? -2 : -1);
-			} else if (ca === "3" || ca === " ") {
+			} else if (ca === "4" || ca === " ") {
 				cell.setQnum(-1);
 			} else {
 				return;
@@ -232,9 +237,31 @@
 			this.drawLines();
 
 			this.drawCircles();
-			this.drawHatenas();
+			if (this.pid === "wblink") {
+				this.drawHatenas();
+			}
 
 			this.drawTarget();
+		}
+	},
+	"Graphic@coffeemilk": {
+		irowake: true,
+		errcolor2: "rgb(192, 64, 64)",
+		getCircleFillColor: function(cell) {
+			if (cell.qnum === 1) {
+				return cell.error === 1 ? this.errbcolor1 : "white";
+			} else if (cell.qnum === 2) {
+				return cell.error === 1 ? this.errcolor1 : this.quescolor;
+			} else if (cell.qnum === -2) {
+				return cell.error === 1 ? this.errcolor2 : "gray";
+			}
+			return null;
+		},
+		getCircleStrokeColor: function(cell) {
+			if (cell.qnum === 1 || cell.qnum === -2) {
+				return cell.error === 1 ? this.errcolor1 : this.quescolor;
+			}
+			return null;
 		}
 	},
 
@@ -246,6 +273,14 @@
 		},
 		encodePzpr: function(type) {
 			this.encodeCircle();
+		}
+	},
+	"Encode@coffeemilk": {
+		decodePzpr: function(type) {
+			this.decodeNumber10or16();
+		},
+		encodePzpr: function(type) {
+			this.encodeNumber10or16();
 		}
 	},
 	//---------------------------------------------------------
@@ -262,7 +297,7 @@
 
 	//---------------------------------------------------------
 	// 正解判定処理実行部
-	AnsCheck: {
+	"AnsCheck@wblink": {
 		checklist: [
 			"checkLineExist+",
 			"checkCrossLine",
@@ -304,6 +339,115 @@
 			}
 			if (!result) {
 				this.failcode.add(code);
+				this.board.border.setnoerr();
+			}
+		}
+	},
+
+	"AnsCheck@coffeemilk": {
+		checklist: [
+			"checkLineExist",
+			"checkCrossLine",
+			"checkDirectLine",
+			"checkGreyCount",
+			"checkBalance",
+			"checkNoLineObject"
+		],
+
+		checkDirectLine: function() {
+			var result = true;
+			allloop: for (var c = 0; c < this.board.cell.length; c++) {
+				var start = this.board.cell[c];
+				if (!start.isNum() || start.qnum === -2) {
+					continue;
+				}
+
+				for (var d = 0; d < 2; d++) {
+					var dir = ["right", "bottom"][d];
+
+					if (!start.adjborder[dir].isLine()) {
+						continue;
+					}
+
+					var size = start.adjborder[dir].getlinesize();
+					var end = this.board.getc(size.x2, size.y2);
+
+					if (end.qnum === -2 || end.qnum === start.qnum) {
+						continue;
+					}
+
+					result = false;
+					if (this.checkOnly) {
+						break allloop;
+					}
+					this.board.borderinside(size.x1, size.y1, size.x2, size.y2).seterr(1);
+					start.seterr(1);
+					end.seterr(1);
+				}
+			}
+			if (!result) {
+				this.failcode.add("lcInvalid");
+				this.board.border.setnoerr();
+			}
+		},
+		checkGreyCount: function() {
+			var result = true,
+				paths = this.board.linegraph.components;
+			for (var r = 0; r < paths.length; r++) {
+				var clist = paths[r].clist.filter(function(cell) {
+					return cell.qnum === -2;
+				});
+				if (clist.length <= 1) {
+					continue;
+				}
+
+				result = false;
+				if (this.checkOnly) {
+					break;
+				}
+				paths[r].setedgeerr(1);
+				clist.seterr(1);
+			}
+			if (!result) {
+				this.failcode.add("lcGrayGt");
+				this.board.border.setnoerr();
+			}
+		},
+
+		checkNoLineObject: function() {
+			this.checkAllCell(function(cell) {
+				return cell.lcnt === 0 && cell.qnum !== -2 && cell.isNum();
+			}, "nmNoLine");
+		},
+
+		checkBalance: function() {
+			var result = true,
+				paths = this.board.linegraph.components;
+			for (var r = 0; r < paths.length; r++) {
+				var clist = paths[r].clist;
+				var white = 0,
+					black = 0;
+				for (var c = 0; c < clist.length; c++) {
+					if (clist[c].qnum === 1) {
+						white++;
+					} else if (clist[c].qnum === 2) {
+						black++;
+					}
+				}
+
+				if (white === black) {
+					continue;
+				}
+
+				result = false;
+				if (this.checkOnly) {
+					break;
+				}
+				paths[r].setedgeerr(1);
+				paths[r].clist.seterr(1);
+			}
+			if (!result) {
+				this.failcode.add("lcBalance");
 				this.board.border.setnoerr();
 			}
 		}
