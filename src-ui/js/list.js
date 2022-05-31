@@ -359,6 +359,7 @@
 			"detour",
 			"snake",
 			"nonogram",
+			"coral",
 			"putteria",
 			"haisu",
 			"nikoji",
@@ -371,7 +372,8 @@
 			"ovotovata",
 			"crossstitch",
 			"chainedb",
-			"canal"
+			"canal",
+			"railpool"
 		]
 	};
 	var tabstate = {

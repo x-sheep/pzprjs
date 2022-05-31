@@ -54,6 +54,20 @@ chainedb:
   4. All blocks must be diagonally adjacent to at least one other block.
 
 
+coral:
+  Shade some cells on the board according to the numbers.
+
+  1. Clues outside the grid represent the lengths of each of the blocks of consecutive shaded cells in the corresponding row or column, not necessarily in order.
+  
+  2. Rows or columns without numbers can contain any amount of shaded cells.
+
+  3. All unshaded cells are connected through other unshaded cells to the outside of the grid.
+
+  4. The shaded cells cannot form a 2x2 square.
+
+  5. All shaded cells form an orthogonally contiguous area.
+
+
 crossstitch:
   Draw diagonal lines to make two loops.
 
@@ -167,6 +181,20 @@ pentominous:
   1. Two adjacent pentominoes cannot have the same shape, counting rotations and reflections as the same.
 
   2. A letter indicates the shape of the pentomino it's contained in. A pentomino may contain any number of identical letters.
+
+
+railpool:
+  Draw a loop that visits every cell.
+
+  1. The loop cannot branch off or cross itself.
+  
+  2. A line segment that overlaps a region must have a length indicated by one of the numbers in that region. For segments contained partially in the region, the number still refers to the total length of the segment.
+  
+  3. Each number must be represented at least once by a horizontal or vertical segment overlapping the region. Regions without numbers can have line segments of any lengths.
+  
+  4. A question mark can replace any number, as long as no number is repeated in that region.
+  
+  This genre is invented by Martin Ender a.k.a. Menderbug.
 
 
 rassi:
