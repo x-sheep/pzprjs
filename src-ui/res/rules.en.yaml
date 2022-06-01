@@ -133,6 +133,16 @@ lohkous:
   This genre is invented by Arvi Teikari a.k.a. Hempuli.
 
 
+nuriuzu:
+  Shade some cells on the board.
+
+  1. The unshaded areas must form blocks with exactly one star. You cannot shade a cell overlapping a star.
+
+  2. Unshaded areas must be rotationally symmetric, with a star at the center.
+
+  3. There cannot be a 2x2 square of all shaded or unshaded cells.
+
+
 oneroom:
   You're given a board divided into rooms. Shade some cells on the board.
 
