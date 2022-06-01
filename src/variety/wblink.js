@@ -90,6 +90,25 @@
 	"MouseEvent@wblink": {
 		limitLine: true
 	},
+	"MouseEvent@coffeemilk": {
+		inputqnum_main: function(cell) {
+			var order = [-1, 1, -2, 2];
+
+			var current = order.indexOf(cell.qnum);
+			var next =
+				current === -1
+					? 0
+					: this.btn === "left"
+					? order[current + 1]
+					: order[current - 1];
+
+			if (next) {
+				this.inputFixedNumber(next);
+			} else {
+				this.common.inputqnum_main.call(this, cell);
+			}
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
