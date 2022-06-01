@@ -119,6 +119,18 @@ lohkous:
   This genre is invented by Arvi Teikari a.k.a. Hempuli.
 
 
+nothree:
+  Shade some cells on the board.
+
+  1. Shaded cells cannot be horizontally or vertically adjacent.
+
+  2. A circle overlaps exactly one shaded cell.
+
+  3. Three consecutive shaded cells in a row/column must have different distances.
+
+  4. All unshaded cells on the board from an orthogonally connected area.
+
+
 oneroom:
   You're given a board divided into rooms. Shade some cells on the board.
 
