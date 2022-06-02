@@ -54,18 +54,6 @@ chainedb:
   4. All blocks must be diagonally adjacent to at least one other block.
 
 
-coffeemilk:
-  Draw lines between the circles to form groups.
-
-  1. Lines must be horizontal or vertical, and cannot turn.
-
-  2. Lines cannot cross each other.
-
-  3. Each group of circles must contain exactly one gray circle, and an equal amount of white and black circles.
-
-  4. A black circle and a white circle cannot be connected directly.
-
-
 crossstitch:
   Draw diagonal lines to make two loops.
 
