@@ -95,6 +95,38 @@
 			}
 		},
 
+		getPointAdjacent: function() {
+			var bd = this.board,
+				bx = this.bx,
+				by = this.by;
+			var list, opposite;
+			switch (this.getDir()) {
+				case this.UP:
+					list = bd.cellinside(bx - 3, by - 2, bx + 3, by + 1);
+					opposite = this.relcell(0, 2);
+					break;
+				case this.DN:
+					list = bd.cellinside(bx - 3, by - 1, bx + 3, by + 2);
+					opposite = this.relcell(0, -2);
+					break;
+				case this.LT:
+					list = bd.cellinside(bx - 2, by - 3, bx + 1, by + 3);
+					opposite = this.relcell(2, 0);
+					break;
+				case this.RT:
+					list = bd.cellinside(bx - 1, by - 3, bx + 2, by + 3);
+					opposite = this.relcell(-2, 0);
+					break;
+				default:
+					return new this.klass.CellList();
+			}
+
+			var idx = list.indexOf(this);
+			list[idx] = opposite;
+
+			return list;
+		},
+
 		getDir: function() {
 			var bx = this.bx,
 				by = this.by;
@@ -397,6 +429,34 @@
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
-		checklist: []
+		checklist: ["checkUniqueShapes"],
+
+		checkUniqueShapes: function() {
+			var thiz = this;
+			for (var c = 0; c < this.board.cell.length; c++) {
+				var cell = this.board.cell[c];
+				if (!cell.isShade()) {
+					continue;
+				}
+
+				var other = cell.getPointAdjacent().filter(function(c) {
+					return (
+						c.isShade() &&
+						c.sblk !== cell.sblk &&
+						!thiz.isDifferentShapeBlock(c.sblk, cell.sblk)
+					);
+				});
+
+				if (!other.length) {
+					continue;
+				}
+
+				this.failcode.add("bsSameShape");
+				if (this.checkOnly) {
+					break;
+				}
+				cell.sblk.clist.seterr(1);
+			}
+		}
 	}
 });
