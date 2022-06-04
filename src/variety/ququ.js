@@ -44,15 +44,56 @@
 		}
 	},
 
-	// AreaShadeGraph: {
-	// 	enabled: true
-	// },
-	// AreaUnshadeGraph: {
-	// 	enabled: true
-	// },
+	AreaShadeGraph: {
+		enabled: true
+	},
+	AreaUnshadeGraph: {
+		enabled: true
+	},
 
 	Cell: {
 		numberRemainsUnshaded: true,
+
+		initAdjacent: function() {
+			var ec = this.board.emptycell;
+			switch (this.getDir()) {
+				case this.UP:
+					this.adjacent = {
+						top: this.relobj(0, -1),
+						bottom: ec,
+						left: this.relobj(-1, 1),
+						right: this.relobj(1, 1)
+					};
+					break;
+				case this.DN:
+					this.adjacent = {
+						top: ec,
+						bottom: this.relobj(0, 1),
+						left: this.relobj(-1, -1),
+						right: this.relobj(1, -1)
+					};
+					break;
+				case this.LT:
+					this.adjacent = {
+						top: this.relobj(1, -1),
+						bottom: this.relobj(1, 1),
+						left: this.relobj(-1, 0),
+						right: ec
+					};
+					break;
+				case this.RT:
+					this.adjacent = {
+						top: this.relobj(-1, -1),
+						bottom: this.relobj(-1, 1),
+						left: ec,
+						right: this.relobj(1, 0)
+					};
+					break;
+				default:
+					this.adjacent = { top: ec, bottom: ec, left: ec, right: ec };
+					break;
+			}
+		},
 
 		getDir: function() {
 			var bx = this.bx,
@@ -102,6 +143,7 @@
 
 				cell.bx = bx;
 				cell.by = by;
+				cell.initAdjacent();
 			}
 		},
 
