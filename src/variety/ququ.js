@@ -52,7 +52,26 @@
 	// },
 
 	Cell: {
-		numberRemainsUnshaded: true
+		numberRemainsUnshaded: true,
+
+		getDir: function() {
+			var bx = this.bx,
+				by = this.by;
+			if (bx % 3 === 1) {
+				if (by % 3 === 0) {
+					return this.UP;
+				} else if (by % 3 === 2) {
+					return this.DN;
+				}
+			} else if (by % 3 === 1) {
+				if (bx % 3 === 0) {
+					return this.LT;
+				} else if (bx % 3 === 2) {
+					return this.RT;
+				}
+			}
+			return this.NDIR;
+		}
 	},
 
 	Board: {
@@ -75,8 +94,8 @@
 
 				var idx = (id / 4) | 0;
 				var pos = id % 4;
-				var bx = (idx / this.cols) | 0;
-				var by = idx % this.cols;
+				var bx = (idx % this.cols) * 3;
+				var by = ((idx / this.cols) | 0) * 3;
 
 				bx += [1, 0, 2, 1][pos];
 				by += [0, 1, 1, 2][pos];
@@ -150,10 +169,12 @@
 	Graphic: {
 		enablebcolor: true,
 		bgcellcolor_func: "qsub1",
+		shadecolor: "#444444",
 		paint: function() {
 			this.drawBGCells();
 			this.drawShadedCells();
 			this.drawGrid();
+			this.drawSlashGrid();
 
 			this.drawQuesNumbers();
 
@@ -167,6 +188,88 @@
 		getBoardRows: function() {
 			var bd = this.board;
 			return (bd.maxby - bd.minby + 1) / 3;
+		},
+
+		drawSlashGrid: function() {
+			var g = this.vinc("slash", "crispEdges", true),
+				bd = this.board;
+
+			var x1 = Math.max(bd.minbx, this.range.x1),
+				y1 = Math.max(bd.minby, this.range.y1),
+				x2 = Math.min(bd.maxbx, this.range.x2),
+				y2 = Math.min(bd.maxby, this.range.y2);
+			if (x1 > x2 || y1 > y2) {
+				return;
+			}
+
+			var bw = this.bw,
+				bh = this.bh;
+			var xa = (x1 / 3) | 0,
+				xb = (x2 / 3) | 0;
+			var ya = (y1 / 3) | 0,
+				yb = (y2 / 3) | 0;
+
+			g.lineWidth = this.gw;
+			g.strokeStyle = this.gridcolor;
+			for (var x = xa; x <= xb; x++) {
+				for (var y = ya; y <= yb; y++) {
+					var px1 = x * bw * 2,
+						px2 = bw * 2 + px1,
+						py1 = y * bh * 2,
+						py2 = bh * 2 + py1;
+					g.vid = "bdsa_" + x + "_" + y;
+					g.strokeLine(px1, py1, px2, py2);
+					g.vid = "bdsb_" + x + "_" + y;
+					g.strokeLine(px1, py2, px2, py1);
+				}
+			}
+		},
+
+		drawCells_common: function(header, colorfunc) {
+			var g = this.context;
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i],
+					color = colorfunc.call(this, cell);
+				g.vid = header + cell.id;
+				if (!!color) {
+					g.fillStyle = color;
+
+					var px = ((cell.bx / 3) | 0) * this.bw * 2;
+					var py = ((cell.by / 3) | 0) * this.bh * 2;
+					var idx = [0, 0, 0, 0];
+
+					switch (cell.getDir()) {
+						case cell.DN:
+							idx = [1, 1, -1, 1];
+							break;
+						case cell.UP:
+							idx = [1, -1, -1, -1];
+							break;
+						case cell.RT:
+							idx = [1, -1, 1, 1];
+							break;
+						case cell.LT:
+							idx = [-1, -1, -1, 1];
+							break;
+					}
+
+					g.setOffsetLinePath(
+						px + this.bw,
+						py + this.bh,
+						0,
+						0,
+						idx[0] * this.bw,
+						idx[1] * this.bh,
+						idx[2] * this.bw,
+						idx[3] * this.bh,
+						true
+					);
+					g.fill();
+				} else {
+					g.vhide();
+				}
+			}
 		}
 	},
 
