@@ -165,41 +165,9 @@
 	},
 
 	BoardExec: {
-		execadjust: function(name) {
-			if (!this.isBoardOp(name)) {
-				return;
-			}
-
-			var puzzle = this.puzzle,
-				bd = this.board;
-			if (name.indexOf("reduce") === 0) {
-				if (name === "reduceup" || name === "reducedn") {
-					if (bd.rows <= 1) {
-						return;
-					}
-				} else if (name === "reducelt" || name === "reducert") {
-					if (bd.cols <= 1) {
-						return;
-					}
-				}
-			}
-
-			puzzle.opemgr.newOperation();
-
-			puzzle.painter.suspendAll();
-
-			// undo/redo時はexecadjust_mainを直接呼びます
-			var d = { x1: 0, y1: 0, x2: 3 * bd.cols, y2: 3 * bd.rows }; // TURNFLIPには範囲が必要
-			this.execadjust_main(this.boardtype[name][1], d);
-			this.addOpe(d, name);
-
-			bd.setminmax();
-			bd.rebuildInfo();
-
-			// Canvasを更新する
-			puzzle.painter.resizeCanvas();
-			puzzle.emit("adjust");
-			puzzle.painter.unsuspend();
+		adjustSize: function() {
+			var bd = this.board;
+			return { x1: 0, y1: 0, x2: 3 * bd.cols - 1, y2: 3 * bd.rows - 1 }; // TURNFLIPには範囲が必要
 		},
 
 		insex: {
@@ -347,8 +315,41 @@
 	},
 	//---------------------------------------------------------
 	FileIO: {
-		decodeData: function() {},
-		encodeData: function() {}
+		decodeData: function() {
+			this.decodeCellQnum();
+			this.decodeCellAns();
+		},
+		encodeData: function() {
+			this.encodeCellQnum();
+			this.encodeCellAns();
+		},
+
+		decodeCell: function(func) {
+			var bd = this.board,
+				n = 0,
+				item = this.getItemList(bd.rows * 3);
+			for (var by = 0; by <= bd.maxby; by++) {
+				for (var bx = 0; bx <= bd.maxbx; bx++) {
+					var cell = bd.getc(bx, by);
+					if (!cell.isnull) {
+						func(cell, item[n++]);
+					}
+				}
+			}
+		},
+		encodeCell: function(func) {
+			var bd = this.board;
+			for (var by = 0; by <= bd.maxby; by++) {
+				var data = "";
+				for (var bx = 0; bx <= bd.maxbx; bx++) {
+					var cell = bd.getc(bx, by);
+					if (!cell.isnull) {
+						data += func(cell);
+					}
+				}
+				this.writeLine(data);
+			}
+		}
 	},
 
 	//---------------------------------------------------------

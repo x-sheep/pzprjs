@@ -75,6 +75,11 @@
 				return !!this.boardtype[name];
 			},
 
+			adjustSize: function() {
+				var bd = this.board;
+				return { x1: 0, y1: 0, x2: 2 * bd.cols, y2: 2 * bd.rows }; // TURNFLIPには範囲が必要
+			},
+
 			//------------------------------------------------------------------------------
 			// bd.exec.execadjust()   盤面の調整、回転、反転で対応する関数へジャンプする
 			// bd.exec.execadjust_main() 盤面の調整、回転、反転処理の実行部
@@ -103,7 +108,7 @@
 				puzzle.painter.suspendAll();
 
 				// undo/redo時はexecadjust_mainを直接呼びます
-				var d = { x1: 0, y1: 0, x2: 2 * bd.cols, y2: 2 * bd.rows }; // TURNFLIPには範囲が必要
+				var d = this.adjustSize(); // TURNFLIPには範囲が必要
 				this.execadjust_main(this.boardtype[name][1], d);
 				this.addOpe(d, name);
 
