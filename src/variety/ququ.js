@@ -147,6 +147,40 @@
 		}
 	},
 
+	CellList: {
+		getRectSize: function() {
+			var bd = this.board;
+			var d = {
+				x1: bd.maxbx + 1,
+				x2: bd.minbx - 1,
+				y1: bd.maxby + 1,
+				y2: bd.minby - 1,
+				cols: 0,
+				rows: 0,
+				cnt: 0
+			};
+			for (var i = 0; i < this.length; i++) {
+				var cell = this[i];
+				if (d.x1 > cell.bx) {
+					d.x1 = cell.bx;
+				}
+				if (d.x2 < cell.bx) {
+					d.x2 = cell.bx;
+				}
+				if (d.y1 > cell.by) {
+					d.y1 = cell.by;
+				}
+				if (d.y2 < cell.by) {
+					d.y2 = cell.by;
+				}
+				d.cnt++;
+			}
+			d.cols = d.x2 - d.x1 + 1;
+			d.rows = d.y2 - d.y1 + 1;
+			return d;
+		}
+	},
+
 	Board: {
 		cols: 4,
 		rows: 4,
