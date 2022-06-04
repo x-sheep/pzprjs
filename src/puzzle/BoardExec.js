@@ -126,7 +126,7 @@
 					var tmp = bd.cols;
 					bd.cols = bd.rows;
 					bd.rows = tmp;
-					d = { x1: 0, y1: 0, x2: 2 * bd.cols, y2: 2 * bd.rows };
+					d = { x1: 0, y1: 0, x2: d.y2, y2: d.x2 };
 				} else if (key & EXPAND) {
 					if (key === this.EXPANDUP || key === this.EXPANDDN) {
 						bd.rows++;

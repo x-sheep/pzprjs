@@ -164,6 +164,68 @@
 		}
 	},
 
+	BoardExec: {
+		execadjust: function(name) {
+			if (!this.isBoardOp(name)) {
+				return;
+			}
+
+			var puzzle = this.puzzle,
+				bd = this.board;
+			if (name.indexOf("reduce") === 0) {
+				if (name === "reduceup" || name === "reducedn") {
+					if (bd.rows <= 1) {
+						return;
+					}
+				} else if (name === "reducelt" || name === "reducert") {
+					if (bd.cols <= 1) {
+						return;
+					}
+				}
+			}
+
+			puzzle.opemgr.newOperation();
+
+			puzzle.painter.suspendAll();
+
+			// undo/redo時はexecadjust_mainを直接呼びます
+			var d = { x1: 0, y1: 0, x2: 3 * bd.cols, y2: 3 * bd.rows }; // TURNFLIPには範囲が必要
+			this.execadjust_main(this.boardtype[name][1], d);
+			this.addOpe(d, name);
+
+			bd.setminmax();
+			bd.rebuildInfo();
+
+			// Canvasを更新する
+			puzzle.painter.resizeCanvas();
+			puzzle.emit("adjust");
+			puzzle.painter.unsuspend();
+		},
+
+		insex: {
+			cell: { 1: true, 2: true, 3: true }
+		},
+
+		distObj: function(key, piece) {
+			var bd = this.board;
+			if (piece.isnull) {
+				return -1;
+			}
+
+			key &= 0x0f;
+			if (key === this.UP) {
+				return piece.by + 1;
+			} else if (key === this.DN) {
+				return 3 * bd.rows - piece.by;
+			} else if (key === this.LT) {
+				return piece.bx + 1;
+			} else if (key === this.RT) {
+				return 3 * bd.cols - piece.bx;
+			}
+			return -1;
+		}
+	},
+
 	//---------------------------------------------------------
 	// 画像表示系
 	Graphic: {
