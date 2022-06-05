@@ -10,7 +10,7 @@
 	MouseEvent: {
 		use: true,
 		inputModes: {
-			edit: ["number"],
+			edit: ["number", "undef", "clear"],
 			play: ["shade", "unshade", "info-blk"]
 		},
 		mouseinput_auto: function() {
@@ -23,6 +23,10 @@
 					this.inputqnum();
 				}
 			}
+		},
+
+		mouseinput_clear: function() {
+			this.inputFixedNumber(-1);
 		},
 
 		getpos: function(rc) {
