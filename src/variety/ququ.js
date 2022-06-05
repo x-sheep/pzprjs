@@ -345,6 +345,24 @@
 			this.drawCursor(false, this.puzzle.editmode);
 		},
 
+		getCellCenter: function(bx, by) {
+			var x = (bx + 0.5) * (2 / 3);
+			var y = (by + 0.5) * (2 / 3);
+
+			if (bx % 3 === 0) {
+				x += 0.1;
+			} else if (bx % 3 === 2) {
+				x -= 0.1;
+			}
+			if (by % 3 === 0) {
+				y += 0.1;
+			} else if (by % 3 === 2) {
+				y -= 0.1;
+			}
+
+			return { x: x * this.bw, y: y * this.bh };
+		},
+
 		drawNumbers_com: function(textfunc, colorfunc, header, textoption) {
 			var g = this.context;
 			var clist = this.range.cells;
@@ -354,9 +372,8 @@
 				g.vid = header + cell.id;
 				if (!!text) {
 					g.fillStyle = colorfunc.call(this, cell);
-					var x = (cell.bx + 0.5) * this.bw * (2 / 3);
-					var y = (cell.by + 0.5) * this.bh * (2 / 3);
-					this.disptext(text, x, y, textoption);
+					var center = this.getCellCenter(cell.bx, cell.by);
+					this.disptext(text, center.x, center.y, textoption);
 				} else {
 					g.vhide();
 				}
@@ -366,8 +383,9 @@
 		drawRawCursor: function(layerid, prefix, cursor, islarge, isdraw, color) {
 			var g = this.vinc(layerid, "crispEdges");
 
-			var px = (cursor.bx + 0.5) * this.bw * (2 / 3),
-				py = (cursor.by + 0.5) * this.bh * (2 / 3);
+			var center = this.getCellCenter(cursor.bx, cursor.by);
+			var px = center.x,
+				py = center.y;
 			var t = Math.max(this.cw / 24, 1) | 0,
 				w = this.bw * 0.45,
 				h = w;
