@@ -10,15 +10,19 @@
 	MouseEvent: {
 		use: true,
 		inputModes: {
-			edit: [],
+			edit: ["number"],
 			play: ["shade", "unshade", "info-blk"]
 		},
 		mouseinput_auto: function() {
-			// if (this.puzzle.playmode) {
-			if (this.mousestart || this.mousemove) {
-				this.inputcell();
+			if (this.puzzle.playmode) {
+				if (this.mousestart || this.mousemove) {
+					this.inputcell();
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.inputqnum();
+				}
 			}
-			// }
 		},
 
 		getpos: function(rc) {
@@ -44,6 +48,21 @@
 		}
 	},
 
+	KeyEvent: {
+		enablemake: true,
+
+		moveTarget: function(ca) {
+			return this.moveTBorder(ca);
+		}
+	},
+
+	TargetCursor: {
+		crosstype: true,
+		initCursor: function() {
+			this.init(1, 0);
+		}
+	},
+
 	AreaShadeGraph: {
 		enabled: true
 	},
@@ -53,6 +72,10 @@
 
 	Cell: {
 		numberRemainsUnshaded: true,
+
+		maxnum: function() {
+			return this.board.cols * this.board.rows * 4;
+		},
 
 		initAdjacent: function() {
 			var ec = this.board.emptycell;
@@ -308,6 +331,7 @@
 		enablebcolor: true,
 		bgcellcolor_func: "qsub1",
 		shadecolor: "#444444",
+		fontsizeratio: 0.4,
 		paint: function() {
 			this.drawBGCells();
 			this.drawShadedCells();
@@ -317,6 +341,64 @@
 			this.drawQuesNumbers();
 
 			this.drawChassis();
+
+			this.drawCursor(false, this.puzzle.editmode);
+		},
+
+		drawNumbers_com: function(textfunc, colorfunc, header, textoption) {
+			var g = this.context;
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+				var text = textfunc.call(this, cell);
+				g.vid = header + cell.id;
+				if (!!text) {
+					g.fillStyle = colorfunc.call(this, cell);
+					var x = (cell.bx + 0.5) * this.bw * (2 / 3);
+					var y = (cell.by + 0.5) * this.bh * (2 / 3);
+					this.disptext(text, x, y, textoption);
+				} else {
+					g.vhide();
+				}
+			}
+		},
+
+		drawRawCursor: function(layerid, prefix, cursor, islarge, isdraw, color) {
+			var g = this.vinc(layerid, "crispEdges");
+
+			var px = (cursor.bx + 0.5) * this.bw * (2 / 3),
+				py = (cursor.by + 0.5) * this.bh * (2 / 3);
+			var t = Math.max(this.cw / 24, 1) | 0,
+				w = this.bw * 0.45,
+				h = w;
+
+			isdraw = isdraw !== false && !this.outputImage;
+			g.fillStyle = color;
+
+			g.vid = prefix + "ti1_";
+			if (isdraw) {
+				g.fillRect(px - w, py - h, w * 2, t);
+			} else {
+				g.vhide();
+			}
+			g.vid = prefix + "ti2_";
+			if (isdraw) {
+				g.fillRect(px - w, py - h, t, h * 2);
+			} else {
+				g.vhide();
+			}
+			g.vid = prefix + "ti3_";
+			if (isdraw) {
+				g.fillRect(px - w, py + h - t, w * 2, t);
+			} else {
+				g.vhide();
+			}
+			g.vid = prefix + "ti4_";
+			if (isdraw) {
+				g.fillRect(px + w - t, py - h, t, h * 2);
+			} else {
+				g.vhide();
+			}
 		},
 
 		resizeCanvasByCellSize: function(cellsize) {
@@ -480,7 +562,48 @@
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
-		checklist: ["checkUniqueShapes"],
+		checklist: [
+			"checkNoNumberInUnshade",
+			"checkUniqueShapes",
+			"checkDoubleNumberInUnshade+",
+			"checkNumberAndUnshadeSize",
+			"doneShadingDecided++"
+		],
+
+		checkNoNumberInUnshade: function() {
+			this.checkAllBlock(
+				this.board.ublkmgr,
+				function(cell) {
+					return cell.isNum();
+				},
+				function(w, h, a, n) {
+					return a !== 0;
+				},
+				"bkNoNum"
+			);
+		},
+
+		checkDoubleNumberInUnshade: function() {
+			this.checkAllBlock(
+				this.board.ublkmgr,
+				function(cell) {
+					return cell.isNum();
+				},
+				function(w, h, a, n) {
+					return a < 2;
+				},
+				"bkNumGe2"
+			);
+		},
+		checkNumberAndUnshadeSize: function() {
+			this.checkAllArea(
+				this.board.ublkmgr,
+				function(w, h, a, n) {
+					return n <= 0 || n === a;
+				},
+				"bkSizeNe"
+			);
+		},
 
 		checkUniqueShapes: function() {
 			var thiz = this;
