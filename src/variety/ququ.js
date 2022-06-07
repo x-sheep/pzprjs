@@ -247,12 +247,7 @@
 		getc: function(bx, by) {
 			var id = null,
 				qc = this.cols;
-			if (
-				bx >= this.minbx &&
-				bx <= this.maxbx &&
-				by >= this.minby &&
-				by <= this.maxby
-			) {
+			if (bx >= 0 && bx < 3 * this.cols && by >= 0 && by < 3 * this.rows) {
 				var idx = ((by / 3) | 0) * qc + ((bx / 3) | 0);
 				if (bx % 3 === 1) {
 					if (by % 3 === 0) {
