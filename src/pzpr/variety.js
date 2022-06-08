@@ -84,6 +84,8 @@
 		"statuepark",
 		"statuepark-aux",
 		"railpool",
+		"coral",
+		"nuriuzu",
 		"coffeemilk"
 	]);
 
@@ -138,14 +140,7 @@
 			arukone: [0, 0, "アルコネ", "Arukone", "numlin"],
 			ayeheya: [0, 1, "∀人∃ＨＥＹＡ", "ekawayeh", "heyawake"],
 			balance: [0, 0, "Balance Loop", "Balance Loop"],
-			cave: [
-				1,
-				0,
-				"バッグ",
-				"Cave",
-				"kurodoko",
-				{ alias: "bag", alias2: "corral", alias3: "correl" }
-			],
+			cave: [1, 0, "バッグ", "Cave", "kurodoko", { alias: "bag" }],
 			cbanana: [0, 0, "チョコバナナ", "Choco Banana"],
 			crossstitch: [0, 0, "Crossstitch", "Crossstitch"],
 			barns: [1, 0, "バーンズ", "Barns"],
@@ -170,6 +165,7 @@
 			coffeemilk: [0, 0, "コーヒー牛乳", "Coffee Milk", "wblink"],
 			cojun: [0, 0, "コージュン", "Cojun", "ripple"],
 			compass: [0, 0, "Compass", "Compass", "compass"],
+			coral: [0, 0, "Coral", "Coral", "nonogram"],
 			country: [1, 0, "カントリーロード", "Country Road"],
 			creek: [1, 0, "クリーク", "Creek"],
 			curvedata: [0, 0, "カーブデータ", "Curve Data"],
@@ -294,6 +290,7 @@
 			nurikabe: [0, 1, "ぬりかべ", "Nurikabe", "nurikabe"],
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
 			nurimisaki: [0, 0, "ぬりみさき", "Nurimisaki", "kurodoko"],
+			nuriuzu: [0, 0, "ぬりうず", "Nuri-uzu", "tentaisho"],
 			ovotovata: [0, 0, "Ovotovata", "Ovotovata", "country"],
 			oneroom: [0, 0, "ワンルームワンドア", "One Room One Door", "heyawake"],
 			onsen: [0, 0, "温泉めぐり", "Onsen-meguri", "country"],
