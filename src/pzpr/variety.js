@@ -84,7 +84,8 @@
 		"statuepark",
 		"statuepark-aux",
 		"railpool",
-		"coral"
+		"coral",
+		"ququ"
 	]);
 
 	(function(Genre, obj) {
