@@ -35,6 +35,10 @@
 			}
 		},
 
+		mouseinput_clear: function() {
+			this.inputFixedNumber(-1);
+		},
+
 		inputLine: function() {
 			var pos = this.getpos(0.1);
 			if (this.prevPos.equals(pos)) {
