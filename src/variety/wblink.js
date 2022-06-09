@@ -129,9 +129,34 @@
 				cell.setQnum(cell.qnum !== 1 ? 1 : -1);
 			} else if (ca === "2") {
 				cell.setQnum(cell.qnum !== 2 ? 2 : -1);
-			} else if (ca === "3" || ca === "-") {
+			} else if (ca === "-") {
 				cell.setQnum(cell.qnum !== -2 ? -2 : -1);
-			} else if (ca === "4" || ca === " ") {
+			} else if (ca === "3" || ca === " ") {
+				cell.setQnum(-1);
+			} else {
+				return;
+			}
+
+			cell.draw();
+		}
+	},
+
+	"KeyEvent@coffeemilk": {
+		enablemake: true,
+
+		keyinput: function(ca) {
+			this.key_inputcircle(ca);
+		},
+		key_inputcircle: function(ca) {
+			var cell = this.cursor.getc();
+
+			if (ca === "1") {
+				cell.setQnum(cell.qnum !== 1 ? 1 : -1);
+			} else if (ca === "3") {
+				cell.setQnum(cell.qnum !== 2 ? 2 : -1);
+			} else if (ca === "2" || ca === "-") {
+				cell.setQnum(cell.qnum !== -2 ? -2 : -1);
+			} else if (ca === "4" || ca === " " || ca === "BS") {
 				cell.setQnum(-1);
 			} else {
 				return;
