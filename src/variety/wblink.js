@@ -182,7 +182,8 @@
 					pos1
 						.move(-1, 0)
 						.getc()
-						.noNum()
+						.noNum() &&
+					(!this.isLine() || pos1.getc().adjborder.left.isLine())
 				) {
 					pos1.move(-1, 0);
 				}
@@ -190,7 +191,8 @@
 					pos2
 						.move(1, 0)
 						.getc()
-						.noNum()
+						.noNum() &&
+					(!this.isLine() || pos2.getc().adjborder.right.isLine())
 				) {
 					pos2.move(1, 0);
 				}
@@ -199,7 +201,8 @@
 					pos1
 						.move(0, -1)
 						.getc()
-						.noNum()
+						.noNum() &&
+					(!this.isLine() || pos1.getc().adjborder.top.isLine())
 				) {
 					pos1.move(0, -1);
 				}
@@ -207,7 +210,8 @@
 					pos2
 						.move(0, 1)
 						.getc()
-						.noNum()
+						.noNum() &&
+					(!this.isLine() || pos2.getc().adjborder.bottom.isLine())
 				) {
 					pos2.move(0, 1);
 				}
