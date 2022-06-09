@@ -377,6 +377,12 @@
 			"checkNoLineObject"
 		],
 
+		checkCrossLine: function() {
+			this.checkAllCell(function(cell) {
+				return !cell.isNum() && cell.lcnt > 1 && !cell.isLineStraight();
+			}, "lnCross");
+		},
+
 		checkDirectLine: function() {
 			var result = true;
 			allloop: for (var c = 0; c < this.board.cell.length; c++) {
