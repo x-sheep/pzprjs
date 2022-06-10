@@ -12,7 +12,7 @@
 	// マウス入力系
 	MouseEvent: {
 		inputModes: {
-			edit: ["circle-shade", "circle-unshade", "undef", "clear"],
+			edit: ["circle-shade", "circle-unshade", "circle-gray", "clear"],
 			play: ["line", "peke"]
 		},
 		mouseinput_auto: function() {
@@ -32,6 +32,14 @@
 				if (this.mousestart) {
 					this.inputqnum();
 				}
+			}
+		},
+
+		mouseinput_other: function() {
+			switch (this.inputMode) {
+				case "circle-gray":
+					this.inputFixedNumber(-2);
+					break;
 			}
 		},
 
