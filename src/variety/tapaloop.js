@@ -46,62 +46,30 @@
 		enablemake: true,
 
 		keyinput: function(ca) {
-			this.key_inputqnum_tapaloop(ca);
-		},
-		key_inputqnum_tapaloop: function(ca) {
-			var cell = this.cursor.getc(),
-				nums = cell.qnums,
-				val = [];
-
-			if (("0" <= ca && ca <= "8") || ca === "-") {
-				var num = ca !== "-" ? +ca : -2;
-				if (this.prev === cell && nums.length <= 3) {
-					for (var i = 0; i < nums.length; i++) {
-						val.push(nums[i]);
-					}
-				}
-				val.push(num);
-				if (val.length > 1) {
-					var sum = 0;
-					for (var i = 0; i < val.length; i++) {
-						sum += val[i] >= 0 ? val[i] : 1;
-					}
-					if (sum > 8) {
-						val = [num];
-					} else {
-						for (var i = 0; i < val.length; i++) {
-							if (val[i] === 0) {
-								val = [num];
-								break;
-							}
-						}
-					}
-				}
-			} else if (ca === "BS") {
-				if (nums.length > 1) {
-					for (var i = 0; i < nums.length - 1; i++) {
-						val.push(nums[i]);
-					}
-				}
-			} else if (ca === " ") {
-				val = [];
-			} else {
-				return;
-			}
-
-			cell.setNums(val);
-
-			this.prev = cell;
-			cell.draw();
+			this.key_inputqnums(ca);
 		}
 	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
 	Cell: {
+		minnum: 0,
+		maxnum: 8,
 		noLP: function(dir) {
 			return this.qnums.length === 0 ? false : true;
 		},
+
+		isValidQnums: function(val) {
+			var sum = 0;
+			for (var i = 0; i < val.length; i++) {
+				if (val[i] === 0) {
+					return false;
+				}
+				sum += val[i] >= 0 ? val[i] : 1;
+			}
+			return sum <= 8;
+		},
+
 		getSegmentLengths: function() {
 			var segs = [];
 			var current = 0;

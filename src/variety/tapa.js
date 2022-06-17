@@ -80,53 +80,7 @@
 		enablemake: true,
 
 		keyinput: function(ca) {
-			this.key_inputqnum_tapa(ca);
-		},
-		key_inputqnum_tapa: function(ca) {
-			var cell = this.cursor.getc(),
-				nums = cell.qnums,
-				val = [];
-
-			if (("0" <= ca && ca <= "8") || ca === "-") {
-				var num = ca !== "-" ? +ca : -2;
-				if (this.prev === cell && nums.length <= 3) {
-					for (var i = 0; i < nums.length; i++) {
-						val.push(nums[i]);
-					}
-				}
-				val.push(num);
-				if (val.length > 1) {
-					var sum = 0;
-					for (var i = 0; i < val.length; i++) {
-						sum += val[i] >= 0 ? val[i] : 1;
-					}
-					if (val.length + sum > 8) {
-						val = [num];
-					} else {
-						for (var i = 0; i < val.length; i++) {
-							if (val[i] === 0) {
-								val = [num];
-								break;
-							}
-						}
-					}
-				}
-			} else if (ca === "BS") {
-				if (nums.length > 1) {
-					for (var i = 0; i < nums.length - 1; i++) {
-						val.push(nums[i]);
-					}
-				}
-			} else if (ca === " ") {
-				val = [];
-			} else {
-				return;
-			}
-
-			cell.setNums(val);
-
-			this.prev = cell;
-			cell.draw();
+			this.key_inputqnums(ca);
 		}
 	},
 
@@ -134,6 +88,7 @@
 	// 盤面管理系
 	Cell: {
 		minnum: 0,
+		maxnum: 8,
 		qnum_states: (function() {
 			var states = [[], [-2], [0], [1], [2], [3], [4], [5], [6], [7], [8]],
 				sum = 0;
@@ -162,6 +117,24 @@
 			states.push([1, 1, 1, 1]);
 			return states;
 		})(),
+
+		isValidQnums: function(val) {
+			if (val.length === 0) {
+				return true;
+			}
+			if (val.length === 1) {
+				return val[0] <= 8;
+			}
+
+			var sum = 0;
+			for (var i = 0; i < val.length; i++) {
+				if (val[i] === 0) {
+					return false;
+				}
+				sum += val[i] >= 0 ? val[i] : 1;
+			}
+			return val.length + sum <= 8;
+		},
 
 		allowUnshade: function() {
 			return this.qnums.length === 0;

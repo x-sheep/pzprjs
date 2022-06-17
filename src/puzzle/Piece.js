@@ -116,6 +116,10 @@ pzpr.classmgr.makeCommon({
 			this.setQans(0);
 			this.setQsub(0);
 		},
+		distinctQnums: false,
+		isValidQnums: function(val) {
+			return val.length <= 4;
+		},
 		setQnums: function(val) {
 			if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
 				return;
