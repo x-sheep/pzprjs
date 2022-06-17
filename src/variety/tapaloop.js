@@ -99,7 +99,6 @@
 	//---------------------------------------------------------
 	// 盤面管理系
 	Cell: {
-		qnums: [],
 		noLP: function(dir) {
 			return this.qnums.length === 0 ? false : true;
 		},
@@ -190,84 +189,7 @@
 			}
 		}
 	},
-	"ObjectOperation2:Operation": {
-		setData: function(cell, old, val) {
-			this.bx = cell.bx;
-			this.by = cell.by;
-			this.old = old;
-			this.val = val;
-			this.property = "qnums";
-		},
-		decode: function(strs) {
-			if (strs.shift() !== "CR") {
-				return false;
-			}
-			this.bx = +strs.shift();
-			this.by = +strs.shift();
-			var str = strs.join(",");
-			var strs2 = str.substr(1, str.length - 2).split(/\],\[/);
-			if (strs2[0].length === 0) {
-				this.old = [];
-			} else {
-				this.old = strs2[0].split(/,/);
-				for (var i = 0; i < this.old.length; i++) {
-					this.old[i] = +this.old[i];
-				}
-			}
-			if (strs2[1].length === 0) {
-				this.val = [];
-			} else {
-				this.val = strs2[1].split(/,/);
-				for (var i = 0; i < this.val.length; i++) {
-					this.val[i] = +this.val[i];
-				}
-			}
-			return true;
-		},
-		toString: function() {
-			return [
-				"CR",
-				this.bx,
-				this.by,
-				"[" + this.old.join(",") + "]",
-				"[" + this.val.join(",") + "]"
-			].join(",");
-		},
 
-		isModify: function(lastope) {
-			// 前回と同じ場所なら前回の更新のみ
-			if (
-				lastope.property === this.property &&
-				lastope.bx === this.bx &&
-				lastope.by === this.by &&
-				this.puzzle.pzpr.util.sameArray(lastope.val, this.old)
-			) {
-				lastope.val = this.val;
-				return true;
-			}
-			return false;
-		},
-
-		undo: function() {
-			this.exec(this.old);
-		},
-		redo: function() {
-			this.exec(this.val);
-		},
-		exec: function(val) {
-			var puzzle = this.puzzle,
-				cell = puzzle.board.getc(this.bx, this.by);
-			cell.setQnums(val);
-			cell.draw();
-			puzzle.checker.resetCache();
-		}
-	},
-
-	OperationManager: {
-		addExtraOperation: function() {
-			this.operationlist.push(this.klass.ObjectOperation2);
-		}
-	},
 	Border: {
 		enableLineNG: true
 	},

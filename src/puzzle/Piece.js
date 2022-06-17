@@ -23,6 +23,7 @@ pzpr.classmgr.makeCommon({
 		qnum2: -1, // cell  :(カックロの下側/よせなべの丸無し数字)
 		qnum3: -1,
 		qnum4: -1,
+		qnums: [],
 
 		qchar: 0, // excell:キンコンカンの文字
 
