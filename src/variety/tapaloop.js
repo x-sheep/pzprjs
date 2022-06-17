@@ -102,24 +102,6 @@
 		noLP: function(dir) {
 			return this.qnums.length === 0 ? false : true;
 		},
-		setNums: function(val) {
-			this.setQnums(val);
-			this.setQans(0);
-			this.setQsub(0);
-		},
-		setQnums: function(val) {
-			if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
-				return;
-			}
-			this.addOpeQnums(this.qnums, val);
-			this.qnums = val;
-		},
-		addOpeQnums: function(old, val) {
-			if (this.puzzle.pzpr.util.sameArray(old, val)) {
-				return;
-			}
-			this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, val));
-		},
 		getSegmentLengths: function() {
 			var segs = [];
 			var current = 0;
@@ -182,7 +164,7 @@
 				var cell = this[i];
 				if (cell.qnums.length > 0) {
 					if (isrec) {
-						cell.addOpeQnums(cell.qnums, []);
+						cell.addOpe("qnums", cell.qnums, []);
 					}
 					cell.qnums = [];
 				}

@@ -111,6 +111,19 @@ pzpr.classmgr.makeCommon({
 		setSnum: function(val) {
 			this.setdata("snum", val);
 		},
+		setNums: function(val) {
+			this.setQnums(val);
+			this.setQans(0);
+			this.setQsub(0);
+		},
+		setQnums: function(val) {
+			if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
+				return;
+			}
+			// TODO use setdata if possible
+			this.addOpe("qnums", this.qnums, val);
+			this.qnums = val;
+		},
 
 		setQnumDir: function(dir, val) {
 			switch (dir) {
@@ -173,12 +186,19 @@ pzpr.classmgr.makeCommon({
 			}
 		},
 		addOpe: function(property, old, num) {
-			if (old === num) {
-				return;
+			if (property === "qnums") {
+				if (this.puzzle.pzpr.util.sameArray(old, num)) {
+					return;
+				}
+				this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, num));
+			} else {
+				if (old === num) {
+					return;
+				}
+				this.puzzle.opemgr.add(
+					new this.klass.ObjectOperation(this, property, old, num)
+				);
 			}
-			this.puzzle.opemgr.add(
-				new this.klass.ObjectOperation(this, property, old, num)
-			);
 		},
 
 		//---------------------------------------------------------------------------

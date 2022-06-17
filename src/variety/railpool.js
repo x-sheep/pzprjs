@@ -120,24 +120,6 @@
 		noLP: function(dir) {
 			return this.isEmpty();
 		},
-		setNums: function(val) {
-			this.setQnums(val);
-			this.setQans(0);
-			this.setQsub(0);
-		},
-		setQnums: function(val) {
-			if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
-				return;
-			}
-			this.addOpeQnums(this.qnums, val);
-			this.qnums = val;
-		},
-		addOpeQnums: function(old, val) {
-			if (this.puzzle.pzpr.util.sameArray(old, val)) {
-				return;
-			}
-			this.puzzle.opemgr.add(new this.klass.ObjectOperation2(this, old, val));
-		},
 		// this was taken from geradeweg.js
 		getSegment: function(horiz) {
 			var llist = new this.klass.PieceList();
@@ -190,7 +172,7 @@
 				var cell = this[i];
 				if (cell.qnums.length > 0) {
 					if (isrec) {
-						cell.addOpeQnums(cell.qnums, []);
+						cell.addOpe("qnums", cell.qnums, []);
 					}
 					cell.qnums = [];
 				}
