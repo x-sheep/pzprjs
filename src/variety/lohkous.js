@@ -231,36 +231,12 @@
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
-			this.decodeQnums_lohkous();
+			this.decodeQnums();
 			this.decodeBorderAns();
 		},
 		encodeData: function() {
-			this.encodeQnums_lohkous();
+			this.encodeQnums();
 			this.encodeBorderAns();
-		},
-		decodeQnums_lohkous: function() {
-			this.decodeCell(function(cell, ca) {
-				if (ca !== ".") {
-					cell.qnums = [];
-					var array = ca.split(/,/);
-					for (var i = 0; i < array.length; i++) {
-						cell.qnums.push(array[i] !== "-" ? +array[i] : -2);
-					}
-				}
-			});
-		},
-		encodeQnums_lohkous: function() {
-			this.encodeCell(function(cell) {
-				if (cell.qnums.length > 0) {
-					var array = [];
-					for (var i = 0; i < cell.qnums.length; i++) {
-						array.push(cell.qnums[i] >= 0 ? "" + cell.qnums[i] : "-");
-					}
-					return array.join(",") + " ";
-				} else {
-					return ". ";
-				}
-			});
 		}
 	},
 

@@ -334,41 +334,16 @@
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
-			this.decodeQnums_railpool();
+			this.decodeQnums();
 			this.decodeEmpty();
 			this.decodeAreaRoom();
 			this.decodeBorderLine();
 		},
 		encodeData: function() {
-			this.encodeQnums_railpool();
+			this.encodeQnums();
 			this.encodeEmpty();
 			this.encodeAreaRoom();
 			this.encodeBorderLine();
-		},
-		// from tapaloop.js
-		decodeQnums_railpool: function() {
-			this.decodeCell(function(cell, ca) {
-				if (ca !== ".") {
-					cell.qnums = [];
-					var array = ca.split(/,/);
-					for (var i = 0; i < array.length; i++) {
-						cell.qnums.push(array[i] !== "-" ? +array[i] : -2);
-					}
-				}
-			});
-		},
-		encodeQnums_railpool: function() {
-			this.encodeCell(function(cell) {
-				if (cell.qnums.length > 0) {
-					var array = [];
-					for (var i = 0; i < cell.qnums.length; i++) {
-						array.push(cell.qnums[i] >= 0 ? "" + cell.qnums[i] : "-");
-					}
-					return array.join(",") + " ";
-				} else {
-					return ". ";
-				}
-			});
 		},
 		// from country.js
 		decodeEmpty: function() {
