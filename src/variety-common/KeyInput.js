@@ -163,7 +163,12 @@ pzpr.classmgr.makeCommon({
 				if (this.prev === cell) {
 					val = nums.slice();
 				}
-				val.push(num);
+				var existing = cell.distinctQnums && num !== -2 ? val.indexOf(num) : -1;
+				if (existing >= 0) {
+					val.splice(existing, 1);
+				} else {
+					val.push(num);
+				}
 				if (!cell.isValidQnums(val)) {
 					val = [num];
 				}

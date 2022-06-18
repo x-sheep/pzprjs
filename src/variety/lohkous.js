@@ -34,54 +34,14 @@
 		enablemake: true,
 
 		keyinput: function(ca) {
-			this.key_inputqnum_lohkous(ca);
-		},
-		key_inputqnum_lohkous: function(ca) {
-			var cell = this.cursor.getc(),
-				nums = cell.qnums,
-				val = [];
-
-			if (("1" <= ca && ca <= "9") || ca === "-") {
-				var num = ca !== "-" ? +ca : -2;
-				var clear = false;
-				if (this.prev === cell) {
-					for (var i = 0; i < nums.length; i++) {
-						if (num === -2 || num !== nums[i]) {
-							val.push(nums[i]);
-						} else {
-							clear = true;
-						}
-					}
-				}
-				if (!clear) {
-					if (nums.length < 4) {
-						val.push(num);
-					} else {
-						val = [num];
-					}
-				}
-			} else if (ca === "BS") {
-				if (nums.length > 1) {
-					for (var i = 0; i < nums.length - 1; i++) {
-						val.push(nums[i]);
-					}
-				}
-			} else if (ca === " ") {
-				val = [];
-			} else {
-				return;
-			}
-
-			cell.setNums(val);
-
-			this.prev = cell;
-			cell.draw();
+			this.key_inputqnums(ca);
 		}
 	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
 	Cell: {
+		distinctQnums: true,
 		setQnums: function(val) {
 			this.common.setQnums.call(this, val);
 			this.board.roommgr.setExtraData(this.room);
