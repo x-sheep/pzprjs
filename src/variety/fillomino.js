@@ -22,6 +22,9 @@
 				this.dragnumber_fillomino();
 			}
 		},
+		mouseinput_clear: function() {
+			this.inputFixedNumber(-1);
+		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode && (this.mousestart || this.mousemove)) {
 				if (this.btn === "left") {
