@@ -9,7 +9,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["fillomino", "symmarea", "pentominous"], {
+})(["fillomino", "symmarea", "pentominous", "snakepit"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -181,6 +181,30 @@
 			return false;
 		}
 	},
+	"KeyEvent@snakepit": {
+		keyinput: function(ca) {
+			if (this.puzzle.editmode) {
+				var cell = this.cursor.getc();
+				if (cell.isnull) {
+					return;
+				}
+				if (ca === "q" || ca === "a" || ca === "z") {
+					cell.setQues(1);
+					cell.draw();
+					return;
+				} else if (ca === "w" || ca === "s" || ca === "x") {
+					cell.setQues(6);
+					cell.draw();
+					return;
+				} else if (ca === "e" || ca === "d" || ca === "c") {
+					cell.setQues(0);
+					cell.draw();
+					return;
+				}
+			}
+			this.key_inputqnum(ca);
+		}
+	},
 
 	"KeyEvent@pentominous": {
 		keyinput: function(ca) {
@@ -292,6 +316,19 @@
 		minnum: 0,
 		maxnum: 11
 	},
+	"Cell@snakepit": {
+		minnum: 2,
+
+		equalcount: function() {
+			if (this.getNum() === -1) {
+				return 0;
+			}
+			var blk = this.eqblk;
+			return this.countDir4Cell(function(adj) {
+				return adj.eqblk === blk;
+			});
+		}
+	},
 	Border: {
 		posthook: {
 			qans: function(num) {
@@ -320,6 +357,13 @@
 			}
 			var num = this.pid !== "pentominous" ? block.clist[0].getNum() : 5;
 			var newcmp = num === block.clist.length ? 1 : 0;
+
+			if (this.puzzle.pid === "snakepit") {
+				if (num === 1) {
+					newcmp = 0;
+				}
+			}
+
 			if (newcmp !== this.qcmp) {
 				this.setQcmp(newcmp);
 				this.draw();
@@ -488,6 +532,14 @@
 		gridcolor_type: "DLIGHT",
 
 		bordercolor_func: "qans",
+		bgcellcolor_func: "icebarn",
+		icecolor: "rgb(204,204,204)",
+
+		getCircleStrokeColor: function(cell) {
+			return cell.ques === 1 ? this.quescolor : null;
+		},
+		circlefillcolor_func: "null",
+		numbercolor_func: "qnum",
 
 		autocmp: "border",
 
@@ -496,6 +548,7 @@
 			this.drawTargetSubNumber();
 			this.drawDashedGrid();
 
+			this.drawCircles();
 			this.drawSubNumbers();
 			this.drawAnsNumbers();
 			this.drawQuesNumbers();
@@ -565,15 +618,47 @@
 			});
 		}
 	},
+	"Encode@snakepit": {
+		decodePzpr: function(type) {
+			this.decodeNumber16();
+			this.decodeQues();
+		},
+		encodePzpr: function(type) {
+			this.encodeNumber16();
+			this.encodeQues();
+		},
+		decodeQues: function() {
+			this.genericDecodeThree(function(cell, val) {
+				cell.ques = [0, 1, 6][val];
+			});
+		},
+		encodeQues: function() {
+			this.genericEncodeThree(function(cell) {
+				return cell.ques === 6 ? 2 : cell.ques;
+			});
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
 			this.decodeCellQnum();
+			if (this.puzzle.pid === "snakepit") {
+				this.decodeCell(function(cell, ca) {
+					cell.ques = ca !== "." ? +ca : 0;
+				});
+			}
+
 			this.decodeCellAnumsub();
 			this.decodeBorderAns();
 		},
 		encodeData: function() {
 			this.encodeCellQnum();
+			if (this.puzzle.pid === "snakepit") {
+				this.encodeCell(function(cell) {
+					return cell.ques >= 0 ? cell.ques + " " : ". ";
+				});
+			}
+
 			this.encodeCellAnumsub();
 			this.encodeBorderAns();
 		},
@@ -652,6 +737,11 @@
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
+			"checkMinNum@snakepit",
+			"check2x2SameNumber@snakepit",
+			"checkNumberBranch@snakepit",
+			"checkNumberLoop@snakepit",
+
 			"checkSmallArea",
 			"checkSideAreaNumberSize",
 			"checkLargeArea",
@@ -718,7 +808,10 @@
 			}
 		},
 		checkNoNumCell_fillomino: function() {
-			if (this.puzzle.getConfig("forceallcell")) {
+			if (
+				this.puzzle.pid === "snakepit" ||
+				this.puzzle.getConfig("forceallcell")
+			) {
 				this.checkAllCell(function(cell) {
 					return cell.noNum();
 				}, "ceNoNum");
@@ -769,5 +862,69 @@
 	"FailCode@pentominous": {
 		bkSizeLt: "bkSizeLt5",
 		bkSizeGt: "bkSizeGt5"
+	},
+	"AnsCheck@snakepit": {
+		checkMinNum: function() {
+			this.checkAllCell(function(cell) {
+				return cell.getNum() === 1;
+			}, "nmEqOne");
+		},
+		check2x2SameNumber: function() {
+			var bd = this.board;
+			allloop: for (var c = 0; c < bd.cell.length; c++) {
+				var cell = bd.cell[c],
+					bx = cell.bx,
+					by = cell.by;
+				if (bx >= bd.maxbx - 1 || by >= bd.maxby - 1) {
+					continue;
+				}
+
+				var clist = bd.cellinside(bx, by, bx + 2, by + 2);
+				if (clist[0].anum <= 0) {
+					continue;
+				}
+				for (var i = 1; i < 4; i++) {
+					if (clist[0].anum !== clist[i].anum) {
+						continue allloop;
+					}
+				}
+
+				this.failcode.add("nmSame2x2");
+				if (this.checkOnly) {
+					break;
+				}
+				clist.seterr(1);
+			}
+		},
+
+		checkNumberBranch: function() {
+			this.checkAllCell(function(cell) {
+				return cell.equalcount() > 2;
+			}, "nmBranch");
+		},
+
+		checkNumberLoop: function() {
+			var snakes = this.board.eqblkgraph.components;
+			for (var r = 0; r < snakes.length; r++) {
+				var clist = snakes[r].clist;
+				var invalid = true;
+
+				for (var i = 0; i < clist.length; i++) {
+					var cell = clist[i];
+					if (cell.equalcount() !== 2) {
+						invalid = false;
+						break;
+					}
+				}
+
+				if (invalid) {
+					this.failcode.add("nmLoop");
+					clist.seterr(1);
+					if (this.checkOnly) {
+						break;
+					}
+				}
+			}
+		}
 	}
 });
