@@ -583,6 +583,10 @@
 		}
 	},
 
+	"Graphic@snakepit": {
+		fontsizeratio: 0.65
+	},
+
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
 	Encode: {
@@ -741,6 +745,8 @@
 			"check2x2SameNumber@snakepit",
 			"checkNumberBranch@snakepit",
 			"checkNumberLoop@snakepit",
+			"checkEndpoints@snakepit",
+			"checkMidpoints@snakepit",
 
 			"checkSmallArea",
 			"checkSideAreaNumberSize",
@@ -895,6 +901,18 @@
 				}
 				clist.seterr(1);
 			}
+		},
+
+		checkEndpoints: function() {
+			this.checkAllCell(function(cell) {
+				return cell.isNum() && cell.ques === 1 && cell.equalcount() > 1;
+			}, "nmEndpoint");
+		},
+
+		checkMidpoints: function() {
+			this.checkAllCell(function(cell) {
+				return cell.isNum() && cell.ques === 6 && cell.equalcount() === 1;
+			}, "nmMidpoint");
 		},
 
 		checkNumberBranch: function() {
