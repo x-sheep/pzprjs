@@ -111,6 +111,32 @@
 			this.mouseCell = cell;
 		}
 	},
+	"MouseEvent@snakepit": {
+		inputModes: {
+			edit: ["number", "circle-unshade", "shade", "clear"],
+			play: ["copynum", "number", "clear", "border", "subline"]
+		},
+
+		mouseinput: function() {
+			if (this.inputMode === "circle-unshade") {
+				this.inputCircle();
+			} else {
+				this.common.mouseinput.call(this);
+			}
+		},
+
+		inputCircle: function() {
+			var cell = this.getcell();
+			if (!cell.isnull && this.inputData === null) {
+				this.inputData = cell.ques === 1 ? 0 : 1;
+			}
+			this.inputIcebarn();
+		},
+
+		inputShade: function() {
+			this.inputIcebarn();
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
@@ -189,11 +215,11 @@
 					return;
 				}
 				if (ca === "q" || ca === "a" || ca === "z") {
-					cell.setQues(1);
+					cell.setQues(cell.ques === 1 ? 0 : 1);
 					cell.draw();
 					return;
 				} else if (ca === "w" || ca === "s" || ca === "x") {
-					cell.setQues(6);
+					cell.setQues(cell.ques === 6 ? 0 : 6);
 					cell.draw();
 					return;
 				} else if (ca === "e" || ca === "d" || ca === "c") {
@@ -239,6 +265,9 @@
 	// 盤面管理系
 	Cell: {
 		enableSubNumberArray: true,
+		maxnum: function() {
+			return this.board.cols * this.board.rows;
+		},
 
 		posthook: {
 			qnum: function() {
@@ -814,10 +843,7 @@
 			}
 		},
 		checkNoNumCell_fillomino: function() {
-			if (
-				this.puzzle.pid === "snakepit" ||
-				this.puzzle.getConfig("forceallcell")
-			) {
+			if (this.puzzle.getConfig("forceallcell")) {
 				this.checkAllCell(function(cell) {
 					return cell.noNum();
 				}, "ceNoNum");
