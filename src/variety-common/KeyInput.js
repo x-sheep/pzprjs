@@ -184,7 +184,9 @@ pzpr.classmgr.makeCommon({
 				return;
 			}
 
-			cell.setNums(val);
+			cell.setQnums(val);
+			cell.setQans(0);
+			cell.setQsub(0);
 
 			this.prev = cell;
 			cell.draw();

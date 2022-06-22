@@ -68,7 +68,9 @@
 					state = states.length - 1;
 				}
 			}
-			cell.setNums(states[state]);
+			cell.setQnums(states[state]);
+			cell.setQans(0);
+			cell.setQsub(0);
 
 			cell.draw();
 		}

@@ -111,11 +111,6 @@ pzpr.classmgr.makeCommon({
 		setSnum: function(val) {
 			this.setdata("snum", val);
 		},
-		setNums: function(val) {
-			this.setQnums(val);
-			this.setQans(0);
-			this.setQsub(0);
-		},
 		distinctQnums: false,
 		isValidQnums: function(val) {
 			return val.length <= 4;
