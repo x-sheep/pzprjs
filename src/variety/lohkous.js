@@ -42,9 +42,10 @@
 	// 盤面管理系
 	Cell: {
 		distinctQnums: true,
-		setQnums: function(val) {
-			this.common.setQnums.call(this, val);
-			this.board.roommgr.setExtraData(this.room);
+		posthook: {
+			qnums: function() {
+				this.board.roommgr.setExtraData(this.room);
+			}
 		}
 	},
 	CellList: {
@@ -54,21 +55,6 @@
 			}
 			for (var i = 0; i < this.length; i++) {
 				this[i].error |= num;
-			}
-		},
-
-		allclear: function(isrec) {
-			this.common.allclear.call(this, isrec);
-
-			for (var i = 0; i < this.length; i++) {
-				var cell = this[i];
-				if (cell.qnums.length > 0) {
-					if (isrec) {
-						cell.addOpe("qnums", cell.qnums, []);
-					}
-					cell.qnums = [];
-					this.board.roommgr.setExtraData(cell.room);
-				}
 			}
 		}
 	},

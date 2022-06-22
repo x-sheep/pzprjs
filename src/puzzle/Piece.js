@@ -44,7 +44,7 @@ pzpr.classmgr.makeCommon({
 		qinfo: 0,
 		trial: 0, // TrialModeのstateを保持する変数
 
-		propques: ["ques", "qdir", "qnum", "qnum2", "qchar"],
+		propques: ["ques", "qdir", "qnum", "qnum2", "qchar", "qnums"],
 		propans: ["qans", "anum", "line", "trial"],
 		propsub: ["qsub", "qcmp", "snum"],
 		propinfo: ["error", "qinfo"],
@@ -116,12 +116,7 @@ pzpr.classmgr.makeCommon({
 			return val.length <= 4;
 		},
 		setQnums: function(val) {
-			if (this.puzzle.pzpr.util.sameArray(this.qnums, val)) {
-				return;
-			}
-			// TODO use setdata if possible
-			this.addOpe("qnums", this.qnums, val);
-			this.qnums = val;
+			this.setdata("qnums", val);
 		},
 
 		setQnumDir: function(dir, val) {
@@ -159,7 +154,11 @@ pzpr.classmgr.makeCommon({
 		// addOpe()  履歴情報にプロパティの変更を通知する
 		//---------------------------------------------------------------------------
 		setdata: function(prop, num, force) {
-			if (this[prop] === num) {
+			if (
+				prop === "qnums"
+					? this.puzzle.pzpr.util.sameArray(this[prop], num)
+					: this[prop] === num
+			) {
 				return;
 			}
 			if (!!this.prehook[prop]) {
@@ -243,7 +242,11 @@ pzpr.classmgr.makeCommon({
 			var proplist = this.getproplist(["ques", "ans", "sub"]);
 			for (var i = 0; i < proplist.length; i++) {
 				var a = proplist[i];
-				if (props[a] !== this[a]) {
+				if (
+					a === "qnums"
+						? !this.puzzle.pzpr.util.sameArray(props[a], this[a])
+						: props[a] !== this[a]
+				) {
 					callback(this.group, this.id, a);
 				}
 			}

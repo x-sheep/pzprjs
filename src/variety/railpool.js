@@ -124,19 +124,6 @@
 		}
 	},
 	CellList: {
-		allclear: function(isrec) {
-			this.common.allclear.call(this, isrec);
-
-			for (var i = 0; i < this.length; i++) {
-				var cell = this[i];
-				if (cell.qnums.length > 0) {
-					if (isrec) {
-						cell.addOpe("qnums", cell.qnums, []);
-					}
-					cell.qnums = [];
-				}
-			}
-		},
 		getClueSet: function() {
 			var result = [];
 			for (var i = 0; i < this.length; i++) {
