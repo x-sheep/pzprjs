@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["tapaloop"], {
+})(["tapaloop", "disloop"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -40,6 +40,39 @@
 		}
 	},
 
+	"MouseEvent@disloop": {
+		inputModes: {
+			edit: ["arrow"],
+			play: ["line", "peke", "info-line"]
+		},
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.btn === "left") {
+					if (this.mousestart || this.mousemove) {
+						this.inputLine();
+					} else if (this.mouseend && this.notInputted()) {
+						this.inputpeke_ifborder();
+					}
+				} else if (this.btn === "right") {
+					if (this.mousestart || this.mousemove) {
+						this.inputpeke();
+					} else if (this.mouseend && this.notInputted()) {
+						this.inputpeke_ifborder();
+					}
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.setcursor(this.getcell());
+				}
+				this.inputarrow_cell();
+			}
+		},
+
+		inputarrow_cell_main: function(cell, dir) {
+			cell.setQdir(cell.qdir === dir ? 0 : dir);
+		}
+	},
+
 	//---------------------------------------------------------
 	// キーボード入力系
 	KeyEvent: {
@@ -53,11 +86,14 @@
 	//---------------------------------------------------------
 	// 盤面管理系
 	Cell: {
-		minnum: 0,
-		maxnum: 8,
 		noLP: function(dir) {
 			return this.qnums.length === 0 ? false : true;
-		},
+		}
+	},
+
+	"Cell@tapaloop": {
+		minnum: 0,
+		maxnum: 8,
 
 		isValidQnums: function(val) {
 			var sum = 0;
@@ -125,8 +161,20 @@
 		}
 	},
 
+	"Cell@disloop": {
+		maxnum: 9,
+
+		getSegmentLengths: function() {
+			// TODO implement
+			return [];
+		}
+	},
+
 	Border: {
-		enableLineNG: true
+		enableLineNG: true,
+		isBorder: function() {
+			return this.sidecell[0].noLP() || this.sidecell[1].noLP();
+		}
 	},
 	Board: {
 		hasborder: 1
@@ -147,6 +195,10 @@
 			this.drawGrid();
 
 			this.drawTapaNumbers();
+			if (this.pid === "disloop") {
+				this.drawCellArrows();
+				this.drawBorders();
+			}
 
 			this.drawMBs();
 			this.drawPekes();
@@ -157,9 +209,20 @@
 		}
 	},
 
+	"Graphic@disloop": {
+		// TODO hide text when clues are 1 question mark and no arrow is given
+		// TODO restyle arrows
+		getBGCellColor: function(cell) {
+			if (cell.noLP()) {
+				return "rgb(224,224,224)";
+			}
+			return this.getBGCellColor_error1(cell);
+		}
+	},
+
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
-	Encode: {
+	"Encode@tapaloop": {
 		decodePzpr: function(type) {
 			this.decodeNumber_tapaloop();
 		},
@@ -296,6 +359,53 @@
 			this.outbstr += cm;
 		}
 	},
+	"Encode@disloop": {
+		decodePzpr: function(type) {
+			this.decodeArrowNumber_disloop();
+		},
+		encodePzpr: function(type) {
+			this.encodeArrowNumber_disloop();
+		},
+		decodeArrowNumber_disloop: function() {
+			var bd = this.board;
+			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+				bd.cell[c].qdir = 0;
+				if (val === -1) {
+					bd.cell[c].qnums = [];
+				} else if (!val) {
+					bd.cell[c].qnums = [-2];
+				} else {
+					var nums = [];
+					while (val > 0) {
+						nums.unshift(val % 10 || -2);
+						val = (val / 10) | 0;
+					}
+					bd.cell[c].qdir = nums[0];
+					bd.cell[c].qnums = nums.slice(1);
+				}
+			});
+		},
+		encodeArrowNumber_disloop: function() {
+			var bd = this.board;
+			this.genericEncodeNumber16(bd.cell.length, function(c) {
+				var cell = bd.cell[c];
+				if (cell.qnums.length === 0) {
+					return -1;
+				}
+				if (cell.qdir === 0) {
+					return 0;
+				}
+				var ret = cell.qdir;
+				for (var i = 0; i < cell.qnums.length; i++) {
+					ret *= 10;
+					if (cell.qnums[i] > 0) {
+						ret += cell.qnums[i];
+					}
+				}
+				return ret;
+			});
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
@@ -307,10 +417,34 @@
 			this.encodeBorderLine();
 		}
 	},
+	"FileIO@disloop": {
+		decodeData: function() {
+			this.decodeQnums();
+			this.decodeDirs();
+			this.decodeBorderLine();
+		},
+		encodeData: function() {
+			this.encodeQnums();
+			this.encodeDirs();
+			this.encodeBorderLine();
+		},
+
+		decodeDirs: function() {
+			this.decodeCell(function(cell, ca) {
+				cell.qdir = +ca || 0;
+			});
+		},
+		encodeDirs: function() {
+			this.encodeCell(function(cell) {
+				return cell.qdir + " ";
+			});
+		}
+	},
 
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
+		// TODO enforce arrows when required
 		checklist: [
 			"checkBranchLine",
 			"checkCrossLine",
