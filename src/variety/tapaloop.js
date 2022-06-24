@@ -211,12 +211,76 @@
 
 	"Graphic@disloop": {
 		// TODO hide text when clues are 1 question mark and no arrow is given
-		// TODO restyle arrows
 		getBGCellColor: function(cell) {
 			if (cell.noLP()) {
 				return "rgb(224,224,224)";
 			}
 			return this.getBGCellColor_error1(cell);
+		},
+
+		getCellArrowColor: function(cell) {
+			if (cell.qdir >= 1 && cell.qdir <= 4) {
+				return cell.error ? this.errcolor1 : this.quescolor;
+			}
+			return null;
+		},
+
+		drawCellArrows: function() {
+			var g = this.vinc("cell_arrow", "crispEdges");
+
+			var inner = this.cw * 0.5;
+
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+				var dir = cell.qdir;
+				var color = this.getCellArrowColor(cell);
+
+				g.lineWidth = (this.lw + this.addlw) / 2;
+				if (!!color) {
+					g.fillStyle = color;
+					g.strokeStyle = color;
+					var px = cell.bx * this.bw,
+						py = cell.by * this.bh;
+					var idx = [0, 0, 0, 0];
+
+					switch (dir) {
+						case cell.UP:
+							idx = [0.5, 0.75, -0.5, 0.75];
+							py -= this.bh * 1.75;
+							break;
+						case cell.DN:
+							idx = [0.5, -0.75, -0.5, -0.75];
+							py += this.bh * 1.75;
+							break;
+						case cell.LT:
+							idx = [0.75, -0.5, 0.75, 0.5];
+							px -= this.bw * 1.75;
+							break;
+						case cell.RT:
+							idx = [-0.75, -0.5, -0.75, 0.5];
+							px += this.bw * 1.75;
+							break;
+					}
+
+					g.vid = "c_arrow_" + cell.id;
+					g.setOffsetLinePath(
+						px,
+						py,
+						0,
+						0,
+						idx[0] * inner,
+						idx[1] * inner,
+						idx[2] * inner,
+						idx[3] * inner,
+						true
+					);
+					g.fill();
+				} else {
+					g.vid = "c_arrow_" + cell.id;
+					g.vhide();
+				}
+			}
 		}
 	},
 
