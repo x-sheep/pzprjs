@@ -626,6 +626,7 @@
     "stNoLine.icebarn": "INに線が通っていません。",
     "stopHalfway.roma": "ゴールにたどり着かないセルがあります。",
     "tapaloopError.tapaloop": "線の長さと数字が一致していません。",
+    "tapaloopError.disloop": "Following the loop from the arrow does not lead to segments of the correct length.",
     "tentAround.tents": "テント同士が接しています。",
     "tooManyUnspecified.railpool": "線分の長さの種類が多すぎます。",
     "tooFewUnspecified.railpool": "線分の長さの種類が少なすぎます。",

@@ -626,6 +626,7 @@
     "stNoLine.icebarn": "The line doesn't go through the 'IN' arrow.",
     "stopHalfway.roma": "A cell cannot reach a goal.",
     "tapaloopError.tapaloop": "The segments around a clue are not the same length as the numbers.",
+    "tapaloopError.disloop": "Following the loop from the arrow does not lead to segments of the correct length.",
     "tentAround.tents": "Some tents touch.",
     "tooManyUnspecified.railpool": "The region contains more unspecified segment lengths than question marks.",
     "tooFewUnspecified.railpool": "The region contains fewer unspecified segment lengths than question marks.",

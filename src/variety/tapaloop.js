@@ -165,8 +165,41 @@
 		maxnum: 9,
 
 		getSegmentLengths: function() {
-			// TODO implement
-			return [];
+			if (this.qdir === 0 || this.qnums.length === 0) {
+				return this.qnums.length === 1 && this.qnums[0] === -2 ? [1] : [];
+			}
+
+			var dir = this.qdir;
+			var addr = this.getaddr();
+			addr.movedir(dir, 3);
+
+			var ret = [0];
+			while (ret.length <= this.qnums.length) {
+				ret[0]++;
+				addr.movedir(dir, 1);
+				if (addr.getc().lcnt !== 2) {
+					break;
+				}
+
+				for (var newdir = 1; newdir <= 4; newdir++) {
+					// Don't go backwards
+					if (newdir === { 1: 2, 2: 1, 3: 4, 4: 3 }[dir]) {
+						continue;
+					}
+					var copy = addr.getaddr();
+					copy.movedir(newdir, 1);
+					if (copy.getb().line) {
+						if (newdir !== dir) {
+							ret.unshift(0);
+							dir = newdir;
+						}
+						break;
+					}
+				}
+				addr.movedir(dir, 1);
+			}
+
+			return ret.slice(-this.qnums.length);
 		}
 	},
 
@@ -178,6 +211,11 @@
 	},
 	Board: {
 		hasborder: 1
+	},
+	"BoardExec@disloop": {
+		adjustBoardData: function(key, d) {
+			this.adjustNumberArrow(key, d);
+		}
 	},
 	LineGraph: {
 		enabled: true
@@ -523,6 +561,7 @@
 					return false;
 				}
 				var segs = cell.getSegmentLengths();
+				// TODO in disloop, be more lenient with incomplete loops with lower seg counts
 				if (cell.qnums.length !== segs.length) {
 					return true;
 				}
