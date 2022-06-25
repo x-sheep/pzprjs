@@ -292,7 +292,7 @@
 				).seterr(1);
 			}
 			if (!result) {
-				this.failcode.add("lnNoBranchOrTerm")
+				this.failcode.add("lnNoBranchOrTerm");
 			}
 		},
 
