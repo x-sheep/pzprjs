@@ -86,7 +86,8 @@
 		"railpool",
 		"coral",
 		"nuriuzu",
-		"ququ"
+		"ququ",
+		"lither"
 	]);
 
 	(function(Genre, obj) {
@@ -253,6 +254,7 @@
 				"",
 				{ pzprurl: "akari", kanpen: "bijutsukan" }
 			],
+			lither: [0, 0, "Litherslink", "Litherslink"],
 			lits: [1, 1, "ＬＩＴＳ", "LITS", "lits"],
 			lohkous: [0, 0, "Lohkous", "Lohkous"],
 			lookair: [0, 0, "るっくえあ", "Look-Air"],
