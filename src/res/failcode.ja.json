@@ -415,6 +415,7 @@
     "lnDeadEnd": "途中で途切れている線があります。",
     "lnDeadEndAround.rassi": "線の端がたてよこななめに隣り合っています。",
     "lnExTri.reflect": "線が三角形を通過していません。",
+    "lnHasLoop.lither": "A tree includes a loop",
     "lnIsolate.bdwalk": "線がすべての数字とエレベーターを通っていません。",
     "lnIsolate.dotchi": "線の通っていない○があります。",
     "lnIsolate.kouchoku": "線がマークのないところから出ています。",

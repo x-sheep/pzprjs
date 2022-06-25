@@ -71,7 +71,7 @@
 	//---------------------------------------------------------
 	// 盤面管理系
 	Cell: {
-		maxnum: 4,
+		maxnum: 3,
 		minnum: 0,
 
 		getdir4BorderLine1: function() {
@@ -99,7 +99,8 @@
 	},
 
 	LineGraph: {
-		enabled: true
+		enabled: true,
+		makeClist: true
 	},
 
 	//---------------------------------------------------------
@@ -253,12 +254,10 @@
 	AnsCheck: {
 		checklist: [
 			"checkLineExist+",
+			"checkPluralLine",
 			"checkAllBranchOrTerminate",
-			"checkdir4BorderLine"
-			
-
-			//"checkOneLoop",
-			//"checkDeadendLine+"
+			"checkdir4BorderLine",
+			"checkNoLoop"
 		],
 
 		checkdir4BorderLine: function() {
@@ -297,15 +296,31 @@
 			}
 		},
 
-		checkPluralLines: function() {
+		checkPluralLine: function() {
 			var bd = this.board,
 				paths = bd.linegraph.components;
 			if (paths.length < 2) {
 				this.failcode.add("lnSnLine");
-				bd.boarder.setnoerr();
+				bd.border.setnoerr();
 				if (paths[0]) {
 					paths[0].setedgeerr(1);
 				}
+			}
+		},
+
+		checkNoLoop: function() {
+			var bd = this.board,
+				paths = bd.linegraph.components;
+			for (var i = 0; i < paths.length; i++) {
+				if (paths[i].circuits === 0) {
+					continue;
+				}
+
+				this.failcode.add("lnHasLoop");
+				if (this.checkOnly) {
+					return;
+				}
+				paths[i].setedgeerr(1);
 			}
 		}
 	}

@@ -415,6 +415,7 @@
     "lnDeadEnd": "There is a dead-end line.",
     "lnDeadEndAround.rassi": "Two line ends are adjacent.",
     "lnExTri.reflect": "A line doesn't goes through a triangle.",
+    "lnHasLoop.lither": "A tree includes a loop",
     "lnIsolate.bdwalk": "A symbol has no line.",
     "lnIsolate.dotchi": "A circle doesn't have a line.",
     "lnIsolate.kouchoku": "A segment starts outside a clue.",

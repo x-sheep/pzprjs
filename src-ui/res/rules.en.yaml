@@ -192,3 +192,9 @@ ququ: "Shade some triangles on the board.\n1. Triangles with numbers or question
   \ an edge form blocks. Two blocks which touch each other at the corners must have\
   \ different shapes, counting rotations and reflections as the same.\nThis genre\
   \ first appeared in Puzzle Communication Nikoli vol. 171."
+
+lither: "Draw lines along the edges of some cells to form trees.\n1. There must be\
+  \ more than one tree.\n2. A tree must branch or terminate at every grid vertex. In\
+  \ other words, each grid vertex must have 1, 3, or 4 connected edges.\n3. Trees must\
+  \ not contain loops.\n4. A number indicates the number of edges of that cell that are\
+  \ included in a tree."
