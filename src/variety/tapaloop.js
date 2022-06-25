@@ -166,12 +166,16 @@
 
 		getSegmentLengths: function() {
 			if (this.qdir === 0 || this.qnums.length === 0) {
-				return this.qnums.length === 1 && this.qnums[0] === -2 ? [1] : [];
+				return [];
 			}
 
 			var dir = this.qdir;
 			var addr = this.getaddr();
 			addr.movedir(dir, 3);
+
+			if (!addr.getb().line) {
+				return [];
+			}
 
 			var ret = [0];
 			while (ret.length <= this.qnums.length) {
@@ -546,37 +550,65 @@
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
-		// TODO enforce arrows when required
 		checklist: [
 			"checkBranchLine",
 			"checkCrossLine",
 			"checkTapaloop",
+			"checkArrowLineExist@disloop",
+			"checkNumberHasArrow@disloop",
 			"checkDeadendLine+",
 			"checkOneLoop"
 		],
 
 		checkTapaloop: function() {
+			var pid = this.pid;
 			this.checkAllCell(function(cell) {
 				if (cell.qnums.length === 0) {
 					return false;
 				}
 				var segs = cell.getSegmentLengths();
-				// TODO in disloop, be more lenient with incomplete loops with lower seg counts
-				if (cell.qnums.length !== segs.length) {
+				if (pid !== "disloop" && cell.qnums.length !== segs.length) {
 					return true;
 				}
-				for (var i = 0; i < cell.qnums.length; i++) {
-					var num = cell.qnums[i];
-					if (num === -2) {
-						continue;
+				var nums = cell.qnums.slice();
+				for (var i = 0; i < segs.length; i++) {
+					var num = segs[i];
+					var idx = nums.indexOf(num);
+					if (idx < 0) {
+						idx = nums.indexOf(-2);
 					}
-					var idx = segs.indexOf(num);
 					if (idx < 0) {
 						return true;
 					}
-					segs.splice(idx, 1);
+					nums.splice(idx, 1);
 				}
 			}, "tapaloopError");
+		}
+	},
+
+	"AnsCheck@disloop": {
+		checkArrowLineExist: function() {
+			this.checkAllCell(function(cell) {
+				if (cell.qdir === 0) {
+					return false;
+				}
+				var addr = cell.getaddr();
+				addr.movedir(cell.qdir, 3);
+				if (!addr.getb().line) {
+					addr.movedir(cell.qdir, -1);
+					addr.getc().seterr(1);
+					return true;
+				}
+			}, "anLineLt");
+		},
+
+		checkNumberHasArrow: function() {
+			this.checkAllCell(function(cell) {
+				if (cell.qnums.length === 1 && cell.qnums[0] === -2) {
+					return false;
+				}
+				return cell.qnums.length > 0 && cell.qdir === cell.NDIR;
+			}, "anNoArrow");
 		}
 	}
 });

@@ -3,6 +3,7 @@
     "anHatenaNe.crossstitch": "矢印の先に、ループが交わっているマスがありません。",
     "anLineGt.castle": "矢印の方向にあるループの長さが数字よりも長いです。",
     "anLineLt.castle": "矢印の方向にあるループの長さが数字よりも短いです。",
+    "anLineLt.disloop": "There is no line segment in the cell adjacent to the arrow.",
     "anNoAdjBd.yajitatami": "矢印の方向に境界線がありません。",
     "anNoArrow": "矢印がない数字のマスがあります。",
     "anNumberNe.crossstitch": "ループが交わっているマスの数が正しくありません。",
