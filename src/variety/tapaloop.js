@@ -177,9 +177,9 @@
 				return [];
 			}
 
-			var ret = [0];
+			var ret = [new this.klass.BorderList()];
 			while (ret.length <= this.qnums.length) {
-				ret[0]++;
+				ret[0].add(addr.getb());
 				addr.movedir(dir, 1);
 				if (addr.getc().lcnt !== 2) {
 					break;
@@ -194,7 +194,7 @@
 					copy.movedir(newdir, 1);
 					if (copy.getb().line) {
 						if (newdir !== dir) {
-							ret.unshift(0);
+							ret.unshift(new this.klass.BorderList());
 							dir = newdir;
 						}
 						break;
@@ -562,6 +562,7 @@
 
 		checkTapaloop: function() {
 			var pid = this.pid;
+			var borders = this.board.border;
 			this.checkAllCell(function(cell) {
 				if (cell.qnums.length === 0) {
 					return false;
@@ -571,17 +572,23 @@
 					return true;
 				}
 				var nums = cell.qnums.slice();
+				var ret = false;
 				for (var i = 0; i < segs.length; i++) {
-					var num = segs[i];
+					var num = typeof segs[i] === "number" ? segs[i] : segs[i].length;
 					var idx = nums.indexOf(num);
 					if (idx < 0) {
 						idx = nums.indexOf(-2);
 					}
 					if (idx < 0) {
-						return true;
+						if (typeof segs[i] === "object") {
+							borders.setnoerr();
+							segs[i].seterr(1);
+						}
+						ret = true;
 					}
 					nums.splice(idx, 1);
 				}
+				return ret;
 			}, "tapaloopError");
 		}
 	},
