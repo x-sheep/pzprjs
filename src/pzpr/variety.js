@@ -87,7 +87,8 @@
 		"coral",
 		"nuriuzu",
 		"ququ",
-		"coffeemilk"
+		"coffeemilk",
+		"disloop"
 	]);
 
 	(function(Genre, obj) {
