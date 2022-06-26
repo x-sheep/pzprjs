@@ -307,7 +307,7 @@
 		},
 
 		drawCellArrows: function() {
-			var g = this.vinc("cell_arrow", "crispEdges");
+			var g = this.vinc("cell_arrow", "auto");
 
 			var inner = this.cw * 0.5;
 
