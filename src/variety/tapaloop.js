@@ -42,7 +42,7 @@
 
 	"MouseEvent@disloop": {
 		inputModes: {
-			edit: ["arrow"],
+			edit: ["arrow", "clear"],
 			play: ["line", "peke", "info-line"]
 		},
 		mouseinput_auto: function() {
@@ -80,6 +80,30 @@
 
 		keyinput: function(ca) {
 			this.key_inputqnums(ca);
+		}
+	},
+	"KeyEvent@disloop": {
+		enablemake: true,
+		keyinput: function(ca) {
+			var cell = this.cursor.getc(),
+				nums = cell.qnums;
+			if (ca === "BS" && nums.length === 1) {
+				if (nums[0] === -2) {
+					cell.setQnums([]);
+					cell.setQdir(0);
+					cell.draw();
+					return;
+				} else if (cell.qdir !== 0) {
+					cell.setQnums([-2]);
+					cell.draw();
+					this.prev = null;
+					return;
+				}
+			}
+
+			if (!this.key_inputarrow(ca)) {
+				this.key_inputqnums(ca);
+			}
 		}
 	},
 
@@ -163,6 +187,14 @@
 
 	"Cell@disloop": {
 		maxnum: 9,
+
+		posthook: {
+			qdir: function(val) {
+				if (this.qnums.length === 0 && val !== 0) {
+					this.setQnums([-2]);
+				}
+			}
+		},
 
 		getSegmentLengths: function() {
 			if (this.qdir === 0 || this.qnums.length === 0) {
@@ -252,7 +284,14 @@
 	},
 
 	"Graphic@disloop": {
-		// TODO hide text when clues are 1 question mark and no arrow is given
+		getQuesNumberColor: function(cell) {
+			if (cell.qnums.length === 1 && cell.qnums[0] === -2 && cell.qdir === 0) {
+				return null;
+			}
+
+			return this.getQuesNumberColor_mixed(cell);
+		},
+
 		getBGCellColor: function(cell) {
 			if (cell.noLP()) {
 				return "rgb(224,224,224)";
