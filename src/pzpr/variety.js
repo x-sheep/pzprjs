@@ -88,6 +88,7 @@
 		"nuriuzu",
 		"ququ",
 		"coffeemilk",
+		"nothree",
 		"disloop"
 	]);
 
@@ -281,6 +282,7 @@
 			nondango: [0, 0, "ノンダンゴ", "Nondango"],
 			nonogram: [0, 0, "ののぐらむ", "Nonogram"],
 			norinori: [0, 1, "のりのり", "Norinori", "lits"],
+			nothree: [0, 0, "ノースリー", "No Three"],
 			numlin: [
 				0,
 				1,
