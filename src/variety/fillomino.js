@@ -348,19 +348,20 @@
 	"Cell@snakepit": {
 		minnum: 2,
 
-		equalcount: function() {
-			var prop = this.getNum() !== -1 ? "eqblk" : "nblk";
-			if (
-				this.getNum() === -1 &&
-				(this.nblk.numkind > 1 ||
-					(this.nblk.numkind === 1 &&
-						this.nblk.number !== this.nblk.clist.length))
-			) {
-				return 0;
+		isSameBlock: function(other) {
+			if (this.getNum() !== -1 && this.eqblk === other.eqblk) {
+				return true;
 			}
-			var blk = this[prop];
+			if (this.nblk === other.nblk) {
+				return this.nblk.complete;
+			}
+			return false;
+		},
+
+		equalcount: function() {
+			var cell = this;
 			return this.countDir4Cell(function(adj) {
-				return adj[prop] === blk;
+				return cell.isSameBlock(adj);
 			});
 		}
 	},
@@ -543,6 +544,7 @@
 			component.numkind = numkind;
 			component.number =
 				numkind === 1 ? filled : numkind === 0 ? clist.length : -1;
+			component.complete = clist.length === component.number;
 		},
 
 		getComponentRefs: function(cell) {
@@ -922,10 +924,7 @@
 
 				var clist = bd.cellinside(bx, by, bx + 2, by + 2);
 				var blk = clist[0].nblk;
-				if (
-					blk.numkind > 1 ||
-					(blk.numkind === 1 && blk.clist.length !== blk.number)
-				) {
+				if (!blk.complete) {
 					continue;
 				}
 				for (var i = 1; i < 4; i++) {
@@ -965,10 +964,7 @@
 			for (var r = 0; r < snakes.length; r++) {
 				var blk = snakes[r];
 				var clist = blk.clist;
-				if (
-					blk.numkind > 1 ||
-					(blk.numkind === 1 && clist.length !== blk.number)
-				) {
+				if (!blk.complete) {
 					continue;
 				}
 
