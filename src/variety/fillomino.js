@@ -349,12 +349,18 @@
 		minnum: 2,
 
 		equalcount: function() {
-			if (this.getNum() === -1) {
+			var prop = this.getNum() !== -1 ? "eqblk" : "nblk";
+			if (
+				this.getNum() === -1 &&
+				(this.nblk.numkind > 1 ||
+					(this.nblk.numkind === 1 &&
+						this.nblk.number !== this.nblk.clist.length))
+			) {
 				return 0;
 			}
-			var blk = this.eqblk;
+			var blk = this[prop];
 			return this.countDir4Cell(function(adj) {
-				return adj.eqblk === blk;
+				return adj[prop] === blk;
 			});
 		}
 	},
@@ -896,9 +902,12 @@
 		bkSizeGt: "bkSizeGt5"
 	},
 	"AnsCheck@snakepit": {
+		// TODO reduce amount of errors when forceallcell is on
 		checkMinNum: function() {
 			this.checkAllCell(function(cell) {
-				return cell.getNum() === 1;
+				return (
+					cell.getNum() === 1 || (cell.nblk && cell.nblk.clist.length === 1)
+				);
 			}, "nmEqOne");
 		},
 		check2x2SameNumber: function() {
@@ -912,11 +921,15 @@
 				}
 
 				var clist = bd.cellinside(bx, by, bx + 2, by + 2);
-				if (clist[0].anum <= 0) {
+				var blk = clist[0].nblk;
+				if (
+					blk.numkind > 1 ||
+					(blk.numkind === 1 && blk.clist.length !== blk.number)
+				) {
 					continue;
 				}
 				for (var i = 1; i < 4; i++) {
-					if (clist[0].anum !== clist[i].anum) {
+					if (clist[i].nblk !== blk) {
 						continue allloop;
 					}
 				}
@@ -931,13 +944,13 @@
 
 		checkEndpoints: function() {
 			this.checkAllCell(function(cell) {
-				return cell.isNum() && cell.ques === 1 && cell.equalcount() > 1;
+				return cell.ques === 1 && cell.equalcount() > 1;
 			}, "nmEndpoint");
 		},
 
 		checkMidpoints: function() {
 			this.checkAllCell(function(cell) {
-				return cell.isNum() && cell.ques === 6 && cell.equalcount() === 1;
+				return cell.ques === 6 && cell.equalcount() === 1;
 			}, "nmMidpoint");
 		},
 
