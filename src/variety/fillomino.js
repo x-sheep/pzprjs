@@ -961,9 +961,17 @@
 		},
 
 		checkNumberLoop: function() {
-			var snakes = this.board.eqblkgraph.components;
+			var snakes = this.board.numblkgraph.components;
 			for (var r = 0; r < snakes.length; r++) {
-				var clist = snakes[r].clist;
+				var blk = snakes[r];
+				var clist = blk.clist;
+				if (
+					blk.numkind > 1 ||
+					(blk.numkind === 1 && clist.length !== blk.number)
+				) {
+					continue;
+				}
+
 				var invalid = true;
 
 				for (var i = 0; i < clist.length; i++) {
