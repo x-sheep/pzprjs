@@ -782,6 +782,7 @@
 			"check2x2SameNumber@snakepit",
 			"checkNumberBranch@snakepit",
 			"checkNumberLoop@snakepit",
+			"checkSnakeDiagonal@snakepit",
 			"checkEndpoints@snakepit",
 			"checkMidpoints@snakepit",
 
@@ -923,12 +924,8 @@
 				}
 
 				var clist = bd.cellinside(bx, by, bx + 2, by + 2);
-				var blk = clist[0].nblk;
-				if (!blk.complete) {
-					continue;
-				}
 				for (var i = 1; i < 4; i++) {
-					if (clist[i].nblk !== blk) {
+					if (!clist[0].isSameBlock(clist[i])) {
 						continue allloop;
 					}
 				}
@@ -938,6 +935,42 @@
 					break;
 				}
 				clist.seterr(1);
+			}
+		},
+
+		checkSnakeDiagonal: function() {
+			var bd = this.board;
+			for (var c = 0; c < bd.cell.length; c++) {
+				var cell = bd.cell[c],
+					bx = cell.bx,
+					by = cell.by;
+				if (bx >= bd.maxbx - 1 || by >= bd.maxby - 1) {
+					continue;
+				}
+
+				var clist = bd.cellinside(bx, by, bx + 2, by + 2);
+				if (
+					clist[0].isSameBlock(clist[3]) &&
+					!clist[0].isSameBlock(clist[1]) &&
+					!clist[0].isSameBlock(clist[2])
+				) {
+					clist[0].seterr(1);
+					clist[3].seterr(1);
+				} else if (
+					clist[1].isSameBlock(clist[2]) &&
+					!clist[0].isSameBlock(clist[1]) &&
+					!clist[3].isSameBlock(clist[1])
+				) {
+					clist[1].seterr(1);
+					clist[2].seterr(1);
+				} else {
+					continue;
+				}
+
+				this.failcode.add("nmDiag");
+				if (this.checkOnly) {
+					break;
+				}
 			}
 		},
 

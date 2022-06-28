@@ -502,6 +502,7 @@
     "nmConnWallLt.walllogic": "The lines connected to a number is short.",
     "nmCountGt.nanro": "A number is bigger than the count.",
     "nmCountLt.nanro": "A number is smaller than the count.",
+    "nmDiag.snakepit": "A snake touches itself diagonally.",
     "nmDiffDistNe.hanare": "The distance of the paired numbers is not equal to their difference.",
     "nmDiffDistNe.putteria": "The distance of the paired numbers is not equal to their difference.",
     "nmDivEq2.kropki": "The number is double the other between two adjacent cells without shaded circle.",
