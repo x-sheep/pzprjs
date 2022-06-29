@@ -88,7 +88,8 @@
 		"nuriuzu",
 		"ququ",
 		"coffeemilk",
-		"nothree"
+		"nothree",
+		"snakepit"
 	]);
 
 	(function(Genre, obj) {
