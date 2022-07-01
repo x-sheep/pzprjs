@@ -87,7 +87,7 @@
 		keyinput: function(ca) {
 			var cell = this.cursor.getc(),
 				nums = cell.qnums;
-			if (ca === "BS" && nums.length === 1) {
+			if (ca === " " || (ca === "BS" && nums.length === 1)) {
 				if (nums[0] === -2) {
 					cell.setQnums([]);
 					cell.setQdir(0);
