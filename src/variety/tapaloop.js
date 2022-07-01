@@ -235,7 +235,7 @@
 				addr.movedir(dir, 1);
 			}
 
-			return ret.slice(-this.qnums.length);
+			return ret.slice(-this.qnums.length).reverse();
 		}
 	},
 
@@ -255,6 +255,17 @@
 	},
 	LineGraph: {
 		enabled: true
+	},
+	"BorderList@disloop": {
+		seterr: function(num) {
+			if (!this.board.isenableSetError()) {
+				return;
+			}
+			for (var i = 0; i < this.length; i++) {
+				var old = this[i].error;
+				this[i].error = old <= 0 ? num : Math.max(old, num);
+			}
+		}
 	},
 
 	//---------------------------------------------------------
@@ -284,6 +295,17 @@
 	},
 
 	"Graphic@disloop": {
+		getLineColor: function(border) {
+			var color = this.common.getLineColor.call(this, border);
+			var info = border.error || border.qinfo;
+			if (border.isLine() && info === 3) {
+				color = this.errlinecolor;
+			} else if (border.isLine() && info === 2) {
+				color = "rgb(100,0,0)";
+			}
+			return color;
+		},
+
 		getQuesNumberColor: function(cell) {
 			if (cell.qnums.length === 1 && cell.qnums[0] === -2 && cell.qdir === 0) {
 				return null;
@@ -611,7 +633,7 @@
 					return true;
 				}
 				var nums = cell.qnums.slice();
-				var ret = false;
+				var ret = -1;
 				for (var i = 0; i < segs.length; i++) {
 					var num = typeof segs[i] === "number" ? segs[i] : segs[i].length;
 					var idx = nums.indexOf(num);
@@ -621,13 +643,20 @@
 					if (idx < 0) {
 						if (typeof segs[i] === "object") {
 							borders.setnoerr();
-							segs[i].seterr(1);
+							segs[i].seterr(3);
 						}
-						ret = true;
+						ret = i;
 					}
 					nums.splice(idx, 1);
 				}
-				return ret;
+				if (ret !== -1) {
+					for (var i = 0; i < ret; i++) {
+						if (typeof segs[i] === "object") {
+							segs[i].seterr(2);
+						}
+					}
+				}
+				return ret >= 0;
 			}, "tapaloopError");
 		}
 	},
