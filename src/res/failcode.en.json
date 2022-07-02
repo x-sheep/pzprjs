@@ -429,7 +429,7 @@
     "lnLengthLt.pencils": "A line is shorter than the connected pencil.",
     "lnLenLt.reflect": "The lines passing a triangle are too short.",
     "lnMultipleTips.pencils": "A line connects to more than one pencil tip.",
-    "lnNoBranchOrTerm": "A line does not branch or terminate at a grid vertex",
+    "lnNoBranchOrTerm.lither": "A line does not branch or terminate at a grid vertex.",
     "lnNotCrossMk": "A cross-joint cell doesn't have four-way lines.",
     "lnNoTip.pencils": "A line is not connected to a pencil tip.",
     "lnNotRect.nagenawa": "There is a non-rectangle loop.",

@@ -218,7 +218,7 @@
 		checkNoLoop: function() {
 			var bd = this.board,
 				paths = bd.linegraph.components;
-			bd.border.setnoerr();
+
 			for (var i = 0; i < paths.length; i++) {
 				if (paths[i].circuits === 0) {
 					continue;
@@ -228,6 +228,7 @@
 				if (this.checkOnly) {
 					return;
 				}
+				bd.border.setnoerr();
 				paths[i].setedgeerr(1);
 			}
 		}
