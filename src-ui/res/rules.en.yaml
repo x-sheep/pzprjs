@@ -211,3 +211,8 @@ disloop: "Draw lines through orthogonally adjacent cells to form a loop.\n1. The
   \ the loop in the direction of the arrow, where N is the amount of numbers inside\
   \ the clue. Numbers aren't necessarily in order.\nThis genre is invented by Eric\
   \ Fox."
+
+context: "Shade some cells black such that no shaded cell touches another orthogonally,\
+  \ and all unshaded cells form one orthogonally connected region. Unshaded numbers\
+  \ count orthogonally adjacent shaded cells, while shaded numbers count diagonally\
+  \ adjacent shaded cells."

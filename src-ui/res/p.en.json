@@ -138,6 +138,7 @@
     "inputmode.clear": "Erase data",
     "inputmode.info-line": "Check line connection",
     "inputmode.info-blk": "Check shaded cell connection",
+    "inputmode.info-ublk": "Check unshaded cell connection",
     "inputmode.info-road": "Check route",
     "disptype": "Display",
     "disptype_yajilin.1": "Original style",

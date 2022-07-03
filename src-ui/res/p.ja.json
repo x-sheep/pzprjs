@@ -138,6 +138,7 @@
     "inputmode.clear": "消去",
     "inputmode.info-line": "線の繋がりチェック",
     "inputmode.info-blk": "黒マス繋がりチェック",
+    "inputmode.info-ublk": "Check unshaded cell connection",
     "inputmode.info-road": "経路チェック",
     "disptype": "表示形式",
     "disptype_yajilin.1": "ニコリ紙面形式",
