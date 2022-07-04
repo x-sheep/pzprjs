@@ -120,10 +120,10 @@
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
-			"checkBorderDeadend+",
 			"checkRoomSquare",
 			"checkRoomSideLen",
-			"checkBorderCross"
+			"checkBorderCross",
+			"checkBorderDeadend+"
 		],
 
 		checkRoomSquare: function() {
