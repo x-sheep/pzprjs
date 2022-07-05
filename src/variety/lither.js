@@ -161,10 +161,10 @@
 	AnsCheck: {
 		checklist: [
 			"checkLineExist+",
+			"checkNoLoop",
 			"checkPluralLine",
 			"checkAllBranchOrTerminate",
-			"checkdir4BorderLine",
-			"checkNoLoop"
+			"checkdir4BorderLine+"
 		],
 
 		checkdir4BorderLine: function() {
@@ -208,10 +208,7 @@
 				paths = bd.linegraph.components;
 			if (paths.length < 2) {
 				this.failcode.add("lnSnLine");
-				bd.border.setnoerr();
-				if (paths[0]) {
-					paths[0].setedgeerr(1);
-				}
+				bd.border.seterr(1);
 			}
 		},
 
@@ -229,7 +226,7 @@
 					return;
 				}
 				bd.border.setnoerr();
-				paths[i].setedgeerr(1);
+				this.searchloop(paths[i], bd.linegraph, true).seterr(1);
 			}
 		}
 	}
