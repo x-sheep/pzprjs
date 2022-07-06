@@ -130,7 +130,7 @@
 			this.checkAllArea(
 				this.board.roommgr,
 				function(w, h, a, n) {
-					return w === h;
+					return w === h && w * h === a;
 				},
 				"bkNotSquare"
 			);
