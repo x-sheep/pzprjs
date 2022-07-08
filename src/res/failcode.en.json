@@ -31,7 +31,6 @@
     "bdBranchExBP.bdblock": "Lines are branched out of the point.",
     "bdCountLt3BP.bdblock": "A point has two or less lines.",
     "bdCross": "There is a crossing border line.",
-    "bdCross.squarejam": "Some region borders form a four-way intersection.",
     "bdCrossBP.kramma": "There is a crossing line on the point.",
     "bdCrossExBP.bdblock": "Lines are crossed out of the point.",
     "bdCurveExBP.kramma": "A line curves out of the points.",

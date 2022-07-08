@@ -37,12 +37,8 @@
 
 	Cell: {
 		minnum: 1,
-		maxnum: 999,
-
-		posthook: {
-			qnum: function() {
-				this.board.roommgr.setExtraData(this.room);
-			}
+		maxnum: function() {
+			return Math.min(this.board.cols, this.board.rows);
 		}
 	},
 
@@ -51,24 +47,7 @@
 	},
 
 	AreaRoomGraph: {
-		enabled: true,
-
-		setExtraData: function(component) {
-			var clist = (component.clist = new this.klass.CellList(
-				component.getnodeobjs()
-			));
-			var numlist = clist.filter(function(cell) {
-				return cell.qnum !== -1;
-			});
-			var nums = [];
-
-			for (var i = 0; i < numlist.length; i++) {
-				nums[i] = numlist[i].qnum;
-			}
-
-			component.numcount = numlist.length;
-			component.nums = nums;
-		}
+		enabled: true
 	},
 
 	//---------------------------------------------------------
