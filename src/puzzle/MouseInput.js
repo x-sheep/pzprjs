@@ -266,7 +266,7 @@ pzpr.classmgr.makeCommon({
 				} else if (this.inputModes.play.indexOf("info-blk") >= 0) {
 					mode = "info-blk";
 				} else if (this.inputModes.play.indexOf("info-ublk") >= 0) {
-					mode = "info-ublk"
+					mode = "info-ublk";
 				}
 			}
 			switch (mode) {

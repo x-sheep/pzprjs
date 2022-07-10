@@ -141,6 +141,8 @@
     "inputmode.info-ublk": "Check unshaded cell connection",
     "inputmode.info-road": "Check route",
     "disptype": "Display",
+    "disptype_context.1": "Default style",
+    "disptype_context.2": "Hide direction indicators",
     "disptype_yajilin.1": "Original style",
     "disptype_yajilin.2": "Gray background",
     "disptype_bosanowa.1": "Original style",

@@ -28,6 +28,9 @@
 			this.add("irowakeblk", false, { variety: true }); /* 黒マスの色分け */
 
 			this.add("dispmove", true); /* 線で動かすパズルで実際に動いたように描画 */
+			this.add("disptype_context", 1, {
+				option: [1, 2]
+			});
 			this.add("disptype_yajilin", 1, {
 				option: [1, 2]
 			}); /* yajilin: 表示形式 */
@@ -336,6 +339,9 @@
 				case "disptype_bosanowa":
 					exec = pid === "bosanowa";
 					break;
+				case "disptype_context":
+					exec = pid === "context";
+					break;
 				case "disptype_yajilin":
 					exec = pid === "yajilin";
 					break;
@@ -431,6 +437,7 @@
 				case "autoerr":
 				case "aquarium_regions":
 				case "snakebd":
+				case "disptype_context":
 				case "disptype_yajilin":
 				case "disptype_interbd":
 				case "dispqnumbg":
