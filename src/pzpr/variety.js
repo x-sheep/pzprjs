@@ -89,7 +89,9 @@
 		"ququ",
 		"coffeemilk",
 		"nothree",
-		"snakepit"
+		"disloop",
+		"lither",
+    "snakepit"
 	]);
 
 	(function(Genre, obj) {
@@ -175,6 +177,7 @@
 			"curvedata-aux": [0, 0, "図形の編集", "Edit shape"],
 			dbchoco: [0, 0, "ダブルチョコ", "Double Choco", "cbblock"],
 			detour: [0, 0, "Detour", "Detour", "country"],
+			disloop: [0, 0, "Disorderly Loop", "Disorderly Loop", "tapaloop"],
 			doppelblock: [0, 0, "Doppelblock", "Doppelblock", "doppelblock"],
 			dosufuwa: [0, 0, "ドッスンフワリ", "Dosun-Fuwari"],
 			dotchi: [0, 0, "ドッチループ", "Dotchi-Loop", "country"],
@@ -257,6 +260,7 @@
 				"",
 				{ pzprurl: "akari", kanpen: "bijutsukan" }
 			],
+			lither: [0, 0, "Litherslink", "Litherslink"],
 			lits: [1, 1, "ＬＩＴＳ", "LITS", "lits"],
 			lohkous: [0, 0, "Lohkous", "Lohkous"],
 			lookair: [0, 0, "るっくえあ", "Look-Air"],

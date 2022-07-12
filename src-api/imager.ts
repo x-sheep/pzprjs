@@ -1,5 +1,5 @@
-import fs = require('fs');
-import path = require('path');
+import fs from 'fs';
+import path from 'path';
 import { VercelResponse } from "@vercel/node";
 import { parse_query, pzvdetails } from "./tools"
 import sharp from "sharp"
@@ -11,11 +11,12 @@ path.resolve(fontPath, 'fonts.conf') // Reference conf so it gets copied
 
 process.env.FONTCONFIG_PATH=fontPath
 
+const saveicons = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'dist/js', 'saveicons.json'), { encoding: "utf8" }));
 const maskHoriz = fs.readFileSync(path.resolve(process.cwd(), 'src-api/img', 'mask-horiz.png'));
 const maskVert = fs.readFileSync(path.resolve(process.cwd(), 'src-api/img', 'mask-vert.png'));
 
 export function preview(res: VercelResponse, url: string) {
-	var qargs = parse_query(url);
+	const qargs = parse_query(url);
 	if (!qargs || !qargs.pzv) {
 		res.statusCode = 400;
 		res.end();
@@ -31,6 +32,15 @@ export function preview(res: VercelResponse, url: string) {
 		res.end("oversized puzzle");
 		console.log('skipping large puzzle:', pzv);
 		return;
+	}
+	if (details.bodyMode === "file") {
+		res.statusCode = 404;
+		res.end("file thumbnails are not supported");
+		console.log('skipping File puzzle:', pzv);
+		return;
+	}
+	if(details.bodyMode === "blank") {
+		pzv = saveicons[details.pid] ?? pzv;
 	}
 
 	const canvas = {};
