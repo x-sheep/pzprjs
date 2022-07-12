@@ -91,7 +91,7 @@
 		"nothree",
 		"disloop",
 		"lither",
-    "snakepit"
+		"snakepit"
 	]);
 
 	(function(Genre, obj) {
