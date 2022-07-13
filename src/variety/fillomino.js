@@ -96,7 +96,9 @@
 			} else if (this.inputMode === "empty") {
 				this.inputempty();
 			}
-		},
+		}
+	},
+	"MouseEvent@pentominous,snakepit#2": {
 		inputempty: function() {
 			var cell = this.getcell();
 			if (cell.isnull || cell === this.mouseCell) {
@@ -113,13 +115,15 @@
 	},
 	"MouseEvent@snakepit": {
 		inputModes: {
-			edit: ["number", "circle-unshade", "shade", "clear"],
+			edit: ["number", "circle-unshade", "shade", "empty", "clear"],
 			play: ["copynum", "number", "clear", "border", "subline"]
 		},
 
 		mouseinput: function() {
 			if (this.inputMode === "circle-unshade") {
 				this.inputCircle();
+			} else if (this.inputMode === "empty") {
+				this.inputempty();
 			} else {
 				this.common.mouseinput.call(this);
 			}
@@ -223,6 +227,10 @@
 					cell.draw();
 					return;
 				} else if (ca === "e" || ca === "d" || ca === "c") {
+					cell.setQues(cell.ques === 7 ? 0 : 7);
+					cell.draw();
+					return;
+				} else if (ca === "r" || ca === "f" || ca === "v") {
 					cell.setQues(0);
 					cell.draw();
 					return;
@@ -569,7 +577,6 @@
 		gridcolor_type: "DLIGHT",
 
 		bordercolor_func: "qans",
-		bgcellcolor_func: "icebarn",
 		icecolor: "rgb(204,204,204)",
 
 		getCircleStrokeColor: function(cell) {
@@ -579,6 +586,13 @@
 		numbercolor_func: "qnum",
 
 		autocmp: "border",
+
+		getBGCellColor: function(cell) {
+			if (!cell.isValid()) {
+				return "black";
+			}
+			return this.getBGCellColor_icebarn(cell);
+		},
 
 		paint: function() {
 			this.drawBGCells();
@@ -606,13 +620,6 @@
 			}
 
 			return this.getBorderColor_qans(border);
-		},
-
-		getBGCellColor: function(cell) {
-			if (!cell.isValid()) {
-				return "black";
-			}
-			return this.getBGCellColor_error1(cell);
 		},
 
 		getNumberTextCore: function(num) {
@@ -668,14 +675,34 @@
 			this.encodeNumber16();
 			this.encodeQues();
 		},
+		decodeNumber16: function() {
+			var bd = this.board;
+			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+				if (val === 0) {
+					bd.cell[c].ques = 7;
+				} else {
+					bd.cell[c].qnum = val;
+				}
+			});
+		},
+		encodeNumber16: function(type) {
+			var bd = this.board;
+			this.genericEncodeNumber16(bd.cell.length, function(c) {
+				return bd.cell[c].isEmpty() ? 0 : bd.cell[c].qnum;
+			});
+		},
 		decodeQues: function() {
 			this.genericDecodeThree(function(cell, val) {
-				cell.ques = [0, 1, 6][val];
+				if (val === 1) {
+					cell.ques = 1;
+				} else if (val === 2) {
+					cell.ques = 6;
+				}
 			});
 		},
 		encodeQues: function() {
 			this.genericEncodeThree(function(cell) {
-				return cell.ques === 6 ? 2 : cell.ques;
+				return cell.ques === 6 ? 2 : cell.ques === 1 ? 1 : 0;
 			});
 		}
 	},
