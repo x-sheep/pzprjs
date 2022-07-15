@@ -4,6 +4,7 @@
 		doclang: pzpr.lang,
 		captions: [],
 		phtml: "p.html",
+		ruleshtml: "rules.html",
 		extend: function(obj) {
 			for (var n in obj) {
 				this[n] = obj[n];
@@ -20,9 +21,16 @@
 	if (location.search === "?en" || location.search === "?ja") {
 		self.doclang = location.search.substr(1, 2);
 	}
-	if (location.hostname === "puzz.link" || location.pathname === "/list") {
+	if (
+		location.hostname === "puzz.link" ||
+		location.pathname === "/list" ||
+		location.host.indexOf("vercel.app") >= 0
+	) {
 		// puzz.link serves p.html at puzz.link/p
 		self.phtml = "p";
+	}
+	if (location.pathname === "/list") {
+		self.ruleshtml = "rules";
 	}
 	function customAttr(el, name) {
 		var value = "";
@@ -88,7 +96,7 @@
 					el.appendChild(editor);
 					var rules = document.createElement("a");
 					rules.className = "rules";
-					rules.href = "rules.html?" + pid;
+					rules.href = v3index.ruleshtml + "?" + pid;
 					rules.textContent = "?";
 					el.appendChild(rules);
 					self.captions.push({
