@@ -215,4 +215,4 @@ disloop: "Draw lines through orthogonally adjacent cells to form a loop.\n1. The
 context: "Shade some cells black such that no shaded cell touches another orthogonally,\
   \ and all unshaded cells form one orthogonally connected region. Unshaded numbers\
   \ count orthogonally adjacent shaded cells, while shaded numbers count diagonally\
-  \ adjacent shaded cells."
+  \ adjacent shaded cells.\nThis genre is invented by RSP."
