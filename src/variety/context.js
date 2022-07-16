@@ -15,7 +15,7 @@
 		use: true,
 		inputModes: {
 			edit: ["number", "clear"],
-			play: ["shade", "unshade", "info-ublk"]
+			play: ["shade", "unshade", "info-blk", "info-ublk"]
 		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
@@ -33,20 +33,7 @@
 	//---------------------------------------------------------
 	// キーボード入力系
 	KeyEvent: {
-		enablemake: true,
-		moveTarget: function(ca) {
-			if (ca.match(/shift/)) {
-				return false;
-			}
-			return this.moveTCell(ca);
-		},
-
-		keyinput: function(ca) {
-			if (this.key_inputdirec(ca)) {
-				return;
-			}
-			this.key_inputqnum(ca);
-		}
+		enablemake: true
 	},
 
 	//---------------------------------------------------------
@@ -54,12 +41,6 @@
 	Cell: {
 		minnum: 0,
 		maxnum: 4
-	},
-
-	BoardExec: {
-		adjustBoardData: function(key, d) {
-			this.adjustNumberArrow(key, d);
-		}
 	},
 
 	AreaUnshadeGraph: {
@@ -73,7 +54,6 @@
 		bgcellcolor_func: "qsub1",
 
 		fontsizeratio: 0.75,
-		//fontShadecolor: "rgb(96,96,96)",
 		fontShadecolor: "rgb(192,192,192)",
 
 		paint: function() {
@@ -90,7 +70,6 @@
 		drawShadeTicks: function() {
 			var g = this.vinc("cell_ticks", "auto");
 			g.lineWidth = (1 + this.cw / 40) | 0;
-			//var d = this.range;
 			var size = this.cw * 0.15;
 			if (size < 3) {
 				size = 3;
@@ -151,7 +130,6 @@
 		drawUnshadeTicks: function() {
 			var g = this.vinc("cell_ticks", "auto");
 			g.lineWidth = (1 + this.cw / 40) | 0;
-			//var d = this.range;
 			var size = this.cw * 0.15;
 			if (size < 3) {
 				size = 3;
@@ -209,13 +187,9 @@
 	Encode: {
 		decodePzpr: function(type) {
 			this.decodeNumber16();
-
-			this.puzzle.setConfig("disptype_context", !this.checkpflag("b") ? 1 : 2);
 		},
 		encodePzpr: function(type) {
 			this.encodeNumber16();
-			this.outpflag =
-				this.puzzle.getConfig("disptype_context") === 2 ? "b" : null;
 		}
 	},
 	//---------------------------------------------------------
