@@ -1,4 +1,9 @@
 {
+    "arNoShade.pentopia": "There is no shaded cell in the direction of an arrow.",
+    "arDistanceGt.pentopia": "There is a shaded cell closer to a clue without an arrow.",
+    "arDistanceNe.pentopia": "The shaded cells pointed to by a clue are at different distances.",
+    "shDiag.pentopia": "Two pieces are diagonally adjacent.",
+    "csOnArrow.pentopia": "A cell with a clue is shaded.",
     "akariDup.lightup": "Akari is shined from another Akari.",
     "anHatenaNe.crossstitch": "There are no crossings in the given direction.",
     "anLineGt.castle": "The number of line segments is not correct.",

@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["statuepark", "statuepark-aux"], {
+})(["statuepark", "statuepark-aux", "pentopia"], {
 	MouseEvent: {
 		use: true,
 		inputModes: {
@@ -90,6 +90,45 @@
 				}
 				thiz.board.bank.setPiece(shape, piece.index);
 			});
+		}
+	},
+
+	"MouseEvent@pentopia": {
+		inputModes: {
+			edit: ["arrow", "undef", "clear", "completion"],
+			play: ["shade", "unshade", "clear", "completion"]
+		},
+
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart || this.mousemove) {
+					this.inputcell();
+				}
+				if (this.notInputted() && this.mousestart) {
+					this.inputqcmp();
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.setcursor(this.getcell());
+				}
+				this.inputarrow_cell();
+				if (this.notInputted() && this.mouseend) {
+					if (this.btn === "left") {
+						this.inputpiece();
+					} else {
+						this.inputqcmp();
+					}
+				}
+			}
+		},
+
+		inputarrow_cell_main: function(cell, dir) {
+			var newdir = Math.max(0, cell.qnum);
+			newdir ^= 1 << (dir - 1);
+			if (newdir === 0) {
+				newdir = -1;
+			}
+			cell.setNum(newdir);
 		}
 	},
 
@@ -337,7 +376,7 @@
 		}
 	},
 
-	Cell: {
+	"Cell@statuepark": {
 		numberAsObject: true,
 		disInputHatena: true,
 		maxnum: 2,
@@ -348,6 +387,14 @@
 
 		allowUnshade: function() {
 			return this.qnum !== 2;
+		}
+	},
+
+	"Cell@pentopia": {
+		numberAsObject: true,
+		maxnum: 15,
+		allowShade: function() {
+			return this.qnum === -1;
 		}
 	},
 
@@ -365,14 +412,20 @@
 		bgcellcolor_func: "qsub1",
 
 		circlefillcolor_func: "qnum2",
-		circleratio: [0.3, 0.25],
+		circleratio: [0.3, 0.25]
+	},
 
+	Graphic: {
 		paint: function() {
 			this.drawBGCells();
 			this.drawShadedCells();
 			this.drawGrid();
 
-			this.drawCircles();
+			if (this.pid === "statuepark") {
+				this.drawCircles();
+			} else {
+				this.drawQuesNumbers();
+			}
 
 			this.drawChassis();
 			this.drawBank();
@@ -402,6 +455,13 @@
 				}
 			}
 		}
+	},
+
+	"Graphic@pentopia": {
+		enablebcolor: true,
+
+		shadecolor: "rgb(80, 80, 80)",
+		bgcellcolor_func: "qsub1"
 	},
 
 	"Graphic@statuepark-aux": {
@@ -442,6 +502,18 @@
 		},
 		encodePzpr: function(type) {
 			this.encodeCircle();
+			this.encodePieceBank();
+		}
+	},
+	"Encode@pentopia": {
+		decodePzpr: function(type) {
+			if (this.outbstr[0] !== "/") {
+				this.decodeNumber16();
+			}
+			this.decodePieceBank();
+		},
+		encodePzpr: function(type) {
+			this.encodeNumber16();
 			this.encodePieceBank();
 		}
 	},
@@ -504,6 +576,58 @@
 			this.checkAllCell(function(cell) {
 				return cell.isShade() && cell.qnum === 1;
 			}, "circleShade");
+		}
+	},
+
+	"AnsCheck@pentopia": {
+		// TODO arrow distances arNoShade
+		// TODO arrow distances arDistance
+		// TODO arrow distances arDistanceNe
+		checklist: [
+			"checkShadeOnArrow",
+			"checkBankPiecesAvailable",
+			"checkShadeDiagonal",
+			"checkBankPiecesInvalid+"
+		],
+
+		checkShadeOnArrow: function() {
+			this.checkAllCell(function(cell) {
+				return cell.isShade() && cell.qnum !== -1;
+			}, "csOnArrow");
+		},
+
+		checkShadeDiagonal: function() {
+			var bd = this.board;
+			for (var c = 0; c < bd.cell.length; c++) {
+				var cell = bd.cell[c];
+				if (cell.bx >= bd.maxbx - 1 || cell.by >= bd.maxby - 1) {
+					continue;
+				}
+
+				var bx = cell.bx,
+					by = cell.by;
+				var clist = bd.cellinside(bx, by, bx + 2, by + 2).filter(function(cc) {
+					return cc.isShade();
+				});
+				if (clist.length !== 2) {
+					continue;
+				}
+
+				var ca = clist[0],
+					cb = clist[1];
+
+				if (ca.bx === cb.bx || ca.by === cb.by) {
+					continue;
+				}
+
+				if (ca.sblk !== cb.sblk) {
+					this.failcode.add("shDiag");
+					if (this.checkOnly) {
+						break;
+					}
+					clist.seterr(1);
+				}
+			}
 		}
 	}
 });
