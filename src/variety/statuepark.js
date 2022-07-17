@@ -580,13 +580,14 @@
 	},
 
 	"AnsCheck@pentopia": {
-		// TODO arrow distances arNoShade
-		// TODO arrow distances arDistance
+		// TODO arrow distances arDistanceGt
 		// TODO arrow distances arDistanceNe
 		checklist: [
 			"checkShadeOnArrow",
 			"checkBankPiecesAvailable",
 			"checkShadeDiagonal",
+			"checkShadeDirExist",
+			"checkShadeDirExist",
 			"checkBankPiecesInvalid+"
 		],
 
@@ -626,6 +627,51 @@
 						break;
 					}
 					clist.seterr(1);
+				}
+			}
+		},
+
+		getShadeDirs: function() {
+			if (this._info.shadeDirs) {
+				return this._info.shadeDirs;
+			}
+			var bd = this.board;
+			var ret = [];
+
+			for (var c = 0; c < bd.cell.length; c++) {
+				var cell0 = bd.cell[c];
+				if (cell0.qnum <= 0) {
+					continue;
+				}
+				var row = [cell0, -1, -1, -1, -1];
+				for (var dir = 1; dir <= 4; dir++) {
+					var addr = cell0.getaddr();
+					while (!addr.getc().isnull && !addr.getc().isShade()) {
+						addr.movedir(dir, 2);
+					}
+					if (addr.getc().isShade()) {
+						row[dir] = 1;
+					}
+				}
+				ret.push(row);
+			}
+
+			return (this._info.shadeDirs = ret);
+		},
+		checkShadeDirExist: function() {
+			var clues = this.getShadeDirs();
+			for (var i in clues) {
+				for (var dir = 1; dir <= 4; dir++) {
+					if (!(clues[i][0].qnum & (1 << (dir - 1)))) {
+						continue;
+					}
+					if (clues[i][dir] === -1) {
+						this.failcode.add("arNoShade");
+						if (this.checkOnly) {
+							return;
+						}
+						clues[i][0].seterr(1);
+					}
 				}
 			}
 		}
