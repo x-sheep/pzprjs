@@ -144,10 +144,11 @@
 		}
 	},
 
-	Board: {
+	"Board@statuepark": {
 		rows: 12,
-		cols: 12,
-
+		cols: 12
+	},
+	Board: {
 		getBankPiecesInGrid: function() {
 			var ret = [];
 			var shapes = this.board.sblkmgr.components;
@@ -424,7 +425,8 @@
 			if (this.pid === "statuepark") {
 				this.drawCircles();
 			} else {
-				this.drawQuesNumbers();
+				this.drawArrowCombinations();
+				this.drawHatenas();
 			}
 
 			this.drawChassis();
@@ -461,7 +463,77 @@
 		enablebcolor: true,
 
 		shadecolor: "rgb(80, 80, 80)",
-		bgcellcolor_func: "qsub1"
+		bgcellcolor_func: "qsub1",
+
+		drawArrowCombinations: function() {
+			var g = this.vinc("cell_arrow", "crispEdges");
+
+			var inner = this.cw * 0.25;
+			var clist = this.range.cells;
+
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+				var num = Math.max(0, cell.qnum);
+
+				for (var dir = 1; dir <= 4; dir++) {
+					if (num & (1 << (dir - 1))) {
+						var px = cell.bx * this.bw,
+							py = cell.by * this.bh,
+							px2 = px,
+							py2 = py;
+						var idx = [0, 0, 0, 0];
+
+						switch (dir) {
+							case cell.UP:
+								idx = [0.5, 0.75, -0.5, 0.75];
+								py -= this.bh * 0.8;
+								break;
+							case cell.DN:
+								idx = [0.5, -0.75, -0.5, -0.75];
+								py += this.bh * 0.8;
+								break;
+							case cell.LT:
+								idx = [0.75, -0.5, 0.75, 0.5];
+								px -= this.bw * 0.8;
+								break;
+							case cell.RT:
+								idx = [-0.75, -0.5, -0.75, 0.5];
+								px += this.bw * 0.8;
+								break;
+						}
+
+						g.vid = "c_arrow_head_" + cell.id + "_" + dir;
+						g.fillStyle = this.getQuesNumberColor(cell);
+						g.setOffsetLinePath(
+							px,
+							py,
+							0,
+							0,
+							idx[0] * inner,
+							idx[1] * inner,
+							idx[2] * inner,
+							idx[3] * inner,
+							true
+						);
+						g.fill();
+						g.vid = "c_arrow_line_" + cell.id + "_" + dir;
+						g.strokeStyle = this.getQuesNumberColor(cell);
+						g.lineWidth = this.lw / 2;
+						g.strokeLine(
+							(px * 1.5 + px2) / 2.5,
+							(py * 1.5 + py2) / 2.5,
+							px2,
+							py2
+						);
+					} else {
+						g.vid = "c_arrow_head_" + cell.id + "_" + dir;
+						g.vhide();
+						g.vid = "c_arrow_line_" + cell.id + "_" + dir;
+						g.vhide();
+					}
+				}
+			}
+		}
 	},
 
 	"Graphic@statuepark-aux": {
