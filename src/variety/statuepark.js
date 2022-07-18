@@ -135,6 +135,37 @@
 	KeyEvent: {
 		enablemake: true
 	},
+	"KeyEvent@pentopia": {
+		moveTarget: function(ca) {
+			if (ca.match(/shift/)) {
+				return false;
+			}
+			return this.moveTCell(ca);
+		},
+
+		keyinput: function(ca) {
+			var cell = this.cursor.getc();
+			var dir = 0;
+			if (ca === "1" || ca === "w" || ca === "shift+up") {
+				dir = 1;
+			} else if (ca === "2" || ca === "s" || ca === "shift+right") {
+				dir = 4;
+			} else if (ca === "3" || ca === "z" || ca === "shift+down") {
+				dir = 2;
+			} else if (ca === "4" || ca === "a" || ca === "shift+left") {
+				dir = 3;
+			}
+
+			if (dir) {
+				this.puzzle.mouse.inputarrow_cell_main(cell, dir);
+				cell.draw();
+			} else if (ca === "5" || ca === "q" || ca === "-") {
+				this.key_inputqnum("s1");
+			} else if (ca === "6" || ca === "e" || ca === " ") {
+				this.key_inputqnum(" ");
+			}
+		}
+	},
 	TargetCursor: {
 		setaddr: function(pos) {
 			if (this.bankpiece !== null) {
