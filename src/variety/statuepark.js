@@ -161,7 +161,7 @@
 				cell.draw();
 			} else if (ca === "5" || ca === "q" || ca === "-") {
 				this.key_inputqnum("s1");
-			} else if (ca === "6" || ca === "e" || ca === " ") {
+			} else if (ca === "6" || ca === "e" || ca === " " || ca === "BS") {
 				this.key_inputqnum(" ");
 			}
 		}
@@ -549,6 +549,14 @@
 		shadecolor: "rgb(80, 80, 80)",
 		bgcellcolor_func: "qsub1",
 
+		getQuesNumberColor: function(cell, i) {
+			if (cell.error & 1 || cell.error & (8 << i)) {
+				return this.errcolor1;
+			}
+
+			return this.quescolor;
+		},
+
 		drawArrowCombinations: function() {
 			var g = this.vinc("cell_arrow", "crispEdges");
 
@@ -587,7 +595,7 @@
 						}
 
 						g.vid = "c_arrow_head_" + cell.id + "_" + dir;
-						g.fillStyle = this.getQuesNumberColor(cell);
+						g.fillStyle = this.getQuesNumberColor(cell, dir - 1);
 						g.setOffsetLinePath(
 							px,
 							py,
@@ -601,7 +609,7 @@
 						);
 						g.fill();
 						g.vid = "c_arrow_line_" + cell.id + "_" + dir;
-						g.strokeStyle = this.getQuesNumberColor(cell);
+						g.strokeStyle = this.getQuesNumberColor(cell, dir - 1);
 						g.lineWidth = this.lw / 2;
 						g.strokeLine(
 							(px * 1.5 + px2) / 2.5,
@@ -826,7 +834,7 @@
 						if (this.checkOnly) {
 							return;
 						}
-						clues[i][0].seterr(1);
+						clues[i][0].seterr(4 << dir);
 					}
 				}
 			}
