@@ -18,7 +18,7 @@
     "arBlkEdge.loute": "An arrow is not at the edge of the area.",
     "arBlocked.toichika2": "Other numbers are between a pair of numbers.",
     "arDistance.toichika2": "A pair of numbers does not have the correct distance.",
-    "arDistanceGt.pentopia": "There is a shaded cell closer to a clue without an arrow.",
+    "arDistanceGt.pentopia": "There is a shaded cell closer to a clue in an unmarked direction.",
     "arDistanceNe.pentopia": "The shaded cells pointed to by a clue are at different distances.",
     "arNoLine": "A line doesn't go through some arrows.",
     "arNoShade.pentopia": "There is no shaded cell in the direction of an arrow.",

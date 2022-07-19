@@ -427,6 +427,11 @@
 		maxnum: 15,
 		allowShade: function() {
 			return this.qnum === -1;
+		},
+		seterr: function(num) {
+			if (this.board.isenableSetError()) {
+				this.error |= num;
+			}
 		}
 	},
 	"BoardExec@pentopia": {
@@ -744,13 +749,12 @@
 	},
 
 	"AnsCheck@pentopia": {
-		// TODO arrow distances arDistanceGt
-		// TODO arrow distances arDistanceNe
 		checklist: [
 			"checkShadeOnArrow",
 			"checkBankPiecesAvailable",
 			"checkShadeDiagonal",
-			"checkShadeDirExist",
+			"checkShadeDirCloser",
+			"checkShadeDirUnequal",
 			"checkShadeDirExist",
 			"checkBankPiecesInvalid+"
 		],
@@ -814,7 +818,8 @@
 						addr.movedir(dir, 2);
 					}
 					if (addr.getc().isShade()) {
-						row[dir] = 1;
+						row[dir] =
+							Math.abs(dir >= 3 ? addr.bx - cell0.bx : addr.by - cell0.by) / 2;
 					}
 				}
 				ret.push(row);
@@ -835,6 +840,77 @@
 							return;
 						}
 						clues[i][0].seterr(4 << dir);
+					}
+				}
+			}
+		},
+		checkShadeDirCloser: function() {
+			var clues = this.getShadeDirs();
+			var unknown = this.board.cols + this.board.rows;
+			for (var i in clues) {
+				var mindist = unknown;
+				for (var dir = 1; dir <= 4; dir++) {
+					if (clues[i][dir] === -1) {
+						continue;
+					}
+					if (clues[i][0].qnum & (1 << (dir - 1))) {
+						mindist = Math.min(mindist, clues[i][dir]);
+					}
+				}
+				for (var dir = 1; dir <= 4; dir++) {
+					var dist = clues[i][dir];
+					if (clues[i][0].qnum & (1 << (dir - 1))) {
+						continue;
+					}
+					if (mindist === unknown && dist > 1) {
+						continue;
+					}
+					if (dist !== -1 && dist <= mindist) {
+						this.failcode.add("arDistanceGt");
+						if (this.checkOnly) {
+							return;
+						}
+						clues[i][0].seterr(0x7c);
+
+						var addr = clues[i][0].getaddr();
+						for (var n = 0; n < dist; n++) {
+							addr.movedir(dir, 2);
+							addr.getc().seterr(1);
+						}
+					}
+				}
+			}
+		},
+		checkShadeDirUnequal: function() {
+			var clues = this.getShadeDirs();
+			var unknown = this.board.cols + this.board.rows;
+			for (var i in clues) {
+				var mindist = unknown;
+				for (var dir = 1; dir <= 4; dir++) {
+					if (clues[i][dir] === -1) {
+						continue;
+					}
+					if (clues[i][0].qnum & (1 << (dir - 1))) {
+						mindist = Math.min(mindist, clues[i][dir]);
+					}
+				}
+				for (var dir = 1; dir <= 4; dir++) {
+					var dist = clues[i][dir];
+					if (!(clues[i][0].qnum & (1 << (dir - 1)))) {
+						continue;
+					}
+					if (dist !== -1 && dist !== mindist) {
+						this.failcode.add("arDistanceNe");
+						if (this.checkOnly) {
+							return;
+						}
+						clues[i][0].seterr(4 << dir);
+
+						var addr = clues[i][0].getaddr();
+						for (var n = 0; n < dist; n++) {
+							addr.movedir(dir, 2);
+							addr.getc().seterr(1);
+						}
 					}
 				}
 			}
