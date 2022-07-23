@@ -563,7 +563,7 @@
 		},
 
 		drawArrowCombinations: function() {
-			var g = this.vinc("cell_arrow", "crispEdges");
+			var g = this.vinc("cell_arrow");
 
 			var inner = this.cw * 0.25;
 			var clist = this.range.cells;
