@@ -162,7 +162,7 @@
 			) {
 				this.cursor.chtarget();
 			} else if (("0" <= ca && ca <= "9") || ca === "BS" || ca === "-") {
-				if (cell.ques === 1) {
+				if (this.puzzle.playmode && cell.ques === 1) {
 					return;
 				}
 				this.key_inputqnum_main(cell, ca);
@@ -240,6 +240,7 @@
 
 		paint: function() {
 			this.drawTargetSubNumber();
+			this.drawBGCells();
 			this.drawGrid();
 			this.drawQuesCells();
 			if (this.pid === "kakuru") {
@@ -275,6 +276,11 @@
 				return cell.error === 1 ? this.errbcolor1 : "white";
 			}
 			return null;
+		},
+		getBGCellColor: function(cell) {
+			return cell.qnum === -1 && cell.anum === -1 && cell.error === 1
+				? this.errbcolor1
+				: null;
 		}
 	},
 	"Graphic@numrope": {
