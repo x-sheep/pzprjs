@@ -890,8 +890,11 @@
 					if (clues[i][dir] === -1) {
 						continue;
 					}
-					if (clues[i][0].qnum & (1 << (dir - 1))) {
-						mindist = Math.min(mindist, clues[i][dir]);
+					if (
+						clues[i][0].qnum & (1 << (dir - 1)) &&
+						mindist !== clues[i][dir]
+					) {
+						mindist = mindist === unknown ? clues[i][dir] : -1;
 					}
 				}
 				for (var dir = 1; dir <= 4; dir++) {
