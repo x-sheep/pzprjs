@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["kakuru"], {
+})(["kakuru", "numrope"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -67,6 +67,81 @@
 			return val !== null;
 		}
 	},
+	"MouseEvent@numrope": {
+		inputModes: {
+			edit: ["number", "line", "clear"],
+			play: ["number", "dragnum+", "dragnum-", "clear"]
+		},
+
+		mouseinput_auto: function() {
+			if (this.mousestart || this.mousemove) {
+				if (this.puzzle.playmode) {
+					this.dragnumber_numrope();
+				} else if (this.puzzle.editmode) {
+					this.inputLine();
+				}
+			}
+			if (this.mouseend && this.notInputted()) {
+				this.mouseCell = null;
+				this.inputqnum();
+			}
+		},
+
+		mouseinput: function() {
+			if (this.inputMode.indexOf("dragnum") === 0) {
+				this.dragnumber_numrope();
+			} else {
+				this.common.mouseinput.call(this);
+			}
+		},
+
+		dragnumber_numrope: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+			if (this.mouseCell.isnull) {
+				if (cell.qnum !== -1) {
+					this.inputData = 0;
+				} else if (cell.anum !== -1) {
+					this.inputData = cell.anum;
+				} else {
+					this.inputData = -1;
+				}
+				this.mouseCell = cell;
+				return;
+			} else if (this.inputData === 0) {
+				if (cell.qnum === -1) {
+					this.inputData = -1;
+				}
+			}
+
+			if (cell.qnum !== -1) {
+				return;
+			} else if (this.inputData >= 1 && this.inputData <= 9) {
+				if (
+					this.inputMode === "dragnum+" ||
+					(this.inputMode === "auto" && this.btn === "left")
+				) {
+					this.inputData++;
+				} else {
+					this.inputData--;
+				}
+				if (this.inputData >= 1 && this.inputData <= 9) {
+					cell.setAnum(this.inputData);
+				} else {
+					return;
+				}
+			} else if (this.inputData === -1) {
+				cell.setAnum(-1);
+			} else {
+				return;
+			}
+
+			this.mouseCell = cell;
+			cell.draw();
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
@@ -79,7 +154,12 @@
 		},
 		key_inputqnum_kakuru: function(ca) {
 			var cell = this.cursor.getc();
-			if (cell.enableSubNumberArray && ca === "shift" && cell.noNum()) {
+			if (
+				this.puzzle.playmode &&
+				cell.enableSubNumberArray &&
+				ca === "shift" &&
+				cell.noNum()
+			) {
 				this.cursor.chtarget();
 			} else if (("0" <= ca && ca <= "9") || ca === "BS" || ca === "-") {
 				if (cell.ques === 1) {
@@ -124,9 +204,31 @@
 			return this.puzzle.editmode ? 44 : 9;
 		}
 	},
+	"Cell@numrope": {
+		isValidNum: function() {
+			return !this.isnull && this.anum >= 0;
+		},
+		maxnum: function() {
+			return this.puzzle.editmode ? 36 : 9;
+		}
+	},
 	Board: {
 		cols: 7,
 		rows: 7
+	},
+	"Board@numrope": {
+		hasborder: 1
+	},
+	"Border@numrope": {
+		isLine: function() {
+			return this.ques > 0;
+		},
+		setLine: function() {
+			this.setQues(1);
+		},
+		removeLine: function(id) {
+			this.setQues(0);
+		}
 	},
 
 	//---------------------------------------------------------
@@ -140,7 +242,12 @@
 			this.drawTargetSubNumber();
 			this.drawGrid();
 			this.drawQuesCells();
-			this.drawCircledNumbers();
+			if (this.pid === "kakuru") {
+				this.drawCircledNumbers();
+			} else {
+				this.drawQuesNumbers();
+				this.drawLines();
+			}
 
 			this.drawSubNumbers();
 			this.drawAnsNumbers();
@@ -168,6 +275,13 @@
 				return cell.error === 1 ? this.errbcolor1 : "white";
 			}
 			return null;
+		}
+	},
+	"Graphic@numrope": {
+		numbercolor_func: "fixed_shaded",
+		fontShadecolor: "white",
+		getLineColor: function(border) {
+			return border.isLine() ? "#aaaaaa" : null;
 		}
 	},
 
@@ -262,6 +376,16 @@
 			return "0";
 		}
 	},
+	"Encode@numrope": {
+		decodePzpr: function(type) {
+			this.decodeBorder();
+			this.decodeKakuru();
+		},
+		encodePzpr: function(type) {
+			this.encodeBorder();
+			this.encodeKakuru();
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
@@ -274,6 +398,9 @@
 					cell.qnum = +ca;
 				}
 			});
+			if (this.pid === "numrope") {
+				this.decodeBorderQues();
+			}
 			this.decodeCell(function(cell, ca) {
 				if (ca.indexOf("[") >= 0) {
 					ca = this.setCellSnum(cell, ca);
@@ -295,6 +422,9 @@
 					return ". ";
 				}
 			});
+			if (this.pid === "numrope") {
+				this.encodeBorderQues();
+			}
 			this.encodeCell(function(cell) {
 				var ca = ".";
 				if (cell.ques !== 1 && cell.qnum === -1) {
@@ -372,10 +502,16 @@
 					bx = cell.bx,
 					by = cell.by;
 				var clist = new this.klass.CellList(),
-					clist0 = bd.cellinside(bx - 2, by - 2, bx + 2, by + 2);
+					clist0 =
+						this.puzzle.pid === "kakuru"
+							? bd.cellinside(bx - 2, by - 2, bx + 2, by + 2)
+							: cell.getdir4clist();
 				clist.add(cell);
 				for (var i = 0; i < clist0.length; i++) {
 					var cell2 = clist0[i];
+					if (cell2.length === 2) {
+						cell2 = cell2[0];
+					}
 					if (cell !== cell2 && cell2.ques === 0 && cell2.qnum === -1) {
 						var qa = cell2.anum;
 						if (qa > 0) {
@@ -427,6 +563,51 @@
 				}
 				clist.seterr(1);
 			}
+		}
+	},
+	"AnsCheck@numrope": {
+		checklist: [
+			"checkSumOfNumber",
+			"checkAdjacentDiffNumber",
+			"checkNumberDifference",
+			"checkNumberInSequence",
+			"checkNoNumCell+"
+		],
+
+		checkNumberDifference: function() {
+			this.checkSideAreaCell(
+				function(cell1, cell2) {
+					return (
+						cell1.isValidNum() &&
+						cell2.isValidNum() &&
+						Math.abs(cell1.anum - cell2.anum) !== 1
+					);
+				},
+				false,
+				"nmSubNe1"
+			);
+		},
+		checkNumberInSequence: function() {
+			this.checkAllCell(function(cell) {
+				if (!cell.isValidNum()) {
+					return false;
+				}
+				var cnt = 0;
+				var next = false,
+					prev = false;
+				var list = cell.getdir4cblist();
+				for (var c = 0; c < list.length; c++) {
+					var adj = list[c];
+					if (!adj[1].isLine() || !adj[0].isValidNum()) {
+						continue;
+					}
+					cnt++;
+					next |= cell.anum > adj[0].anum;
+					prev |= cell.anum < adj[0].anum;
+				}
+
+				return cnt >= 2 && (!next || !prev);
+			}, "nmNotSeq");
 		}
 	}
 });
