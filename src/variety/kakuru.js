@@ -357,10 +357,10 @@
 			for (var c = 0; c < bd.cell.length; c++) {
 				var pstr = "",
 					cell = bd.cell[c];
-				if (cell.ques === 1) {
-					pstr = "+";
-				} else if (cell.qnum !== -1) {
+				if (cell.qnum !== -1) {
 					pstr = this.encval(cell.qnum);
+				} else if (cell.ques === 1) {
+					pstr = "+";
 				} else {
 					count++;
 				}
@@ -443,12 +443,12 @@
 		},
 		encodeData: function() {
 			this.encodeCell(function(cell) {
-				if (cell.ques === 1) {
-					return "b ";
-				} else if (cell.qnum === -2) {
+				if (cell.qnum === -2) {
 					return "? ";
 				} else if (cell.qnum >= 0) {
 					return cell.qnum + " ";
+				} else if (cell.ques === 1) {
+					return "b ";
 				} else {
 					return ". ";
 				}
