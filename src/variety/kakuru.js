@@ -210,6 +210,25 @@
 		},
 		maxnum: function() {
 			return this.puzzle.editmode ? 36 : 9;
+		},
+		noLP: function(dir) {
+			return this.ques !== 0 || this.qnum !== -1;
+		},
+		posthook: {
+			ques: function() {
+				this.clearLines();
+			},
+			qnum: function() {
+				this.clearLines();
+			}
+		},
+		clearLines: function() {
+			if (!this.noLP()) {
+				return;
+			}
+			for (var b in this.adjborder) {
+				this.adjborder[b].setQues(0);
+			}
 		}
 	},
 	Board: {
@@ -228,6 +247,12 @@
 		},
 		removeLine: function(id) {
 			this.setQues(0);
+		},
+		enableLineNG: true,
+		prehook: {
+			ques: function(num) {
+				return this.checkStableLine(num);
+			}
 		}
 	},
 
@@ -586,7 +611,7 @@
 					return (
 						cell1.isValidNum() &&
 						cell2.isValidNum() &&
-						Math.abs(cell1.anum - cell2.anum) !== 1
+						Math.abs(cell1.anum - cell2.anum) > 1
 					);
 				},
 				false,
@@ -600,19 +625,24 @@
 				}
 				var cnt = 0;
 				var next = false,
-					prev = false;
+					prev = false,
+					empty = false;
 				var list = cell.getdir4cblist();
 				for (var c = 0; c < list.length; c++) {
 					var adj = list[c];
-					if (!adj[1].isLine() || !adj[0].isValidNum()) {
+					if (!adj[1].isLine()) {
 						continue;
 					}
-					cnt++;
-					next |= cell.anum > adj[0].anum;
-					prev |= cell.anum < adj[0].anum;
+					if (!adj[0].isValidNum()) {
+						empty = true;
+					} else {
+						cnt++;
+						next |= cell.anum > adj[0].anum;
+						prev |= cell.anum < adj[0].anum;
+					}
 				}
 
-				return cnt >= 2 && (!next || !prev);
+				return !empty && cnt >= 2 && (!next || !prev);
 			}, "nmNotSeq");
 		}
 	}
