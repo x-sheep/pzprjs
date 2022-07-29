@@ -521,11 +521,18 @@
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
+			"checkRange",
 			"checkAroundPlNums",
 			"checkSumOfNumber",
 			"checkAdjacentNumbers",
 			"checkNoNumCell+"
 		],
+
+		checkRange: function() {
+			this.checkAllCell(function(cell) {
+				return cell.anum !== -1 && (cell.anum < 1 || cell.anum > 9);
+			}, "nmRange");
+		},
 
 		checkAroundPlNums: function(type) {
 			var bd = this.board;
@@ -646,6 +653,7 @@
 	},
 	"AnsCheck@numrope": {
 		checklist: [
+			"checkRange",
 			"checkSumOfNumber",
 			"checkAdjacentDiffNumber",
 			"checkNumberDifference",
