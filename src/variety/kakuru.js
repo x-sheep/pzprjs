@@ -196,6 +196,54 @@
 		}
 	},
 
+	"KeyEvent@numrope": {
+		moveTarget: function(ca) {
+			if (ca.match(/shift/)) {
+				return false;
+			}
+			return this.moveTCell(ca);
+		},
+		keyinput: function(ca) {
+			if (this.puzzle.editmode) {
+				var cell = this.cursor.getc();
+				var dir = cell.NDIR;
+				switch (ca) {
+					case "shift+up":
+						dir = cell.UP;
+						break;
+					case "shift+down":
+						dir = cell.DN;
+						break;
+					case "shift+left":
+						dir = cell.LT;
+						break;
+					case "shift+right":
+						dir = cell.RT;
+						break;
+				}
+				if (dir !== cell.NDIR) {
+					var pos0 = cell.getaddr(),
+						addr = cell.getaddr();
+					addr.movedir(dir, 1);
+					var bd = addr.getb();
+
+					if (bd.isLine()) {
+						bd.removeLine();
+					} else {
+						bd.setLine();
+					}
+
+					this.cursor.movedir(dir, 2);
+					pos0.draw();
+					this.cursor.draw();
+					return;
+				}
+			}
+
+			this.key_inputqnum_kakuru(ca);
+		}
+	},
+
 	//---------------------------------------------------------
 	// 盤面管理系
 	Cell: {
