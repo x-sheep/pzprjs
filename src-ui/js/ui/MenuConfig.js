@@ -109,7 +109,7 @@
 					idname = "nuriuzu_connect";
 					break;
 				case "context":
-					idname = "disptype_context";
+					idname = "context_marks";
 					break;
 			}
 			if (!!idname) {

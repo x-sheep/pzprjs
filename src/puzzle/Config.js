@@ -28,9 +28,6 @@
 			this.add("irowakeblk", false, { variety: true }); /* 黒マスの色分け */
 
 			this.add("dispmove", true); /* 線で動かすパズルで実際に動いたように描画 */
-			this.add("disptype_context", 1, {
-				option: [1, 2]
-			});
 			this.add("disptype_yajilin", 1, {
 				option: [1, 2]
 			}); /* yajilin: 表示形式 */
@@ -45,6 +42,7 @@
 				"ensquare",
 				true
 			); /* tajmahal: Only draw given from square centers */
+			this.add("context_marks", true);
 			this.add("dispqnumbg", false); /* yinyang: 問題のまるに背景色をつける */
 			this.add("undefcell", true); /* shugaku: 未確定マスはグレー表示にする */
 
@@ -339,7 +337,7 @@
 				case "disptype_bosanowa":
 					exec = pid === "bosanowa";
 					break;
-				case "disptype_context":
+				case "context_marks":
 					exec = pid === "context";
 					break;
 				case "disptype_yajilin":
@@ -438,7 +436,7 @@
 				case "autoerr":
 				case "aquarium_regions":
 				case "snakebd":
-				case "disptype_context":
+				case "context_marks":
 				case "disptype_yajilin":
 				case "disptype_interbd":
 				case "dispqnumbg":

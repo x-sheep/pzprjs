@@ -78,7 +78,7 @@
 			for (var c = 0; c < this.board.cell.length; c++) {
 				var cell = this.board.cell[c];
 				if (
-					this.puzzle.getConfig("disptype_context") !== 1 ||
+					!this.puzzle.getConfig("context_marks") ||
 					cell.qnum < 0 ||
 					!cell.isShade()
 				) {
@@ -138,7 +138,7 @@
 			for (var c = 0; c < this.board.cell.length; c++) {
 				var cell = this.board.cell[c];
 				if (
-					this.puzzle.getConfig("disptype_context") !== 1 ||
+					!this.puzzle.getConfig("context_marks") ||
 					cell.qnum < 0 ||
 					!!cell.isShade() ||
 					cell.qsub <= 0
