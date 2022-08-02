@@ -301,6 +301,15 @@
 		enabled: false
 	},
 
+	"Bank@pentopia": {
+		shouldDrawBank: function() {
+			var pieces = this.pieces.map(function(p) {
+				return p.serialize();
+			});
+			return !this.puzzle.pzpr.util.sameArray(this.presets[0].constant, pieces);
+		}
+	},
+
 	BankPiece: {
 		canon: null,
 		compressed: null,
