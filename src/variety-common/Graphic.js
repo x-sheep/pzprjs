@@ -2565,7 +2565,10 @@ pzpr.classmgr.makeCommon({
 
 		lastBankPieceCount: 0,
 		drawBank: function() {
-			if (!this.range.bank && this.range.bankPieces.length === 0) {
+			if (
+				!this.showBank ||
+				(!this.range.bank && this.range.bankPieces.length === 0)
+			) {
 				return;
 			}
 
@@ -2601,6 +2604,7 @@ pzpr.classmgr.makeCommon({
 				addButton = bd.bank.addButton;
 			var showAdd =
 				this.puzzle.editmode &&
+				!this.outputImage &&
 				addButton.index !== null &&
 				(this.range.bank || this.range.bankPieces.indexOf(addButton) !== -1);
 
