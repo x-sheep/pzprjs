@@ -565,10 +565,9 @@
 
 		getQuesNumberColor: function(cell, i) {
 			if (cell.error & 1 || cell.error & (8 << i)) {
-				return this.errcolor1;
+				return cell.isShade() ? this.errbcolor1 : this.errcolor1;
 			}
-
-			return this.quescolor;
+			return cell.isShade() ? "white" : this.quescolor;
 		},
 
 		drawArrowCombinations: function() {
