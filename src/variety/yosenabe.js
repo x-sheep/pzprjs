@@ -163,15 +163,15 @@
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
 				if (this.mousestart || this.mousemove) {
-					// TODO not great. right drag should add background
 					if (this.btn === "left") {
 						this.inputLine();
 					} else if (this.btn === "right") {
-						this.inputpeke();
+						this.inputdragcross();
 					}
 				} else if (this.mouseend && this.notInputted()) {
-					if (!this.inputqcmp()) {
-						this.inputlight();
+					if (this.btn === "left" && this.inputqcmp()) {
+					} else if (!this.inputpeke_ifborder()) {
+						this.inputBGcolor();
 					}
 				}
 			} else if (this.puzzle.editmode) {
@@ -184,6 +184,19 @@
 						this.inputqnum();
 					}
 				}
+			}
+		},
+		inputdragcross: function() {
+			if (this.firstPoint.bx === null) {
+				this.firstPoint.set(this.inputPoint);
+			} else if (this.inputData === null) {
+				var dx = this.inputPoint.bx - this.firstPoint.bx,
+					dy = this.inputPoint.by - this.firstPoint.by;
+				if (dx * dx + dy * dy > 0.1) {
+					this.inputFixedQsub(2);
+				}
+			} else {
+				this.inputFixedQsub(2);
 			}
 		},
 		inputdirec: function() {
