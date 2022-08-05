@@ -92,7 +92,8 @@
 		"disloop",
 		"lither",
 		"snakepit",
-		"squarejam"
+		"squarejam",
+		"yajisoko"
 	]);
 
 	(function(Genre, obj) {
