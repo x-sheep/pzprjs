@@ -155,6 +155,11 @@
 			edit: ["number", "direc", "box", "clear"],
 			play: ["line", "peke", "bgcolor", "bgcolor1", "bgcolor2", "completion"]
 		},
+		mouseinput_other: function() {
+			if (this.inputMode === "box") {
+				this.inputFixedNumber(-3);
+			}
+		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
 				if (this.mousestart || this.mousemove) {
