@@ -28,7 +28,8 @@
     "format": "prettier --write \"{src,src-ui,test}/**/*.{js,css}\"",
     "check-format": "prettier --check \"{src,src-ui,test}/**/*.{js,css}\"",
     "lint": "eslint src src-ui test sample",
-    "test": "eslint --quiet src src-ui test sample && mocha -r source-map-support/register -R progress --recursive test",
+    "test": "mocha -r source-map-support/register -R progress --recursive test",
+    "coverage": "nyc --reporter=lcov npm run test",
     "prepublishOnly": "npm test"
   },
   "devDependencies": {
@@ -44,6 +45,8 @@
     "prettier": "^1.19.1"
   },
   "dependencies": {
+    "codecov": "^3.8.3",
+    "nyc": "^15.1.0",
     "pzpr-canvas": "0.8.2",
     "source-map-support": "^0.5.21"
   },
