@@ -7,10 +7,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
-    - uses: codecov/codecov-action@v3
     - run: npm install
     - run: npm run-script check-format
     - run: npm run-script build
     - run: npm run-script lint
     - run: npm run-script coverage
-    - run: npx codecov
+    - uses: codecov/codecov-action@v3
