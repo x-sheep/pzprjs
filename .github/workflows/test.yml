@@ -10,6 +10,7 @@ jobs:
     - uses: codecov/codecov-action@v3
     - run: npm install
     - run: npm run-script check-format
+    - run: npm run-script build
     - run: npm run-script lint
     - run: npm run-script coverage
     - run: npx codecov
