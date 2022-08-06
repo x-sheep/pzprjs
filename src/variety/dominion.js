@@ -163,5 +163,10 @@
 				"bkNoNum"
 			);
 		}
+	},
+	FailCode: {
+		bkNoNum: "bkNoNum.kaero",
+		bkPlNum: "bkPlNum.kaero",
+		bkSepNum: "bkSepNum.kaero"
 	}
 });
