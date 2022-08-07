@@ -47,20 +47,8 @@
 				}
 			}
 
-			if (val === -3) {
-				cell.setQues(1);
-				cell.setQnum(-1);
-				cell.setAnum(-1);
-				cell.draw();
-			} else if (val === -1) {
-				cell.setQues(0);
-				cell.setQnum(-1);
-				cell.setAnum(-1);
-				cell.draw();
-			} else if (val === -2) {
-				cell.setQues(0);
-				cell.setQnum(-2);
-				cell.setAnum(-1);
+			if (val !== null) {
+				cell.setNum(val);
 				cell.draw();
 			}
 
@@ -167,9 +155,6 @@
 				}
 				this.key_inputqnum_main(cell, ca);
 			} else if (ca === " ") {
-				if (this.puzzle.editmode) {
-					cell.setQues(0);
-				}
 				cell.setNum(-1);
 				cell.draw();
 				this.prev = cell;
@@ -183,10 +168,9 @@
 					ca = cell.ques !== 1 ? "q1" : "q2";
 				}
 				if (ca === "q1") {
-					cell.setQues(1);
-					cell.setNum(-1);
+					cell.setNum(-3);
 				} else if (ca === "q2") {
-					cell.setQues(0);
+					cell.setNum(-1);
 				}
 				cell.draw();
 				this.prev = cell;
@@ -250,6 +234,22 @@
 		enableSubNumberArray: true,
 		maxnum: function() {
 			return this.puzzle.editmode ? 44 : 9;
+		},
+		getNum: function() {
+			return this.ques === 1 ? -3 : this.qnum !== -1 ? this.qnum : this.anum;
+		},
+		setNum: function(val) {
+			if (val === -3 && this.puzzle.editmode) {
+				val = this.ques === 1 ? 0 : 1;
+				this.setQnum(-1);
+				this.setQues(val);
+				this.setAnum(-1);
+			} else {
+				if (this.puzzle.editmode) {
+					this.setQues(0);
+				}
+				this.common.setNum.call(this, val);
+			}
 		}
 	},
 	"Cell@numrope": {
