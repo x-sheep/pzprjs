@@ -36,5 +36,24 @@ ui.debug.addDebugData("pentopia", {
 			"pzprv3/pentopia/6/7/t/. . . . . . 6 /. . . . . . . /. . 3 11 . . . /8 . . . . . . /. . . . . 9 . /. . . . . 5 . /+ # # # + + + /+ # + + + + + /+ + + + + # + /+ + + + + # # /+ + # # + + # /+ + # # + + + /0 0 0 0 0 /"
 		]
 	],
-	inputs: []
+	inputs: [
+		{
+			label: "Arrow mouse input",
+			input: ["newboard,3,3", "mouse,left,3,3,1,3", "mouse,left,3,3,3,5"],
+			result:
+				"pzprv3/pentopia/3/3/p/. . . /. 6 . /. . . /. . . /. . . /. . . /0 0 0 0 0 0 0 0 0 0 0 0 /"
+		},
+		{
+			label: "Arrow number input",
+			input: ["cursor,3,1", "key,1,2"],
+			result:
+				"pzprv3/pentopia/3/3/p/. 9 . /. 6 . /. . . /. . . /. . . /. . . /0 0 0 0 0 0 0 0 0 0 0 0 /"
+		},
+		{
+			label: "Arrow shift input",
+			input: ["cursor,3,1", "key,shift+left,key,shift+down"],
+			result:
+				"pzprv3/pentopia/3/3/p/. 15 . /. 6 . /. . . /. . . /. . . /. . . /0 0 0 0 0 0 0 0 0 0 0 0 /"
+		}
+	]
 });
