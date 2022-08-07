@@ -29,5 +29,41 @@ ui.debug.addDebugData("numrope", {
 			null,
 			"pzprv3/numrope/4/4/. . . 2 /. . . 10 /14 . . . /b . . . /1 1 0 /0 1 0 /0 0 1 /0 1 0 /1 0 0 0 /0 0 1 0 /0 1 0 1 /4 3 2 . /5 7 6 . /. 9 5 4 /. 8 7 3 /"
 		]
+	],
+	inputs: [
+		{
+			label: "Maxnum",
+			input: [
+				"newboard,5,1",
+				"cursor,5,1",
+				"mouse,right,5,1",
+				"playmode",
+				"key,left",
+				"mouse,right,3,1"
+			],
+			result: "pzprv3/numrope/1/5/. . 36 . . /0 0 0 0 /0 9 . 0 0 /"
+		},
+		{
+			label: "Left click cycle",
+			input: [
+				"newboard,5,1",
+				"editmode",
+				"mouse,leftx2,3,1",
+				"mouse,leftx3,5,1",
+				"mouse,leftx4,7,1"
+			],
+			result: "pzprv3/numrope/1/5/. b ? 1 . /0 0 0 0 /0 . . . 0 /"
+		},
+		{
+			label: "Right click cycle",
+			input: [
+				"newboard,5,1",
+				"key,1,right,1,right,1,right,1",
+				"mouse,rightx2,3,1",
+				"mouse,rightx3,5,1",
+				"mouse,rightx4,7,1"
+			],
+			result: "pzprv3/numrope/1/5/1 ? b . . /0 0 0 0 /. . . 0 0 /"
+		}
 	]
 });
