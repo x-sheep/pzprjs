@@ -93,6 +93,7 @@
 		"lither",
 		"snakepit",
 		"squarejam",
+		"context",
 		"numrope"
 	]);
 
@@ -149,6 +150,7 @@
 			balance: [0, 0, "Balance Loop", "Balance Loop"],
 			cave: [1, 0, "バッグ", "Cave", "kurodoko", { alias: "bag" }],
 			cbanana: [0, 0, "チョコバナナ", "Choco Banana"],
+			context: [0, 0, "Context", "Context"],
 			crossstitch: [0, 0, "Crossstitch", "Crossstitch"],
 			barns: [1, 0, "バーンズ", "Barns"],
 			bdblock: [1, 0, "ボーダーブロック", "Border Block"],

@@ -123,6 +123,7 @@ ui.keypopup = {
 		lither: [3, 0],
 		snakepit: [120, 10],
 		squarejam: [10, 0],
+		context: [4, 0],
 		numrope: [10, 10]
 	},
 
