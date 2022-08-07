@@ -64,6 +64,26 @@ ui.debug.addDebugData("numrope", {
 				"mouse,rightx4,7,1"
 			],
 			result: "pzprv3/numrope/1/5/1 ? b . . /0 0 0 0 /. . . 0 0 /"
+		},
+		{
+			label: "Drag line",
+			input: ["newboard,2,2", "mouse,left,1,1,3,1,3,3,1,3"],
+			result: "pzprv3/numrope/2/2/. . /. . /1 /1 /0 1 /0 0 /0 0 /"
+		},
+		{
+			label: "Line with keyboard",
+			input: ["newboard,2,2", "key,shift+right,shift+down,shift+left,shift+up"],
+			result: "pzprv3/numrope/2/2/. . /. . /1 /1 /1 1 /0 0 /0 0 /"
+		},
+		{
+			label: "Number drag",
+			input: [
+				"newboard,2,2",
+				"playmode",
+				"key,1",
+				"mouse,left,1,1,3,1,3,3,1,3"
+			],
+			result: "pzprv3/numrope/2/2/. . /. . /0 /0 /0 0 /1 2 /4 3 /"
 		}
 	]
 });
