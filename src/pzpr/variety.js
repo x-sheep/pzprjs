@@ -94,6 +94,7 @@
 		"snakepit",
 		"squarejam",
 		"context",
+		"pentopia",
 		"numrope"
 	]);
 
@@ -311,6 +312,7 @@
 			parquet: [0, 0, "Parquet", "Parquet"],
 			pencils: [0, 0, "ペンシルズ", "Pencils"],
 			pentominous: [0, 0, "Pentominous", "Pentominous", "fillomino"],
+			pentopia: [0, 0, "Pentopia", "Pentopia", "statuepark"],
 			pipelink: [1, 0, "パイプリンク", "Pipelink", "pipelink"],
 			pipelinkr: [
 				1,
