@@ -93,6 +93,8 @@
 		"lither",
 		"snakepit",
 		"squarejam",
+		"context",
+		"pentopia",
 		"yajisoko"
 	]);
 
@@ -149,6 +151,7 @@
 			balance: [0, 0, "Balance Loop", "Balance Loop"],
 			cave: [1, 0, "バッグ", "Cave", "kurodoko", { alias: "bag" }],
 			cbanana: [0, 0, "チョコバナナ", "Choco Banana"],
+			context: [0, 0, "Context", "Context"],
 			crossstitch: [0, 0, "Crossstitch", "Crossstitch"],
 			barns: [1, 0, "バーンズ", "Barns"],
 			bdblock: [1, 0, "ボーダーブロック", "Border Block"],
@@ -308,6 +311,7 @@
 			parquet: [0, 0, "Parquet", "Parquet"],
 			pencils: [0, 0, "ペンシルズ", "Pencils"],
 			pentominous: [0, 0, "Pentominous", "Pentominous", "fillomino"],
+			pentopia: [0, 0, "Pentopia", "Pentopia", "statuepark"],
 			pipelink: [1, 0, "パイプリンク", "Pipelink", "pipelink"],
 			pipelinkr: [
 				1,
