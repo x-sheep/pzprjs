@@ -43,5 +43,39 @@ ui.debug.addDebugData("yajisoko", {
 			null,
 			"pzprv3/yajisoko/4/4/. . # . /. # 3,3 # /# . 1,2 . /4,2 . 4,1 . /0 0 0 /0 1 0 /0 0 0 /0 0 0 /0 0 0 0 /0 0 0 1 /1 0 0 1 /0 0 0 0 /0 0 0 0 /0 0 0 0 /0 0 0 0 /"
 		]
+	],
+	inputs: [
+		{
+			label: "Left click cycle",
+			input: [
+				"newboard,5,1",
+				"editmode",
+				"mouse,leftx2,3,1",
+				"mouse,leftx3,5,1",
+				"mouse,leftx4,7,1"
+			],
+			result: "pzprv3/yajisoko/1/5/. # 0,-2 0,0 . /0 0 0 0 /0 0 0 0 0 /"
+		},
+		{
+			label: "Right click cycle",
+			input: [
+				"newboard,5,1",
+				"key,1,right,1,right,1,right,1",
+				"mouse,rightx2,3,1",
+				"mouse,rightx3,5,1",
+				"mouse,rightx4,7,1"
+			],
+			result: "pzprv3/yajisoko/1/5/0,1 0,0 0,-2 # . /0 0 0 0 /0 0 0 0 0 /"
+		},
+		{
+			label: "Drag arrow",
+			input: ["newboard,2,2", "mouse,leftx4,3,3", "mouse,left,3,3,1,3"],
+			result: "pzprv3/yajisoko/2/2/. . /. 3,0 /0 /0 /0 0 /0 0 /0 0 /"
+		},
+		{
+			label: "Arrow with keyboard",
+			input: ["newboard,2,2", "key,down,1,shift+right"],
+			result: "pzprv3/yajisoko/2/2/. . /4,1 . /0 /0 /0 0 /0 0 /0 0 /"
+		}
 	]
 });
