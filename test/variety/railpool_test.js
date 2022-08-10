@@ -17,7 +17,7 @@ describe("Variety:railpool", function() {
 		puzzle.board.compareData(bd2, function(group, c, a) {
 			assert.equal(
 				bd2[group][c][a],
-				bd1[group][c][a],
+				puzzle.board[group][c][a],
 				group + "[" + c + "]." + a
 			);
 		});
