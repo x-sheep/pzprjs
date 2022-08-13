@@ -243,6 +243,7 @@
 			interbd: [0, 0, "International Borders", "International Borders"],
 			juosan: [0, 0, "縦横さん", "Juosan"],
 			kaero: [1, 0, "お家に帰ろう", "Return Home"],
+			kaidan: [0, 0, "かいだんしばり", "Stairwell"],
 			kakuro: [0, 1, "カックロ", "Kakuro"],
 			kakuru: [0, 0, "カックル", "Kakuru"],
 			kazunori: [0, 0, "かずのりのへや", "Kazunori Room"],
