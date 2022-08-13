@@ -55,7 +55,15 @@
 	},
 
 	LineGraph: {
-		enabled: true
+		enabled: true,
+		makeClist: true
+	},
+	AreaUnshadeGraph: {
+		enabled: true,
+		relation: { "cell.qnum": "node", "cell.qans": "node" },
+		isnodevalid: function(cell) {
+			return !cell.noLP();
+		}
 	},
 
 	//---------------------------------------------------------
@@ -146,6 +154,35 @@
 	//---------------------------------------------------------
 	// 正解判定処理実行部
 	AnsCheck: {
-		checklist: []
+		checklist: [
+			"checkLineOverlap",
+			"checkLineOnShadeCell",
+			"checkAdjacentShadeCell",
+			"checkConnectUnshade",
+			"checkLengthConsecutive",
+			"checkEmptyCell_kaidan+"
+		],
+		// TODO short ends
+		checkLengthConsecutive: function() {
+			this.checkSideCell(function(cell1, cell2) {
+				return (
+					cell1.lcnt &&
+					cell2.lcnt &&
+					cell1.path !== cell2.path &&
+					Math.abs(cell1.path.clist.length - cell2.path.clist.length) !== 1
+				);
+			}, "lnConsecutive");
+		},
+
+		checkLineOverlap: function() {
+			this.checkAllCell(function(cell) {
+				return cell.lcnt > 2 || cell.isLineCurve();
+			}, "laCurve");
+		},
+		checkEmptyCell_kaidan: function() {
+			this.checkAllCell(function(cell) {
+				return cell.lcnt === 0 && !cell.isShade() && cell.noNum();
+			}, "ceEmpty");
+		}
 	}
 });
