@@ -17,16 +17,32 @@
 		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
-				// TODO drag cross marks with right mouse
-				if (this.mousestart || this.mousemove) {
+				if (this.btn === "right") {
+					this.inputdragcross();
+				} else if (this.mousestart || this.mousemove) {
 					this.inputLine();
-				} else if (this.mouseend && this.notInputted()) {
+				}
+				if (this.mouseend && this.notInputted()) {
 					this.inputcell();
 				}
 			} else if (this.puzzle.editmode) {
 				if (this.mousestart) {
 					this.inputqnum();
 				}
+			}
+		},
+		inputdragcross: function() {
+			if (this.firstPoint.bx === null) {
+				this.firstPoint.set(this.inputPoint);
+			} else if (this.inputData === null) {
+				var dx = this.inputPoint.bx - this.firstPoint.bx,
+					dy = this.inputPoint.by - this.firstPoint.by;
+				if (dx * dx + dy * dy > 0.1) {
+					// TODO should not change cross to circle when dragging in 1 button mode
+					this.inputShade();
+				}
+			} else {
+				this.inputShade();
 			}
 		},
 		inputqcmp: function() {
