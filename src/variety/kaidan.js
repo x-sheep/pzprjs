@@ -9,7 +9,6 @@
 		// TODO completion for numbers
 		// TODO clear lines when entering number
 		// TODO gesture for line ends. don't use aux mark field
-		// TODO clear line end when forming straight line
 		// TODO rename input modes
 		use: true,
 		RBShadeCell: true,
@@ -83,6 +82,17 @@
 			line: function(num) {
 				return (num && this.isLineNG()) || this.checkFormCurve(num);
 			}
+		},
+		posthook: {
+			line: function() {
+				for (var i in this.sidecell) {
+					var cell = this.sidecell[i];
+					if (cell.line && cell.lcnt !== 1) {
+						cell.setLineVal(0);
+						cell.draw();
+					}
+				}
+			}
 		}
 	},
 
@@ -122,7 +132,6 @@
 		fontShadecolor: "white",
 		fgcellcolor_func: "qnum",
 		qcmpcolor: "rgb(127,127,127)",
-		// TODO draw rectangle ends
 
 		paint: function() {
 			this.drawBGCells();
@@ -271,9 +280,35 @@
 		}
 	},
 	FileIO: {
-		// TODO implement
-		decodeData: function() {},
-		encodeData: function() {}
+		decodeData: function() {
+			this.decodeCellQnum();
+			this.decodeCell(function(cell, ca) {
+				var val = +ca;
+				if (val & 1) {
+					cell.qans = 1;
+				}
+				if (val & 2) {
+					cell.line = 1;
+				}
+				if (val & 4) {
+					cell.qsub = 1;
+				}
+				if (val & 8) {
+					cell.qcmp = 1;
+				}
+			});
+			this.decodeBorderLine();
+		},
+		encodeData: function() {
+			this.encodeCellQnum();
+			this.encodeCell(function(cell) {
+				return (
+					(cell.qans | (cell.line << 1) | (cell.qsub << 2) | (cell.qcmp << 3)) +
+					" "
+				);
+			});
+			this.encodeBorderLine();
+		}
 	},
 
 	AnsCheck: {
