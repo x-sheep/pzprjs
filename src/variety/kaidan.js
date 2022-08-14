@@ -105,7 +105,7 @@
 		fontShadecolor: "white",
 		fgcellcolor_func: "qnum",
 		qcmpcolor: "rgb(127,127,127)",
-		// TODO draw lines as rectangles
+		// TODO draw rectangle ends
 
 		paint: function() {
 			this.drawBGCells();
@@ -144,6 +144,43 @@
 					g.vhide();
 				}
 			}
+		},
+		drawLines: function() {
+			var g = this.vinc("line", "crispEdges");
+
+			var blist = this.range.borders;
+			for (var i = 0; i < blist.length; i++) {
+				var border = blist[i],
+					color = this.getLineColor(border);
+
+				if (!!color) {
+					var px = border.bx * this.bw,
+						py = border.by * this.bh;
+					var mx = this.bw / 2;
+					var my = this.bh / 2;
+					var isvert = this.board.borderAsLine === border.isVert();
+					var lm = this.lm + this.addlw / 2;
+
+					g.fillStyle = color;
+					if (isvert) {
+						g.vid = "b_line1_" + border.id;
+						g.fillRectCenter(px - mx, py, lm, this.bh + lm + my);
+						g.vid = "b_line2_" + border.id;
+						g.fillRectCenter(px + mx, py, lm, this.bh + lm + my);
+					} else {
+						g.vid = "b_line1_" + border.id;
+						g.fillRectCenter(px, py - my, this.bw + lm + mx, lm);
+						g.vid = "b_line2_" + border.id;
+						g.fillRectCenter(px, py + my, this.bw + lm + mx, lm);
+					}
+				} else {
+					g.vid = "b_line1_" + border.id;
+					g.vhide();
+					g.vid = "b_line2_" + border.id;
+					g.vhide();
+				}
+			}
+			this.addlw = 0;
 		},
 
 		getQuesNumberColor: function(cell) {
