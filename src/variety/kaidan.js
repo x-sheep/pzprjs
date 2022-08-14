@@ -5,9 +5,11 @@
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
 })(["kaidan"], {
-	//---------------------------------------------------------
-	// マウス入力系
 	MouseEvent: {
+		// TODO completion for numbers
+		// TODO don't place circles/crosses on clues
+		// TODO completion for line ends
+		// TODO rename input modes
 		use: true,
 		inputModes: {
 			edit: ["number", "clear"],
@@ -66,8 +68,6 @@
 		}
 	},
 
-	//---------------------------------------------------------
-	// 画像表示系
 	Graphic: {
 		hideHatena: true,
 
@@ -75,6 +75,7 @@
 
 		fontShadecolor: "white",
 		fgcellcolor_func: "qnum",
+		// TODO draw lines as rectangles
 
 		paint: function() {
 			this.drawBGCells();
@@ -135,8 +136,6 @@
 		}
 	},
 
-	//---------------------------------------------------------
-	// URLエンコード/デコード処理
 	Encode: {
 		decodePzpr: function(type) {
 			this.decode4Cell();
@@ -145,24 +144,22 @@
 			this.encode4Cell();
 		}
 	},
-	//---------------------------------------------------------
 	FileIO: {
+		// TODO implement
 		decodeData: function() {},
 		encodeData: function() {}
 	},
 
-	//---------------------------------------------------------
-	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
 			"checkLineOverlap",
 			"checkLineOnShadeCell",
 			"checkAdjacentShadeCell",
 			"checkConnectUnshade",
+			"checkShortEnds",
 			"checkLengthConsecutive",
 			"checkEmptyCell_kaidan+"
 		],
-		// TODO short ends
 		checkLengthConsecutive: function() {
 			this.checkSideCell(function(cell1, cell2) {
 				return (
@@ -172,6 +169,26 @@
 					Math.abs(cell1.path.clist.length - cell2.path.clist.length) !== 1
 				);
 			}, "lnConsecutive");
+		},
+
+		checkShortEnds: function() {
+			this.checkSideCell(function(cell1, cell2) {
+				if (cell1.lcnt !== 1 || cell2.lcnt !== 1) {
+					return false;
+				}
+				var cb = cell1.board.getb(
+					(cell1.bx + cell2.bx) / 2,
+					(cell1.by + cell2.by) / 2
+				);
+				if (cb.line) {
+					return false;
+				}
+
+				var b1 = cb.relbd((cell1.bx - cb.bx) * 2, (cell1.by - cb.by) * 2);
+				var b2 = cb.relbd((cell2.bx - cb.bx) * 2, (cell2.by - cb.by) * 2);
+
+				return b1.line && b2.line;
+			}, "lnEnds");
 		},
 
 		checkLineOverlap: function() {
