@@ -7,16 +7,17 @@
 })(["kaidan"], {
 	MouseEvent: {
 		// TODO completion for numbers
-		// TODO don't place circles/crosses on clues
 		// TODO completion for line ends
 		// TODO rename input modes
 		use: true,
+		RBShadeCell: true,
 		inputModes: {
 			edit: ["number", "clear"],
-			play: ["line", "shade", "unshade"]
+			play: ["line", "shade", "unshade", "completion"]
 		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
+				// TODO drag cross marks with right mouse
 				if (this.mousestart || this.mousemove) {
 					this.inputLine();
 				} else if (this.mouseend && this.notInputted()) {
@@ -27,6 +28,17 @@
 					this.inputqnum();
 				}
 			}
+		},
+		inputqcmp: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell.noNum()) {
+				return;
+			}
+
+			cell.setQcmp(+!cell.qcmp);
+			cell.draw();
+
+			this.mousereset();
 		}
 	},
 
@@ -44,6 +56,7 @@
 	Cell: {
 		maxnum: 4,
 		minnum: 0,
+		numberRemainsUnshaded: true,
 		noLP: function(dir) {
 			return this.isNum() || this.qans;
 		}
@@ -75,6 +88,7 @@
 
 		fontShadecolor: "white",
 		fgcellcolor_func: "qnum",
+		qcmpcolor: "rgb(127,127,127)",
 		// TODO draw lines as rectangles
 
 		paint: function() {
@@ -155,11 +169,32 @@
 			"checkLineOverlap",
 			"checkLineOnShadeCell",
 			"checkAdjacentShadeCell",
+			"checkDir4ShadeOver",
 			"checkConnectUnshade",
 			"checkShortEnds",
 			"checkLengthConsecutive",
+			"checkDir4ShadeLess",
 			"checkEmptyCell_kaidan+"
 		],
+
+		checkDir4ShadeOver: function() {
+			this.checkDir4Cell(
+				function(cell) {
+					return cell.isShade();
+				},
+				2,
+				"nmShadeGt"
+			);
+		},
+		checkDir4ShadeLess: function() {
+			this.checkDir4Cell(
+				function(cell) {
+					return cell.isShade();
+				},
+				1,
+				"nmShadeLt"
+			);
+		},
 		checkLengthConsecutive: function() {
 			this.checkSideCell(function(cell1, cell2) {
 				return (
