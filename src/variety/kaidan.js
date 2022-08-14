@@ -7,7 +7,9 @@
 })(["kaidan"], {
 	MouseEvent: {
 		// TODO completion for numbers
-		// TODO completion for line ends
+		// TODO clear lines when entering number
+		// TODO gesture for line ends. don't use aux mark field
+		// TODO clear line end when forming straight line
 		// TODO rename input modes
 		use: true,
 		RBShadeCell: true,
@@ -23,12 +25,27 @@
 					this.inputLine();
 				}
 				if (this.mouseend && this.notInputted()) {
-					this.inputcell();
+					this.inputEndOrCell();
 				}
 			} else if (this.puzzle.editmode) {
 				if (this.mousestart) {
 					this.inputqnum();
 				}
+			}
+		},
+		inputEndOrCell: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+
+			if (cell.lcnt === 1) {
+				cell.setLineVal(+!cell.line);
+				cell.draw();
+			} else if (cell.isNum()) {
+				this.inputqcmp();
+			} else {
+				this.inputcell();
 			}
 		},
 		inputdragcross: function() {
@@ -118,6 +135,7 @@
 			this.drawCrosses();
 
 			this.drawLines();
+			this.drawLineEnds();
 
 			this.drawChassis();
 
@@ -147,6 +165,8 @@
 		},
 		drawLines: function() {
 			var g = this.vinc("line", "crispEdges");
+			var mx = this.bw / 2;
+			var my = this.bh / 2;
 
 			var blist = this.range.borders;
 			for (var i = 0; i < blist.length; i++) {
@@ -156,8 +176,7 @@
 				if (!!color) {
 					var px = border.bx * this.bw,
 						py = border.by * this.bh;
-					var mx = this.bw / 2;
-					var my = this.bh / 2;
+
 					var isvert = this.board.borderAsLine === border.isVert();
 					var lm = this.lm + this.addlw / 2;
 
@@ -181,6 +200,46 @@
 				}
 			}
 			this.addlw = 0;
+		},
+		drawLineEnds: function() {
+			var g = this.vinc("lineends", "auto", true);
+			var mx = this.bw / 2;
+			var my = this.bh / 2;
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i],
+					px,
+					py;
+
+				g.vid = "c_end_" + cell.id;
+				if (cell.line > 0 && cell.lcnt === 1) {
+					var dir = cell.getdir4cblist().filter(function(tuple) {
+						return tuple[1].line;
+					})[0];
+
+					px = cell.bx * this.bw;
+					py = cell.by * this.bh;
+					g.fillStyle = this.getLineColor(dir[1]);
+					var lm = this.lm + this.addlw / 2;
+					if (dir[1].isVert()) {
+						g.fillRectCenter(
+							px + (mx + 1) * (dir[2] === cell.RT ? -1 : +1),
+							py,
+							lm,
+							my + lm
+						);
+					} else {
+						g.fillRectCenter(
+							px,
+							py + (my + 1) * (dir[2] === cell.DN ? -1 : +1),
+							my + lm,
+							lm
+						);
+					}
+				} else {
+					g.vhide();
+				}
+			}
 		},
 
 		getQuesNumberColor: function(cell) {
@@ -218,6 +277,7 @@
 	},
 
 	AnsCheck: {
+		// TODO use line ends in anschecks
 		checklist: [
 			"checkLineOverlap",
 			"checkLineOnShadeCell",
