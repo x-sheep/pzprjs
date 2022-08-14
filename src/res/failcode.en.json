@@ -278,6 +278,7 @@
     "ceEmpty.yajilin": "There is an empty cell.",
     "ceNoBar.juosan": "There is an empty cell.",
     "ceNoBar.tateyoko": "There is an empty cell.",
+    "ceNoEnd.kaidan": "A rectangle is not closed.",
     "ceNoLine.arukone": "A crossing is left blank.",
     "ceNoLine": "There is an empty cell.",
     "ceNoNum.compass": "There is an area without a clue.",

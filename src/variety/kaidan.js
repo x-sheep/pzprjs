@@ -6,7 +6,6 @@
 	}
 })(["kaidan"], {
 	MouseEvent: {
-		// TODO completion for numbers
 		// TODO clear lines when entering number
 		// TODO gesture for line ends. don't use aux mark field
 		// TODO rename input modes
@@ -312,7 +311,6 @@
 	},
 
 	AnsCheck: {
-		// TODO use line ends in anschecks
 		checklist: [
 			"checkLineOverlap",
 			"checkLineOnShadeCell",
@@ -322,6 +320,7 @@
 			"checkShortEnds",
 			"checkLengthConsecutive",
 			"checkDir4ShadeLess",
+			"checkMissingEnd",
 			"checkEmptyCell_kaidan+"
 		],
 
@@ -356,7 +355,11 @@
 
 		checkShortEnds: function() {
 			this.checkSideCell(function(cell1, cell2) {
-				if (cell1.lcnt !== 1 || cell2.lcnt !== 1) {
+				if (
+					cell1.lcnt !== 1 ||
+					cell2.lcnt !== 1 ||
+					!(cell1.line || cell2.line)
+				) {
 					return false;
 				}
 				var cb = cell1.board.getb(
@@ -378,6 +381,11 @@
 			this.checkAllCell(function(cell) {
 				return cell.lcnt > 2 || cell.isLineCurve();
 			}, "laCurve");
+		},
+		checkMissingEnd: function() {
+			this.checkAllCell(function(cell) {
+				return cell.lcnt === 1 && !cell.line;
+			}, "ceNoEnd");
 		},
 		checkEmptyCell_kaidan: function() {
 			this.checkAllCell(function(cell) {
