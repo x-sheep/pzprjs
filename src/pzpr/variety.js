@@ -95,6 +95,7 @@
 		"squarejam",
 		"context",
 		"pentopia",
+		"numrope",
 		"yajisoko"
 	]);
 
@@ -299,6 +300,7 @@
 				"",
 				{ kanpen: "numberlink" }
 			],
+			numrope: [0, 0, "ナンバーロープ", "Number Rope", "kakuru"],
 			nuribou: [1, 0, "ぬりぼう", "Nuribou", "nurikabe"],
 			nurikabe: [0, 1, "ぬりかべ", "Nurikabe", "nurikabe"],
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
