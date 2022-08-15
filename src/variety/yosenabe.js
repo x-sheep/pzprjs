@@ -301,7 +301,7 @@
 			if (this.key_inputdirec(ca)) {
 				return;
 			}
-			if (ca === "q") {
+			if (ca === "q" || ca === "q1") {
 				ca = "s2";
 			} else if (ca === "i") {
 				ca = "s3";
@@ -310,7 +310,7 @@
 		},
 
 		getNewNumber: function(cell, ca, cur) {
-			var ret = this.common.getNewNumber(cell, ca, cur);
+			var ret = this.common.getNewNumber.call(this, cell, ca, cur);
 			if (
 				this.puzzle.execConfig("dispmove") &&
 				cur === -3 &&
