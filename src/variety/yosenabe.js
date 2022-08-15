@@ -536,7 +536,7 @@
 			this.drawDepartures();
 			this.drawLines();
 
-			this.drawArrowNumbers();
+			this.drawArrowNumbers({ bottom: true });
 			this.drawBoxes();
 
 			this.drawPekes();
