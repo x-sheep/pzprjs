@@ -37,7 +37,7 @@
 				return;
 			}
 
-			if (cell.lcnt === 1) {
+			if (cell.lcnt === 1 && this.btn === "left") {
 				cell.setLineVal(+!cell.line);
 				cell.draw();
 			} else if (cell.isNum()) {
@@ -101,6 +101,9 @@
 		numberRemainsUnshaded: true,
 		noLP: function(dir) {
 			return this.isNum() || this.qans;
+		},
+		allowShade: function() {
+			return this.qnum === -1 && this.lcnt === 0;
 		}
 	},
 
