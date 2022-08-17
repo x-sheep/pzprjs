@@ -94,7 +94,8 @@
 		"snakepit",
 		"squarejam",
 		"context",
-		"pentopia"
+		"pentopia",
+		"kaidan"
 	]);
 
 	(function(Genre, obj) {
