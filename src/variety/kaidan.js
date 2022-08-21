@@ -7,7 +7,6 @@
 })(["kaidan"], {
 	MouseEvent: {
 		// TODO clear lines when entering number
-		// TODO gesture for line ends. don't use aux mark field
 		// TODO rename input modes
 		use: true,
 		RBShadeCell: true,
@@ -19,7 +18,7 @@
 			if (this.puzzle.playmode) {
 				if (this.btn === "right") {
 					this.inputdragcross();
-				} else if (this.mousestart || this.mousemove) {
+				} else {
 					this.inputLine();
 				}
 				if (this.mouseend && this.notInputted()) {
@@ -70,6 +69,79 @@
 			cell.draw();
 
 			this.mousereset();
+		},
+		initialize: function() {
+			this.edgeCell = new this.klass.Address();
+			this.common.initialize.call(this);
+		},
+		inputLine: function() {
+			var cell = this.getcell();
+			var addcmp = false;
+			if (!cell.isnull && !cell.equals(this.edgeCell)) {
+				if (this.edgeCell.bx !== null) {
+					if (this.edgeData.top && this.edgeData.bottom) {
+						if (this.edgeCell.bx - cell.bx === 2) {
+							addcmp = this.edgeData.right;
+						} else if (this.edgeCell.bx - cell.bx === -2) {
+							addcmp = this.edgeData.left;
+						}
+					}
+					if (this.edgeData.left && this.edgeData.right) {
+						if (this.edgeCell.by - cell.by === 2) {
+							addcmp = this.edgeData.bottom;
+						} else if (this.edgeCell.by - cell.by === -2) {
+							addcmp = this.edgeData.top;
+						}
+					}
+				}
+
+				this.edgeData = {};
+			}
+
+			var bx = (this.inputPoint.bx % 2) - 1,
+				by = (this.inputPoint.by % 2) - 1;
+
+			// TODO also set these when doing a large movement left/right
+			if (bx < -0.1) {
+				this.edgeData.left = true;
+			} else if (bx > 0.1) {
+				this.edgeData.right = true;
+			}
+			if (by < 0.1) {
+				this.edgeData.top = true;
+			} else if (by > 0.1) {
+				this.edgeData.bottom = true;
+			}
+
+			var edgec = this.edgeCell.getc();
+
+			if (this.edgeData.top && this.edgeData.bottom) {
+				addcmp =
+					addcmp ||
+					edgec.adjborder.left.isBorder() ||
+					edgec.adjborder.right.isBorder();
+			}
+			if (this.edgeData.left && this.edgeData.right) {
+				addcmp =
+					addcmp ||
+					edgec.adjborder.top.isBorder() ||
+					edgec.adjborder.bottom.isBorder();
+			}
+
+			this.common.inputLine.call(this);
+			if (addcmp && edgec.lcnt === 1) {
+				// TODO remove line instead if applicable
+				edgec.setLineVal(1);
+				edgec.draw();
+			}
+			if (!cell.isnull) {
+				this.edgeCell.set(cell);
+			}
+		},
+		mousereset: function() {
+			this.edgeCell.reset();
+			this.edgeData = {};
+			this.common.mousereset.call(this);
 		}
 	},
 
