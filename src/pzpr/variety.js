@@ -96,7 +96,8 @@
 		"context",
 		"pentopia",
 		"numrope",
-		"yajisoko"
+		"yajisoko",
+		"dominion"
 	]);
 
 	(function(Genre, obj) {
