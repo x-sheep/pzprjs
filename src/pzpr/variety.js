@@ -93,7 +93,10 @@
 		"lither",
 		"snakepit",
 		"squarejam",
-		"context"
+		"context",
+		"pentopia",
+		"numrope",
+		"yajisoko"
 	]);
 
 	(function(Genre, obj) {
@@ -298,6 +301,7 @@
 				"",
 				{ kanpen: "numberlink" }
 			],
+			numrope: [0, 0, "ナンバーロープ", "Number Rope", "kakuru"],
 			nuribou: [1, 0, "ぬりぼう", "Nuribou", "nurikabe"],
 			nurikabe: [0, 1, "ぬりかべ", "Nurikabe", "nurikabe"],
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
@@ -310,6 +314,7 @@
 			parquet: [0, 0, "Parquet", "Parquet"],
 			pencils: [0, 0, "ペンシルズ", "Pencils"],
 			pentominous: [0, 0, "Pentominous", "Pentominous", "fillomino"],
+			pentopia: [0, 0, "Pentopia", "Pentopia", "statuepark"],
 			pipelink: [1, 0, "パイプリンク", "Pipelink", "pipelink"],
 			pipelinkr: [
 				1,
@@ -410,6 +415,7 @@
 				"yajilin",
 				{ alias: "yajirin-regions" }
 			],
+			yajisoko: [0, 0, "やじさん倉庫番", "Yajisan-Sokoban", "yosenabe"],
 			yajitatami: [0, 0, "ヤジタタミ", "Yajitatami"],
 			yinyang: [0, 0, "しろまるくろまる", "Yin-Yang"],
 			yosenabe: [0, 0, "よせなべ", "Yosenabe"]
