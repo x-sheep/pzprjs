@@ -96,7 +96,8 @@
 		"context",
 		"pentopia",
 		"numrope",
-		"yajisoko"
+		"yajisoko",
+		"roundtrip"
 	]);
 
 	(function(Genre, obj) {
@@ -339,6 +340,7 @@
 				{ kanpen: "hakyukoka" }
 			],
 			roma: [0, 0, "ろーま", "Roma", "", { alias: "rome" }],
+			roundtrip: [0, 0, "Round Trip", "Round Trip"],
 			sashigane: [0, 0, "さしがね", "Sashigane", "loute"],
 			satogaeri: [
 				0,
