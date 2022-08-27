@@ -285,7 +285,7 @@
 			this.addlw = 0;
 		},
 		drawLineEnds: function() {
-			var g = this.vinc("lineends", "auto", true);
+			var g = this.vinc("lineends", "auto");
 			var mx = this.bw / 2;
 			var my = this.bh / 2;
 			var clist = this.range.cells;
