@@ -44,5 +44,34 @@ ui.debug.addDebugData("kaidan", {
 			"pzprv3/kaidan/5/5/. . 1 . . /. . . . . /0 . - . . /. . . . 2 /0 . . . . /2 2 0 2 2 /2 0 1 0 2 /0 2 0 2 1 /2 0 0 2 0 /0 2 0 2 1 /0 0 0 0 /0 0 0 0 /0 0 0 0 /1 1 1 0 /0 1 1 0 /1 1 0 1 1 /0 1 0 1 0 /0 0 0 0 0 /0 0 0 0 0 /"
 		]
 	],
-	inputs: []
+	inputs: [
+		{
+			label: "Draw line without ends",
+			input: ["newboard,4,1", "playmode", "mouse,left,1,1,5,1"],
+			result: "pzprv3/kaidan/1/4/. . . . /0 0 0 0 /1 1 0 /"
+		},
+		{
+			label: "Click cells for input",
+			input: ["mouse,left,3,1", "mouse,left,5,1", "mouse,left,7,1"],
+			result: "pzprv3/kaidan/1/4/. . . . /0 0 2 1 /1 1 0 /"
+		},
+		{
+			label: "Click number for completion",
+			input: [
+				"newboard,4,1",
+				"editmode",
+				"cursor,3,1",
+				"key,1",
+				"playmode",
+				"mouse,left,1,1",
+				"mouse,left,3,1"
+			],
+			result: "pzprv3/kaidan/1/4/. 1 . . /1 8 0 0 /0 0 0 /"
+		},
+		{
+			label: "Drag crosses",
+			input: ["ansclear", "mouse,right,1,1,7,1"],
+			result: "pzprv3/kaidan/1/4/. 1 . . /4 0 4 4 /0 0 0 /"
+		}
+	]
 });
