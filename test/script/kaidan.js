@@ -72,6 +72,20 @@ ui.debug.addDebugData("kaidan", {
 			label: "Drag crosses",
 			input: ["ansclear", "mouse,right,1,1,7,1"],
 			result: "pzprv3/kaidan/1/4/. 1 . . /4 0 4 4 /0 0 0 /"
+		},
+		{
+			label: "Input lines and line ends",
+			input: ["newboard,3,1", "mouse,left, 0.5,0.5, 0.5,1.5, 5.5,1.5, 5.5,0.5"],
+			result: "pzprv3/kaidan/1/3/. . . /2 0 2 /1 1 /"
+		},
+		{
+			label: "Input line end with drag",
+			input: [
+				"newboard,2,2",
+				"mouse,left,1,1,3,1",
+				"mouse,left, 3.5,0.5, 3.5,3.5"
+			],
+			result: "pzprv3/kaidan/2/2/. . /. . /0 2 /0 0 /1 /0 /0 0 /"
 		}
 	]
 });
