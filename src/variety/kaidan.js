@@ -96,36 +96,40 @@
 				}
 
 				this.edgeData = {};
-			}
-
-			var bx = (this.inputPoint.bx % 2) - 1,
-				by = (this.inputPoint.by % 2) - 1;
-
-			// TODO also set these when doing a large movement left/right
-			if (bx < -0.1) {
-				this.edgeData.left = true;
-			} else if (bx > 0.1) {
-				this.edgeData.right = true;
-			}
-			if (by < 0.1) {
-				this.edgeData.top = true;
-			} else if (by > 0.1) {
-				this.edgeData.bottom = true;
+				if (this.edgeCell.isnull) {
+					this.edgeCell.set(cell);
+				}
 			}
 
 			var edgec = this.edgeCell.getc();
 
+			if (!edgec.isnull) {
+				var bx = this.inputPoint.bx - edgec.bx;
+				by = this.inputPoint.by - edgec.by;
+
+				if (bx < -0.1) {
+					this.edgeData.left = true;
+				} else if (bx > 0.1) {
+					this.edgeData.right = true;
+				}
+				if (by < 0.1) {
+					this.edgeData.top = true;
+				} else if (by > 0.1) {
+					this.edgeData.bottom = true;
+				}
+			}
+
 			if (this.edgeData.top && this.edgeData.bottom) {
 				addcmp =
 					addcmp ||
-					edgec.adjborder.left.isBorder() ||
-					edgec.adjborder.right.isBorder();
+					edgec.adjborder.left.isLine() ||
+					edgec.adjborder.right.isLine();
 			}
 			if (this.edgeData.left && this.edgeData.right) {
 				addcmp =
 					addcmp ||
-					edgec.adjborder.top.isBorder() ||
-					edgec.adjborder.bottom.isBorder();
+					edgec.adjborder.top.isLine() ||
+					edgec.adjborder.bottom.isLine();
 			}
 
 			this.common.inputLine.call(this);
