@@ -42,6 +42,7 @@
 				"ensquare",
 				true
 			); /* tajmahal: Only draw given from square centers */
+			this.add("context_marks", true);
 			this.add("dispqnumbg", false); /* yinyang: 問題のまるに背景色をつける */
 			this.add("undefcell", true); /* shugaku: 未確定マスはグレー表示にする */
 
@@ -336,6 +337,9 @@
 				case "disptype_bosanowa":
 					exec = pid === "bosanowa";
 					break;
+				case "context_marks":
+					exec = pid === "context";
+					break;
 				case "disptype_yajilin":
 					exec = pid === "yajilin";
 					break;
@@ -386,7 +390,8 @@
 					exec = pid === "mashu";
 					break;
 				case "forceallcell":
-					exec = pid === "fillomino" || pid === "symmarea";
+					exec =
+						pid === "fillomino" || pid === "symmarea" || pid === "snakepit";
 					break;
 				case "dontpassallcell":
 					exec = pid === "arukone";
@@ -431,6 +436,7 @@
 				case "autoerr":
 				case "aquarium_regions":
 				case "snakebd":
+				case "context_marks":
 				case "disptype_yajilin":
 				case "disptype_interbd":
 				case "dispqnumbg":

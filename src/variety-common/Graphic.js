@@ -652,7 +652,7 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		// pc.drawArrowNumbers() Cellの数字と矢印をCanvasに書き込む
 		//---------------------------------------------------------------------------
-		drawArrowNumbers: function() {
+		drawArrowNumbers: function(opts) {
 			var g = this.vinc("cell_arrownumber", "auto");
 
 			var al = this.cw * 0.4; // ArrowLength
@@ -661,6 +661,10 @@ pzpr.classmgr.makeCommon({
 			var tw = this.cw * 0.12; // 矢じりの幅
 			var dy = -this.bh * 0.6;
 			var dx = [this.bw * 0.6, this.bw * 0.7, this.bw * 0.8, this.bw * 0.85];
+
+			if (opts && opts.bottom) {
+				dy *= -1;
+			}
 
 			var clist = this.range.cells;
 			for (var i = 0; i < clist.length; i++) {
@@ -781,7 +785,7 @@ pzpr.classmgr.makeCommon({
 					if (dir === cell.UP || dir === cell.DN) {
 						px -= this.cw * 0.1;
 					} else if (dir === cell.LT || dir === cell.RT) {
-						py += this.ch * 0.1;
+						py += this.ch * 0.1 * (opts && opts.bottom ? -1 : +1);
 					}
 
 					this.disptext(text, px, py, option);
@@ -2565,7 +2569,10 @@ pzpr.classmgr.makeCommon({
 
 		lastBankPieceCount: 0,
 		drawBank: function() {
-			if (!this.range.bank && this.range.bankPieces.length === 0) {
+			if (
+				!this.showBank ||
+				(!this.range.bank && this.range.bankPieces.length === 0)
+			) {
 				return;
 			}
 
@@ -2601,6 +2608,7 @@ pzpr.classmgr.makeCommon({
 				addButton = bd.bank.addButton;
 			var showAdd =
 				this.puzzle.editmode &&
+				!this.outputImage &&
 				addButton.index !== null &&
 				(this.range.bank || this.range.bankPieces.indexOf(addButton) !== -1);
 

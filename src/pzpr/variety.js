@@ -88,6 +88,15 @@
 		"nuriuzu",
 		"ququ",
 		"coffeemilk",
+		"nothree",
+		"disloop",
+		"lither",
+		"snakepit",
+		"squarejam",
+		"context",
+		"pentopia",
+		"numrope",
+		"yajisoko",
 		"vslither",
 		"tslither"
 	]);
@@ -145,6 +154,7 @@
 			balance: [0, 0, "Balance Loop", "Balance Loop"],
 			cave: [1, 0, "バッグ", "Cave", "kurodoko", { alias: "bag" }],
 			cbanana: [0, 0, "チョコバナナ", "Choco Banana"],
+			context: [0, 0, "Context", "Context"],
 			crossstitch: [0, 0, "Crossstitch", "Crossstitch"],
 			barns: [1, 0, "バーンズ", "Barns"],
 			bdblock: [1, 0, "ボーダーブロック", "Border Block"],
@@ -175,6 +185,7 @@
 			"curvedata-aux": [0, 0, "図形の編集", "Edit shape"],
 			dbchoco: [0, 0, "ダブルチョコ", "Double Choco", "cbblock"],
 			detour: [0, 0, "Detour", "Detour", "country"],
+			disloop: [0, 0, "Disorderly Loop", "Disorderly Loop", "tapaloop"],
 			doppelblock: [0, 0, "Doppelblock", "Doppelblock", "doppelblock"],
 			dosufuwa: [0, 0, "ドッスンフワリ", "Dosun-Fuwari"],
 			dotchi: [0, 0, "ドッチループ", "Dotchi-Loop", "country"],
@@ -257,6 +268,7 @@
 				"",
 				{ pzprurl: "akari", kanpen: "bijutsukan" }
 			],
+			lither: [0, 0, "Litherslink", "Litherslink"],
 			lits: [1, 1, "ＬＩＴＳ", "LITS", "lits"],
 			lohkous: [0, 0, "Lohkous", "Lohkous"],
 			lookair: [0, 0, "るっくえあ", "Look-Air"],
@@ -281,6 +293,7 @@
 			nondango: [0, 0, "ノンダンゴ", "Nondango"],
 			nonogram: [0, 0, "ののぐらむ", "Nonogram"],
 			norinori: [0, 1, "のりのり", "Norinori", "lits"],
+			nothree: [0, 0, "ノースリー", "No Three"],
 			numlin: [
 				0,
 				1,
@@ -289,6 +302,7 @@
 				"",
 				{ kanpen: "numberlink" }
 			],
+			numrope: [0, 0, "ナンバーロープ", "Number Rope", "kakuru"],
 			nuribou: [1, 0, "ぬりぼう", "Nuribou", "nurikabe"],
 			nurikabe: [0, 1, "ぬりかべ", "Nurikabe", "nurikabe"],
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
@@ -301,6 +315,7 @@
 			parquet: [0, 0, "Parquet", "Parquet"],
 			pencils: [0, 0, "ペンシルズ", "Pencils"],
 			pentominous: [0, 0, "Pentominous", "Pentominous", "fillomino"],
+			pentopia: [0, 0, "Pentopia", "Pentopia", "statuepark"],
 			pipelink: [1, 0, "パイプリンク", "Pipelink", "pipelink"],
 			pipelinkr: [
 				1,
@@ -352,7 +367,9 @@
 				{ kanpen: "slitherlink" }
 			],
 			snake: [0, 0, "Snake", "Snake"],
+			snakepit: [0, 0, "Snake Pit", "Snake Pit", "fillomino"],
 			starbattle: [0, 0, "スターバトル", "Star Battle"],
+			squarejam: [0, 0, "Square Jam", "Square Jam"],
 			statuepark: [0, 0, "Statue Park", "Statue Park"],
 			"statuepark-aux": [0, 0, "図形の編集", "Edit shape"],
 			stostone: [0, 0, "ストストーン", "Stostone", "shimaguni"],
@@ -401,6 +418,7 @@
 				"yajilin",
 				{ alias: "yajirin-regions" }
 			],
+			yajisoko: [0, 0, "やじさん倉庫番", "Yajisan-Sokoban", "yosenabe"],
 			yajitatami: [0, 0, "ヤジタタミ", "Yajitatami"],
 			yinyang: [0, 0, "しろまるくろまる", "Yin-Yang"],
 			yosenabe: [0, 0, "よせなべ", "Yosenabe"]
