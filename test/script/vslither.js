@@ -1,7 +1,7 @@
 /* vslither.js */
 
 ui.debug.addDebugData("vslither", {
-	url: "5/5/62342dici32337c",
+	url: "5/5/62342dici32337c./",
 	failcheck: [
 		[
 			"brNoLine",
