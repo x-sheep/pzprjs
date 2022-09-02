@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["nonogram", "coral"], {
+})(["nonogram", "coral", "cts"], {
 	MouseEvent: {
 		use: true,
 		inputModes: { edit: ["number"], play: ["shade", "unshade"] },
@@ -128,8 +128,15 @@
 						excell.setQnum(num);
 					}
 				}
-			} else if (ca === " " || ca === "-" || ca === "BS") {
+			} else if (ca === " " || ca === "BS") {
 				excell.setQnum(-1);
+			} else if (ca === "-") {
+				excell.setQnum(excell.disInputHatena ? -1 : -2);
+			} else if (
+				excell.minnum === 0 &&
+				(ca === "w" || ca === "shift+8" || ca === "*")
+			) {
+				excell.setQnum(0);
 			} else {
 				return;
 			}
@@ -162,6 +169,11 @@
 				this.puzzle.board.excellOffsets = null;
 			}
 		}
+	},
+
+	"ExCell@cts": {
+		disInputHatena: false,
+		minnum: 0
 	},
 
 	Board: {
@@ -278,6 +290,15 @@
 			var offset =
 				this.puzzle.playeronly || this.outputImage ? bd.getOffsets()[1] : 0;
 			return (0 - bd.minby) / 2 - offset;
+		}
+	},
+
+	"Graphic@cts": {
+		getQuesNumberText: function(excell) {
+			if (excell.qnum === 0) {
+				return "*";
+			}
+			return this.getNumberTextCore(excell.qnum);
 		}
 	},
 
@@ -415,6 +436,39 @@
 				}
 				clist.seterr(1);
 			}
+		}
+	},
+
+	"AnsCheck@cts": {
+		checklist: ["check2x2ShadeCell", "checkNonogram", "checkConnectShade"],
+
+		isExCellCount: function(clist) {
+			var d = clist.getRectSize(),
+				bd = this.board;
+
+			var excells =
+				d.x1 === d.x2
+					? bd.excellinside(d.x1, bd.minby, d.x1, -1)
+					: bd.excellinside(bd.minbx, d.y1, -1, d.y1);
+
+			var nums = [];
+			for (var i = 0; i < excells.length; i++) {
+				var qnum = excells[i].qnum;
+				if (qnum !== -1) {
+					nums.push(qnum);
+				}
+			}
+
+			// TODO build a string and a regex
+
+			// var lines = this.getLines(clist);
+
+			// if (!this.puzzle.pzpr.util.sameArray(nums, lines)) {
+			// 	clist.seterr(1);
+			// 	excells.seterr(1);
+			// 	return false;
+			// }
+			return true;
 		}
 	}
 });
