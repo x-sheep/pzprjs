@@ -52,7 +52,7 @@
 		}
 	},
 
-	"MouseEvent@coral": {
+	"MouseEvent@coral,cts": {
 		inputModes: {
 			edit: ["number", "clear", "info-blk"],
 			play: ["shade", "unshade", "info-blk"]
@@ -452,11 +452,17 @@
 					: bd.excellinside(bd.minbx, d.y1, -1, d.y1);
 
 			var nums = [];
+			var addedStar = false;
 			for (var i = 0; i < excells.length; i++) {
 				var qnum = excells[i].qnum;
-				if (qnum !== -1) {
+				if (qnum !== -1 && (!addedStar || qnum !== 0)) {
 					nums.push(qnum);
 				}
+				addedStar = qnum === 0;
+			}
+
+			if (nums.length === 1 && nums[0] === 0) {
+				return true;
 			}
 
 			var lines = this.getLines(clist);
@@ -474,15 +480,27 @@
 			lines.forEach(function(l) {
 				lineStr += "a".repeat(l) + " ";
 			});
-			lineStr = lineStr.slice(0, -1);
 
-			// TODO build a regex
-			// if (!this.puzzle.pzpr.util.sameArray(nums, lines)) {
-			// 	clist.seterr(1);
-			// 	excells.seterr(1);
-			// 	return false;
-			// }
-			return !!lineStr;
+			var regex = "^";
+			nums.forEach(function(n) {
+				if (n === -2) {
+					regex += "a* ";
+				} else if (n === 0) {
+					regex += "(|.* )";
+				} else if (n === 1) {
+					regex += "a ";
+				} else {
+					regex += "a{" + n + "} ";
+				}
+			});
+			regex += "$";
+
+			if (!lineStr.match(new RegExp(regex))) {
+				clist.seterr(1);
+				excells.seterr(1);
+				return false;
+			}
+			return true;
 		}
 	}
 });
