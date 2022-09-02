@@ -97,7 +97,8 @@
 		"pentopia",
 		"numrope",
 		"yajisoko",
-		"dominion"
+		"dominion",
+		"cts"
 	]);
 
 	(function(Genre, obj) {

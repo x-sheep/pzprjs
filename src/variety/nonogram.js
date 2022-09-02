@@ -239,7 +239,7 @@
 		enabled: true
 	},
 
-	"AreaShadeGraph@coral": {
+	"AreaShadeGraph@coral,cts": {
 		enabled: true
 	},
 
@@ -459,16 +459,30 @@
 				}
 			}
 
-			// TODO build a string and a regex
+			var lines = this.getLines(clist);
 
-			// var lines = this.getLines(clist);
+			if (lines.length === 0 || nums.length === 0) {
+				if (lines.length !== nums.length) {
+					clist.seterr(1);
+					excells.seterr(1);
+					return false;
+				}
+				return true;
+			}
 
+			var lineStr = "";
+			lines.forEach(function(l) {
+				lineStr += "a".repeat(l) + " ";
+			});
+			lineStr = lineStr.slice(0, -1);
+
+			// TODO build a regex
 			// if (!this.puzzle.pzpr.util.sameArray(nums, lines)) {
 			// 	clist.seterr(1);
 			// 	excells.seterr(1);
 			// 	return false;
 			// }
-			return true;
+			return !!lineStr;
 		}
 	}
 });
