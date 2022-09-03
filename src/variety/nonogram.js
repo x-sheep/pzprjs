@@ -108,38 +108,15 @@
 		keyinput: function(ca) {
 			this.key_inputexcell(ca);
 		},
+
 		key_inputexcell: function(ca) {
-			var excell = this.cursor.getex(),
-				qn = excell.qnum;
-			var max = excell.getmaxnum(),
-				min = excell.getminnum();
+			var excell = this.cursor.getex();
 
-			if ("0" <= ca && ca <= "9") {
-				var num = +ca;
-
-				if (qn <= 0 || this.prev !== excell) {
-					if (num <= max && num >= min) {
-						excell.setQnum(num);
-					}
-				} else {
-					if (qn * 10 + num <= max) {
-						excell.setQnum(qn * 10 + num);
-					} else if (num <= max && num >= min) {
-						excell.setQnum(num);
-					}
-				}
-			} else if (ca === " " || ca === "BS") {
-				excell.setQnum(-1);
-			} else if (ca === "-") {
-				excell.setQnum(excell.disInputHatena ? -1 : -2);
-			} else if (
-				excell.minnum === 0 &&
-				(ca === "w" || ca === "shift+8" || ca === "*")
-			) {
-				excell.setQnum(0);
-			} else {
+			var val = this.getNewNumber(excell, ca, excell.qnum);
+			if (val === null) {
 				return;
 			}
+			excell.setQnum(val);
 
 			this.prev = excell;
 			this.cursor.draw();
@@ -168,6 +145,15 @@
 			qnum: function(num) {
 				this.puzzle.board.excellOffsets = null;
 			}
+		}
+	},
+
+	"KeyEvent@cts": {
+		getNewNumber: function(cell, ca, cur) {
+			if (ca === "w" || ca === "shift+8" || ca === "*") {
+				return 0;
+			}
+			return this.common.getNewNumber.call(this, cell, ca, cur);
 		}
 	},
 

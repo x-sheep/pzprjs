@@ -23,5 +23,17 @@ ui.debug.addDebugData("cts", {
 			null,
 			"pzprv3/cts/5/5/. . . . . . . . /. . . 3 1 2 . . /. . . 0 2 -2 1 4 /. . 3 # # # . . /. 1 0 # . # . # /. 2 1 # # . . # /. . -2 . # # # # /. . 1 . . . . # /"
 		]
+	],
+	inputs: [
+		{
+			input: [
+				"editmode",
+				"newboard,3,3",
+				"cursor,1,-1",
+				"key,1,up,shift+8,right,-,down,2,left,3"
+			],
+			result:
+				"pzprv3/cts/3/3/. . 0 -2 . /. . 3 2 . /. . . . . /. . . . . /. . . . . /"
+		}
 	]
 });
