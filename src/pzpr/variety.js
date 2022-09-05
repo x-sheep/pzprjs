@@ -97,6 +97,7 @@
 		"pentopia",
 		"numrope",
 		"yajisoko",
+		"dominion",
 		"roundtrip"
 	]);
 
@@ -185,6 +186,7 @@
 			dbchoco: [0, 0, "ダブルチョコ", "Double Choco", "cbblock"],
 			detour: [0, 0, "Detour", "Detour", "country"],
 			disloop: [0, 0, "Disorderly Loop", "Disorderly Loop", "tapaloop"],
+			dominion: [0, 0, "ドミニオン", "Dominion"],
 			doppelblock: [0, 0, "Doppelblock", "Doppelblock", "doppelblock"],
 			dosufuwa: [0, 0, "ドッスンフワリ", "Dosun-Fuwari"],
 			dotchi: [0, 0, "ドッチループ", "Dotchi-Loop", "country"],
