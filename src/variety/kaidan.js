@@ -104,8 +104,8 @@
 			var edgec = this.edgeCell.getc();
 
 			if (!edgec.isnull) {
-				var bx = this.inputPoint.bx - edgec.bx;
-				by = this.inputPoint.by - edgec.by;
+				var bx = this.inputPoint.bx - edgec.bx,
+					by = this.inputPoint.by - edgec.by;
 
 				if (bx < -0.1) {
 					this.edgeData.left = true;
