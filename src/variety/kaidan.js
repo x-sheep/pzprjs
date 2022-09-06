@@ -134,9 +134,11 @@
 
 			this.common.inputLine.call(this);
 			if (addcmp && edgec.lcnt === 1) {
-				// TODO remove line instead if applicable
-				edgec.setLineVal(1);
+				edgec.setLineVal(
+					this.inputData === null ? +!edgec.line : this.inputData
+				);
 				edgec.draw();
+				this.edgeData = {};
 			}
 			if (!cell.isnull) {
 				this.edgeCell.set(cell);

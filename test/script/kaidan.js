@@ -86,6 +86,11 @@ ui.debug.addDebugData("kaidan", {
 				"mouse,left, 3.5,0.5, 3.5,3.5"
 			],
 			result: "pzprv3/kaidan/2/2/. . /. . /0 2 /0 0 /1 /0 /0 0 /"
+		},
+		{
+			label: "Clear line end with drag",
+			input: ["mouse,left,3.5,0.5, 3.5,3.5"],
+			result: "pzprv3/kaidan/2/2/. . /. . /0 0 /0 0 /1 /0 /0 0 /"
 		}
 	]
 });
