@@ -67,7 +67,6 @@
 				var dx = this.inputPoint.bx - this.firstPoint.bx,
 					dy = this.inputPoint.by - this.firstPoint.by;
 				if (dx * dx + dy * dy > 0.1) {
-					// TODO should not change cross to circle when dragging in 1 button mode
 					this.inputShade();
 				}
 			} else {
@@ -258,7 +257,7 @@
 			this.drawTarget();
 		},
 		drawCrosses: function() {
-			var g = this.vinc("cell_mb", "auto", true);
+			var g = this.vinc("cell_mb", "auto");
 			g.lineWidth = 1;
 
 			var rsize = this.cw * 0.25;
@@ -273,7 +272,7 @@
 					py = cell.by * this.bh;
 					g.lineWidth = (1 + this.cw / 40) | 0;
 					g.strokeStyle = !cell.trial ? this.mbcolor : "rgb(192, 192, 192)";
-					g.strokeCross(px, py, rsize);
+					g.strokeCross(px, py, rsize * (cell.lcnt ? 0.5 : 1));
 				} else {
 					g.vhide();
 				}
