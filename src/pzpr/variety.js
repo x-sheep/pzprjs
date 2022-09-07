@@ -98,6 +98,7 @@
 		"numrope",
 		"yajisoko",
 		"dominion",
+		"roundtrip",
 		"cts"
 	]);
 
@@ -343,6 +344,7 @@
 				{ kanpen: "hakyukoka" }
 			],
 			roma: [0, 0, "ろーま", "Roma", "", { alias: "rome" }],
+			roundtrip: [0, 0, "Round Trip", "Round Trip"],
 			sashigane: [0, 0, "さしがね", "Sashigane", "loute"],
 			satogaeri: [
 				0,
