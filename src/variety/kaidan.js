@@ -6,12 +6,28 @@
 	}
 })(["kaidan"], {
 	MouseEvent: {
-		// TODO rename input modes
 		use: true,
 		RBShadeCell: true,
 		inputModes: {
 			edit: ["number", "clear"],
-			play: ["line", "shade", "unshade", "completion"]
+			play: ["line", "mark-circle", "subcross", "completion"]
+		},
+		mouseinput: function() {
+			var mode = this.inputMode;
+			if (mode === "subcross" || mode === "mark-circle") {
+				this.inputShade();
+			} else {
+				this.common.mouseinput.call(this);
+			}
+		},
+		decIC: function(cell) {
+			if (this.inputMode === "mark-circle") {
+				this.inputData = cell.qans !== 1 ? 1 : 0;
+			} else if (this.inputMode === "subcross") {
+				this.inputData = cell.qsub !== 1 ? 2 : 0;
+			} else {
+				this.common.decIC.call(this, cell);
+			}
 		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
