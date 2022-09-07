@@ -6,7 +6,6 @@
 	}
 })(["kaidan"], {
 	MouseEvent: {
-		// TODO clear lines when entering number
 		// TODO rename input modes
 		use: true,
 		RBShadeCell: true,
@@ -182,6 +181,17 @@
 		},
 		allowShade: function() {
 			return this.qnum === -1 && this.lcnt === 0;
+		},
+		posthook: {
+			qnum: function(val) {
+				if (val !== -1) {
+					this.setLineVal(0);
+					this.setQans(0);
+					for (var dir in this.adjborder) {
+						this.adjborder[dir].setLineVal(0);
+					}
+				}
+			}
 		}
 	},
 
