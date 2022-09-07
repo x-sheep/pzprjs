@@ -133,9 +133,10 @@
 
 			this.common.inputLine.call(this);
 			if (addcmp && edgec.lcnt === 1) {
-				edgec.setLineVal(
-					this.inputData === null ? +!edgec.line : this.inputData
-				);
+				if (this.inputData === null) {
+					this.inputData = +!edgec.line;
+				}
+				edgec.setLineVal(this.inputData);
 				edgec.draw();
 				this.edgeData = {};
 			}
