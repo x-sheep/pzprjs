@@ -26,6 +26,7 @@ ui.debug.addDebugData("cts", {
 	],
 	inputs: [
 		{
+			label: "Keyboard inputs",
 			input: [
 				"editmode",
 				"newboard,3,3",
@@ -34,6 +35,18 @@ ui.debug.addDebugData("cts", {
 			],
 			result:
 				"pzprv3/cts/3/3/. . 0 -2 . /. . 3 2 . /. . . . . /. . . . . /. . . . . /"
+		},
+		{
+			label: "Completion inputs",
+			input: [
+				"newboard,3,1",
+				"editmode,number",
+				"mouse,rightx2,-1,1",
+				"playmode",
+				"mouse,left,-1,1",
+				"mouse,left,3,-1"
+			],
+			result: "pzprv3/cts/1/3/. . . . . /. c3 . . . /"
 		}
 	]
 });
