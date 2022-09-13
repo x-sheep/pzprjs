@@ -97,6 +97,9 @@
 		"pentopia",
 		"numrope",
 		"yajisoko",
+		"dominion",
+		"roundtrip",
+		"cts",
 		"vslither",
 		"tslither"
 	]);
@@ -156,6 +159,7 @@
 			cbanana: [0, 0, "チョコバナナ", "Choco Banana"],
 			context: [0, 0, "Context", "Context"],
 			crossstitch: [0, 0, "Crossstitch", "Crossstitch"],
+			cts: [0, 0, "Cross the Streams", "Cross the Streams", "nonogram"],
 			barns: [1, 0, "バーンズ", "Barns"],
 			bdblock: [1, 0, "ボーダーブロック", "Border Block"],
 			bdwalk: [0, 0, "ビルウォーク", "Building Walk", "haisu"],
@@ -186,6 +190,7 @@
 			dbchoco: [0, 0, "ダブルチョコ", "Double Choco", "cbblock"],
 			detour: [0, 0, "Detour", "Detour", "country"],
 			disloop: [0, 0, "Disorderly Loop", "Disorderly Loop", "tapaloop"],
+			dominion: [0, 0, "ドミニオン", "Dominion"],
 			doppelblock: [0, 0, "Doppelblock", "Doppelblock", "doppelblock"],
 			dosufuwa: [0, 0, "ドッスンフワリ", "Dosun-Fuwari"],
 			dotchi: [0, 0, "ドッチループ", "Dotchi-Loop", "country"],
@@ -341,6 +346,7 @@
 				{ kanpen: "hakyukoka" }
 			],
 			roma: [0, 0, "ろーま", "Roma", "", { alias: "rome" }],
+			roundtrip: [0, 0, "Round Trip", "Round Trip"],
 			sashigane: [0, 0, "さしがね", "Sashigane", "loute"],
 			satogaeri: [
 				0,

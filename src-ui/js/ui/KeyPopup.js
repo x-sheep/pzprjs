@@ -125,7 +125,9 @@ ui.keypopup = {
 		squarejam: [10, 0],
 		context: [4, 0],
 		numrope: [10, 10],
-		yajisoko: [10, 0]
+		yajisoko: [10, 0],
+		roundtrip: [10, 0],
+		cts: [121, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -247,6 +249,8 @@ ui.keypopup = {
 			this.generate_pentominous(mode);
 		} else if (type === 120) {
 			this.generate_snakepit(mode);
+		} else if (type === 121) {
+			this.generate_cts(mode);
 		}
 	},
 	gentable4: function(mode) {
@@ -625,6 +629,26 @@ ui.keypopup = {
 				["w", { text: "■", color: "gray" }]
 			],
 			4
+		);
+	},
+	generate_cts: function() {
+		this.generate_main(
+			[
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9",
+				"0",
+				["-", "?"],
+				["w", "*"],
+				" "
+			],
+			5
 		);
 	},
 
