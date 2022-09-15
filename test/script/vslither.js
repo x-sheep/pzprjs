@@ -31,5 +31,20 @@ ui.debug.addDebugData("vslither", {
 			null,
 			"pzprv3/vslither/5/5/1 . 2 3 4 /2 3 . . . /. . 2 . . /. . . 3 2 /3 3 2 . 2 /0 0 0 0 0 /0 0 0 0 0 /0 0 0 0 0 /0 0 0 0 0 /0 0 0 0 0 /-1 -1 -1 -1 1 1 /-1 1 -1 0 0 1 /-1 1 -1 1 0 -1 /1 0 -1 -1 1 -1 /-1 1 -1 -1 1 -1 /-1 -1 -1 -1 1 /-1 1 1 1 0 /-1 -1 -1 1 1 /1 -1 -1 1 -1 /1 -1 -1 -1 -1 /-1 1 1 1 -1 /"
 		]
+	],
+	inputs: [
+		{ input: ["newboard,2,2", "editmode", "cursor,1,1", "key,4"] },
+		{
+			label: "Input lines",
+			input: ["playmode", "mouse,left, 0,0, 2,0, 2,2"],
+			result:
+				"pzprv3/vslither/2/2/4 . /. . /0 0 /0 0 /0 1 0 /0 0 0 /1 0 /0 0 /0 0 /0 0 0 /0 0 0 /0 0 0 /"
+		},
+		{
+			label: "Input vertices",
+			input: ["playmode", "mouse,left,0,2", "mouse,right,2,2"],
+			result:
+				"pzprv3/vslither/2/2/4 . /. . /0 0 /0 0 /0 1 0 /0 0 0 /1 0 /0 0 /0 0 /0 0 0 /1 2 0 /0 0 0 /"
+		}
 	]
 });
