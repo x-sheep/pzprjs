@@ -4,7 +4,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["scrin"], {
+})(["scrin", "antmill"], {
 	MouseEvent: {
 		inputModes: { edit: ["number", "clear"], play: ["shade", "unshade"] },
 		mouseinput_auto: function() {
@@ -20,7 +20,50 @@
 		}
 	},
 
-	KeyEvent: {
+	"MouseEvent@antmill": {
+		inputModes: { edit: ["number", "clear"], play: ["shade", "unshade"] },
+		// TODO stop after 2 cells. refactor existing logic
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart || this.mousemove) {
+					this.inputcell();
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.inputmark_antmill();
+				}
+			}
+		},
+
+		inputmark_antmill: function() {
+			var pos = this.getpos(0.33);
+			var border = pos.getb();
+			if (!pos.isinside()) {
+				return;
+			}
+			if (border.isnull) {
+				return;
+			}
+
+			var qn = border.ques;
+			if (this.btn === "left") {
+				if (qn === 2) {
+					border.setQues(0);
+				} else {
+					border.setQues(qn + 1);
+				}
+			} else if (this.btn === "right") {
+				if (qn === 0) {
+					border.setQues(2);
+				} else {
+					border.setQues(qn - 1);
+				}
+			}
+			border.draw();
+		}
+	},
+
+	"KeyEvent@scrin": {
 		enablemake: true
 	},
 	"Room:BoardPiece": {
@@ -160,8 +203,8 @@
 			return list;
 		}
 	},
-	Border: {
-		hascross: 2,
+	Border: { hascross: 2 },
+	"Border@scrin": {
 		isLine: function() {
 			return this.sidecell[0].isShade() !== this.sidecell[1].isShade();
 		}
@@ -236,7 +279,7 @@
 		}
 	},
 
-	Graphic: {
+	"Graphic@scrin": {
 		hideHatena: true,
 		gridcolor_type: "DLIGHT",
 
@@ -300,9 +343,58 @@
 		}
 	},
 
+	"Graphic@antmill": {
+		shadecolor: "#444444",
+		bgcellcolor_func: "qsub1",
+
+		paint: function() {
+			this.drawBGCells();
+			this.drawShadedCells();
+
+			this.drawGrid();
+			this.drawChassis();
+
+			this.drawBorderClues();
+		},
+
+		drawBorderClues: function() {
+			var g = this.vinc("antmill", "auto", true);
+
+			g.lineWidth = this.lm;
+			var size = this.cw * 0.24;
+			var blist = this.range.borders;
+			for (var i = 0; i < blist.length; i++) {
+				var border = blist[i],
+					bx = border.bx,
+					by = border.by;
+
+				g.vid = "s_square_" + border.id;
+				if (border.ques === 1) {
+					g.strokeStyle = this.quescolor;
+					g.strokeRect(
+						bx * this.bw - size,
+						by * this.bh - size,
+						size * 2,
+						size * 2
+					);
+				} else {
+					g.vhide();
+				}
+
+				g.vid = "s_cross_" + border.id;
+				if (border.ques === 2) {
+					g.strokeStyle = this.quescolor;
+					g.strokeCross(bx * this.bw, by * this.bh, size);
+				} else {
+					g.vhide();
+				}
+			}
+		}
+	},
+
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
-	Encode: {
+	"Encode@scrin": {
 		decodePzpr: function(type) {
 			this.decodeNumber16();
 		},
@@ -310,13 +402,31 @@
 			this.encodeNumber16();
 		}
 	},
-	FileIO: {
+	"FileIO@scrin": {
 		decodeData: function() {
 			this.decodeCellQnum();
 			this.decodeCellAns();
 		},
 		encodeData: function() {
 			this.encodeCellQnum();
+			this.encodeCellAns();
+		}
+	},
+	"Encode@antmill": {
+		decodePzpr: function(type) {
+			// TODO clues
+		},
+		encodePzpr: function(type) {
+			// TODO clues
+		}
+	},
+	"FileIO@antmill": {
+		decodeData: function() {
+			// TODO clues
+			this.decodeCellAns();
+		},
+		encodeData: function() {
+			// TODO clues
 			this.encodeCellAns();
 		}
 	},
@@ -429,5 +539,16 @@
 				room.seterr(1);
 			}
 		}
+	},
+
+	"AnsCheck@antmill": {
+		checklist: [
+			// TODO check for clues
+			"checkRoomRect", // TODO change with size 2 check
+			"checkConnectShadeDiag",
+			"checkIsolatedRoom",
+			"checkDeadendRoom",
+			"checkBranchRoom"
+		]
 	}
 });
