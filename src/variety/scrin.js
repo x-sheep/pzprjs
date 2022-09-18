@@ -22,7 +22,26 @@
 
 	"MouseEvent@antmill": {
 		inputModes: { edit: ["number", "clear"], play: ["shade", "unshade"] },
-		// TODO stop after 2 cells. refactor existing logic
+		shadeCount: 0,
+		mousereset: function() {
+			this.shadeCount = 0;
+			this.common.mousereset.call(this);
+		},
+		inputcell: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+
+			this.common.inputcell.call(this);
+
+			if (this.inputData === 1) {
+				++this.shadeCount;
+				if (this.shadeCount >= 2) {
+					this.mousereset();
+				}
+			}
+		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
 				if (this.mousestart || this.mousemove) {
@@ -566,11 +585,30 @@
 	"AnsCheck@antmill": {
 		checklist: [
 			// TODO check for clues
-			"checkRoomRect", // TODO change with size 2 check
-			"checkConnectShadeDiag",
+			"checkOverShadeCell",
+			"checkBranchRoom",
+			"checkSingleShadeCell",
 			"checkIsolatedRoom",
 			"checkDeadendRoom",
-			"checkBranchRoom"
-		]
+			"checkConnectShadeDiag"
+		],
+		checkOverShadeCell: function() {
+			this.checkAllArea(
+				this.board.sblkmgr,
+				function(w, h, a, n) {
+					return a <= 2;
+				},
+				"csGt2"
+			);
+		},
+		checkSingleShadeCell: function() {
+			this.checkAllArea(
+				this.board.sblkmgr,
+				function(w, h, a, n) {
+					return a >= 2;
+				},
+				"csLt2"
+			);
+		}
 	}
 });
