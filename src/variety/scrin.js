@@ -584,10 +584,11 @@
 
 	"AnsCheck@antmill": {
 		checklist: [
-			// TODO check for clues
 			"checkOverShadeCell",
+			"checkEqualSideCell",
 			"checkBranchRoom",
 			"checkSingleShadeCell",
+			"checkUnequalSideCell",
 			"checkIsolatedRoom",
 			"checkDeadendRoom",
 			"checkConnectShadeDiag"
@@ -608,6 +609,24 @@
 					return a >= 2;
 				},
 				"csLt2"
+			);
+		},
+		checkEqualSideCell: function() {
+			this.checkSideAreaCell(
+				function(c1, c2, border) {
+					return border.ques === 1 && c1.isShade() !== c2.isShade();
+				},
+				false,
+				"bdEqual"
+			);
+		},
+		checkUnequalSideCell: function() {
+			this.checkSideAreaCell(
+				function(c1, c2, border) {
+					return border.ques === 2 && c1.isShade() === c2.isShade();
+				},
+				false,
+				"bdUnequal"
 			);
 		}
 	}
