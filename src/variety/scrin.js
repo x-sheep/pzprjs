@@ -414,19 +414,41 @@
 	},
 	"Encode@antmill": {
 		decodePzpr: function(type) {
-			// TODO clues
+			var bd = this.board;
+			this.genericDecodeNumber16(bd.cell.length - 1, function(c, val) {
+				var cell = bd.cell[c];
+				if (!cell.adjborder.right.isnull) {
+					cell.adjborder.right.ques = (val / 3) | 0;
+				}
+				if (!cell.adjborder.bottom.isnull) {
+					cell.adjborder.bottom.ques = val % 3;
+				}
+			});
 		},
 		encodePzpr: function(type) {
-			// TODO clues
+			var bd = this.board;
+			this.genericEncodeNumber16(bd.cell.length - 1, function(c) {
+				var cell = bd.cell[c];
+				var r = cell.adjborder.right.ques;
+				var b = cell.adjborder.bottom.ques;
+				if (!r && !b) {
+					return -1;
+				}
+				return r * 3 + b;
+			});
 		}
 	},
 	"FileIO@antmill": {
 		decodeData: function() {
-			// TODO clues
+			this.decodeBorder(function(border, ca) {
+				border.ques = +ca;
+			});
 			this.decodeCellAns();
 		},
 		encodeData: function() {
-			// TODO clues
+			this.encodeBorder(function(border) {
+				return border.ques + " ";
+			});
 			this.encodeCellAns();
 		}
 	},
