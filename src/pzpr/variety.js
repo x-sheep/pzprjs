@@ -95,6 +95,13 @@
 		"squarejam",
 		"context",
 		"pentopia",
+		"numrope",
+		"yajisoko",
+		"dominion",
+		"roundtrip",
+		"cts",
+		"vslither",
+		"tslither",
 		"kaidan"
 	]);
 
@@ -153,6 +160,7 @@
 			cbanana: [0, 0, "チョコバナナ", "Choco Banana"],
 			context: [0, 0, "Context", "Context"],
 			crossstitch: [0, 0, "Crossstitch", "Crossstitch"],
+			cts: [0, 0, "Cross the Streams", "Cross the Streams", "nonogram"],
 			barns: [1, 0, "バーンズ", "Barns"],
 			bdblock: [1, 0, "ボーダーブロック", "Border Block"],
 			bdwalk: [0, 0, "ビルウォーク", "Building Walk", "haisu"],
@@ -183,6 +191,7 @@
 			dbchoco: [0, 0, "ダブルチョコ", "Double Choco", "cbblock"],
 			detour: [0, 0, "Detour", "Detour", "country"],
 			disloop: [0, 0, "Disorderly Loop", "Disorderly Loop", "tapaloop"],
+			dominion: [0, 0, "ドミニオン", "Dominion"],
 			doppelblock: [0, 0, "Doppelblock", "Doppelblock", "doppelblock"],
 			dosufuwa: [0, 0, "ドッスンフワリ", "Dosun-Fuwari"],
 			dotchi: [0, 0, "ドッチループ", "Dotchi-Loop", "country"],
@@ -300,6 +309,7 @@
 				"",
 				{ kanpen: "numberlink" }
 			],
+			numrope: [0, 0, "ナンバーロープ", "Number Rope", "kakuru"],
 			nuribou: [1, 0, "ぬりぼう", "Nuribou", "nurikabe"],
 			nurikabe: [0, 1, "ぬりかべ", "Nurikabe", "nurikabe"],
 			nurimaze: [0, 0, "ぬりめいず", "Nuri-Maze", "nurimaze"],
@@ -338,6 +348,7 @@
 				{ kanpen: "hakyukoka" }
 			],
 			roma: [0, 0, "ろーま", "Roma", "", { alias: "rome" }],
+			roundtrip: [0, 0, "Round Trip", "Round Trip"],
 			sashigane: [0, 0, "さしがね", "Sashigane", "loute"],
 			satogaeri: [
 				0,
@@ -389,10 +400,12 @@
 			tontti: [0, 0, "Tonttiraja", "Tonttiraja"],
 			tren: [0, 0, "パーキング", "Tren"],
 			triplace: [0, 0, "トリプレイス", "Tri-place"],
+			tslither: [0, 0, "Touch Slitherlink", "Touch Slitherlink", "vslither"],
 			usotatami: [0, 0, "ウソタタミ", "Uso-tatami", "fillmat"],
 			usoone: [0, 0, "ウソワン", "Uso-one"],
 			view: [1, 0, "ヴィウ", "View", "sukoro"],
 			voxas: [0, 0, "Voxas", "Voxas"],
+			vslither: [0, 0, "Vertex Slitherlink", "Vertex Slitherlink"],
 			wagiri: [0, 0, "ごきげんななめ・輪切", "Wagiri", "gokigen"],
 			walllogic: [0, 0, "ウォールロジック", "Wall Logic"],
 			wblink: [0, 0, "シロクロリンク", "Shirokuro-link"],
@@ -413,6 +426,7 @@
 				"yajilin",
 				{ alias: "yajirin-regions" }
 			],
+			yajisoko: [0, 0, "やじさん倉庫番", "Yajisan-Sokoban", "yosenabe"],
 			yajitatami: [0, 0, "ヤジタタミ", "Yajitatami"],
 			yinyang: [0, 0, "しろまるくろまる", "Yin-Yang"],
 			yosenabe: [0, 0, "よせなべ", "Yosenabe"]

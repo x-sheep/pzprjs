@@ -247,3 +247,42 @@ dominion: "Shade some cells on the board to divide all unshaded cells into regio
   \ same region. There can not be a region without any letters.\n4. Different letters\
   \ must be in different regions.\n5. Question marks can be replaced with any letter,\
   \ as long as it appears elsewhere on the grid."
+yajisoko: "Draw lines to move some of the boxes.\n1. A box can be moved horizontally\
+  \ or vertically, but cannot make a turn.\n2. Movement lines cannot cross or overlap\
+  \ each other. Lines can also not go through the start- or endpoint of other boxes.\n\
+  3. A number indicates the amount of boxes in the given direction. If a box stops\
+  \ on top of a clue, the number becomes meaningless (it may be true or false).\n\
+  This genre is invented by Jamie Hargrove."
+kaidan: 'Draw several rectangles of length 1xN (at least 2) and draw a circle in all
+  remaining cells.
+
+  1. Rectangles and circles cannot overlap shaded cells.
+
+  2. A number indicates the amount of circles in the 4 orthogonally adjacent cells.
+
+  3. Two circles cannot be orthogonally adjacent.
+
+  4. Two rectangles with the same orientation cannot be adjacent along the short end.
+
+  5. When two rectangles are orthogonally adjacent, one rectangle must be exactly
+  1 square longer than the other.
+
+  6. All rectangles form an orthogonally contiguous area.
+
+  This genre first appeared in Puzzle Communication Nikoli vol. 172.'
+roundtrip: "Draw lines through orthogonally adjacent cells to form a loop.\n1. The\
+  \ loop cannot branch off or retrace itself. When the loop visits a cell twice, it\
+  \ must travel in a straight line each time.\n2. The numbers to the left/right of\
+  \ the rows indicate the number of cells visited by the nearest section of the loop\
+  \ that travels horizontally in that row. Likewise, The numbers to the top/bottom\
+  \ of the columns indicate the number of cells visited by the nearest section of\
+  \ the loop that travels vertically in that column.\nThis genre is invented by Craig\
+  \ Kasper."
+cts: "Shade some cells on the board according to the numbers.\n1. Clues outside the\
+  \ grid represent the lengths of each of the blocks of consecutive shaded cells in\
+  \ the corresponding row or column, in order from left to right or top to bottom.\n\
+  2. A question mark represents a block of any length (at least 1).\n3. An asterisk\
+  \ represents an unknown amount of blocks of any length. An asterisk may also be\
+  \ meaningless, i.e. represent no blocks at all.\n4. The shaded cells cannot form\
+  \ a 2x2 square.\n5. All shaded cells form an orthogonally contiguous area.\nThis\
+  \ genre is invented by Grant Fikes."
