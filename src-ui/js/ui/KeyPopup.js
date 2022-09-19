@@ -128,6 +128,8 @@ ui.keypopup = {
 		yajisoko: [10, 0],
 		roundtrip: [10, 0],
 		cts: [121, 0],
+		vslither: [4, 0],
+		tslither: [4, 0],
 		kaidan: [4, 0]
 	},
 
