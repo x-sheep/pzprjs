@@ -289,6 +289,9 @@
 			}
 		}
 	},
+	"Board@antmill": {
+		hasborder: 1
+	},
 	BoardExec: {
 		adjustBoardData2: function(key, d) {
 			this.board.createExtraObject();
