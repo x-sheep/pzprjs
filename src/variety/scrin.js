@@ -21,11 +21,46 @@
 	},
 
 	"MouseEvent@antmill": {
-		inputModes: { edit: ["number", "clear"], play: ["shade", "unshade"] },
+		inputModes: {
+			edit: ["mark-rect", "mark-cross", "clear"],
+			play: ["shade", "unshade"]
+		},
 		shadeCount: 0,
 		mousereset: function() {
 			this.shadeCount = 0;
 			this.common.mousereset.call(this);
+		},
+		mouseinput_other: function() {
+			switch (this.inputMode) {
+				case "mark-rect":
+					this.inputFixedNumber(1);
+					break;
+				case "mark-cross":
+					this.inputFixedNumber(2);
+					break;
+			}
+		},
+		mouseinput_clear: function() {
+			this.inputFixedNumber(0);
+		},
+		inputFixedNumber: function(num) {
+			var pos = this.getpos(0.33);
+			var border = pos.getb();
+			if (!pos.isinside()) {
+				return;
+			}
+			if (border.isnull) {
+				return;
+			}
+
+			var val = border.ques;
+			if (this.inputData === null) {
+				this.inputData = val === num ? 0 : num;
+			}
+			if (val !== num || this.inputData === 0) {
+				border.setQues(this.inputData);
+				border.draw();
+			}
 		},
 		inputcell: function() {
 			var cell = this.getcell();
