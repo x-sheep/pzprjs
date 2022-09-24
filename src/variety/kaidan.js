@@ -121,14 +121,14 @@
 				var bx = this.inputPoint.bx - edgec.bx,
 					by = this.inputPoint.by - edgec.by;
 
-				if (bx < -0.1) {
+				if (bx < -0.2) {
 					this.edgeData.left = true;
-				} else if (bx > 0.1) {
+				} else if (bx > 0.2) {
 					this.edgeData.right = true;
 				}
-				if (by < 0.1) {
+				if (by < -0.2) {
 					this.edgeData.top = true;
-				} else if (by > 0.1) {
+				} else if (by > 0.2) {
 					this.edgeData.bottom = true;
 				}
 			}
