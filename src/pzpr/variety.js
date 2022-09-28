@@ -101,7 +101,8 @@
 		"roundtrip",
 		"cts",
 		"vslither",
-		"tslither"
+		"tslither",
+		"anglers"
 	]);
 
 	(function(Genre, obj) {
