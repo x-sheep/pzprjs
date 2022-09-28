@@ -46,7 +46,6 @@
 	},
 	KeyEvent: {
 		enablemake: true,
-		// TODO allow typing shaded cells and fish on normal cells
 		keyinput: function(ca) {
 			var excell = this.cursor.getex();
 			if (!excell.isnull) {
@@ -54,6 +53,16 @@
 			} else {
 				this.key_inputqnum(ca);
 			}
+		},
+		getNewNumber: function(cell, ca, cur) {
+			if (cell.getminnum() === 0) {
+				if (ca === "q") {
+					return -3;
+				} else if (ca === "w") {
+					return 0;
+				}
+			}
+			return this.common.getNewNumber.call(this, cell, ca, cur);
 		}
 	},
 	ExCell: {
@@ -86,6 +95,9 @@
 		hasborder: 2
 	},
 	Border: {
+		isBorder: function() {
+			return this.sidecell[0].qnum === -3 || this.sidecell[1].qnum === -3;
+		},
 		prehook: {
 			line: function(num) {
 				return (
@@ -128,12 +140,13 @@
 	Graphic: {
 		irowake: true,
 		gridcolor_type: "LIGHT",
-		// TODO add borders to shaded cells
 
 		paint: function() {
 			this.drawBGCells();
 			this.drawGrid();
 			this.drawQuesCells();
+
+			this.drawBorders();
 
 			this.drawLines();
 			this.drawPekes();
