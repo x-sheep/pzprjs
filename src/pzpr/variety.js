@@ -102,7 +102,8 @@
 		"cts",
 		"vslither",
 		"tslither",
-		"antmill"
+		"antmill",
+		"heyablock"
 	]);
 
 	(function(Genre, obj) {
@@ -228,6 +229,7 @@
 			hebi: [1, 0, "へびいちご", "Hebi-Ichigo", "", { old: "snakes" }],
 			herugolf: [0, 0, "ヘルゴルフ", "Herugolf"],
 			heteromino: [0, 0, "ヘテロミノ", "Heteromino", "nawabari"],
+			heyablock: [0, 0, "へやブロ", "Heyablock", "shimaguni"],
 			heyabon: [1, 0, "へやぼん", "Heya-Bon", "bonsan"],
 			heyawake: [
 				0,
