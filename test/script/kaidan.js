@@ -75,7 +75,7 @@ ui.debug.addDebugData("kaidan", {
 		},
 		{
 			label: "Input lines and line ends",
-			input: ["newboard,3,1", "mouse,left, 0.5,0.5, 0.5,1.5, 5.5,1.5, 5.5,0.5"],
+			input: ["newboard,3,1", "mouse,left, 0.3,0.3, 0.3,1.7, 5.7,1.7, 5.7,0.3"],
 			result: "pzprv3/kaidan/1/3/. . . /2 0 2 /1 1 /"
 		},
 		{
@@ -83,13 +83,13 @@ ui.debug.addDebugData("kaidan", {
 			input: [
 				"newboard,2,2",
 				"mouse,left,1,1,3,1",
-				"mouse,left, 3.5,0.5, 3.5,3.5"
+				"mouse,left, 3.7,0.3, 3.7,3.7"
 			],
 			result: "pzprv3/kaidan/2/2/. . /. . /0 2 /0 0 /1 /0 /0 0 /"
 		},
 		{
 			label: "Clear line end with drag",
-			input: ["mouse,left,3.5,0.5, 3.5,3.5"],
+			input: ["mouse,left,3.7,0.3, 3.7,3.7"],
 			result: "pzprv3/kaidan/2/2/. . /. . /0 0 /0 0 /1 /0 /0 0 /"
 		}
 	]
