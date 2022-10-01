@@ -153,6 +153,7 @@
 
 			this.drawQuesNumbers();
 			this.drawNumbersExCell();
+			this.drawFish();
 
 			this.drawChassis();
 
@@ -160,11 +161,57 @@
 		},
 
 		getQuesNumberText: function(excell) {
-			// TODO draw fish graphic with two circular arcs
 			if (excell.qnum === 0) {
-				return "🐟";
+				return null;
 			}
 			return this.getNumberTextCore(excell.qnum);
+		},
+
+		drawFish: function() {
+			var g = this.vinc("cell_fish", "auto");
+			g.lineWidth = (1 + this.cw / 30) | 0;
+			var rsize = this.cw * 0.45;
+			var rad1s = (90 * Math.PI) / 180,
+				rad1e = (180 * Math.PI) / 180;
+			var rad2s = (270 * Math.PI) / 180,
+				rad2e = (0 * Math.PI) / 180;
+
+			for (var c = 0; c < this.board.cell.length; c++) {
+				var cell = this.board.cell[c];
+				if (cell.qnum !== 0) {
+					g.vid = "f_body_" + cell.id;
+					g.vhide();
+					g.vid = "f_tail_" + cell.id;
+					g.vhide();
+					continue;
+				}
+				var bx = cell.bx,
+					by = cell.by,
+					px = (bx - 0.15) * this.bw,
+					py = (by - 0.15) * this.bh,
+					px1 = px + this.bw * 0.45,
+					py1 = py - this.bh * 0.45,
+					px2 = px - this.bw * 0.45,
+					py2 = py + this.bh * 0.45,
+					pxt = px1 + rsize * Math.cos(rad1s),
+					pyt = py1 + rsize * Math.sin(rad1s);
+				var color = this.getQuesNumberColor(cell);
+				g.strokeStyle = color;
+
+				g.vid = "f_body_" + cell.id;
+				g.beginPath();
+				g.moveTo(px1 + rsize * Math.cos(rad1s), py1 + rsize * Math.sin(rad1s));
+				g.arc(px1, py1, rsize, rad1s, rad1e, false);
+				g.arc(px2, py2, rsize, rad2s, rad2e, false);
+				g.stroke();
+
+				g.vid = "f_tail_" + cell.id;
+				g.beginPath();
+				g.moveTo(pxt + 0.35 * this.bw, pyt);
+				g.lineTo(pxt, pyt);
+				g.lineTo(pxt, pyt + 0.35 * this.bh);
+				g.stroke();
+			}
 		},
 
 		getBGCellColor: function(cell) {
