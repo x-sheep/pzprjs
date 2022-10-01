@@ -239,6 +239,15 @@
 			if (!this.isValidNum()) {
 				return null;
 			}
+			if (this.puzzle.getConfig("koburin_minesweeper")) {
+				return this.board.cellinside(
+					this.bx - 2,
+					this.by - 2,
+					this.bx + 2,
+					this.by + 2
+				);
+			}
+
 			return new this.klass.CellList(
 				this.getdir4clist().map(function(cl) {
 					return cl[0];
@@ -479,9 +488,11 @@
 	"Encode@koburin": {
 		decodePzpr: function(type) {
 			this.decode4Cell();
+			this.puzzle.setConfig("koburin_minesweeper", this.checkpflag("m"));
 		},
 		encodePzpr: function(type) {
 			this.encode4Cell();
+			this.outpflag = this.puzzle.getConfig("koburin_minesweeper") ? "m" : null;
 		}
 	},
 	//---------------------------------------------------------
@@ -632,14 +643,31 @@
 	},
 	"FileIO@koburin": {
 		decodeData: function() {
+			this.decodeConfig();
 			this.decodeCellQnum();
 			this.decodeCellAns();
 			this.decodeBorderLine();
 		},
 		encodeData: function() {
+			this.encodeConfig();
 			this.encodeCellQnum();
 			this.encodeCellAns();
 			this.encodeBorderLine();
+		},
+
+		decodeConfig: function() {
+			if (this.dataarray[this.lineseek] === "m") {
+				this.puzzle.setConfig("koburin_minesweeper", true);
+				this.readLine();
+			} else {
+				this.puzzle.setConfig("koburin_minesweeper", false);
+			}
+		},
+
+		encodeConfig: function() {
+			if (this.puzzle.getConfig("koburin_minesweeper")) {
+				this.writeLine("m");
+			}
 		}
 	},
 	//---------------------------------------------------------
