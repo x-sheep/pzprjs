@@ -179,7 +179,9 @@
 			for (var c = 0; c < this.board.cell.length; c++) {
 				var cell = this.board.cell[c];
 				if (cell.qnum !== 0) {
-					g.vid = "f_body_" + cell.id;
+					g.vid = "f_outline_" + cell.id;
+					g.vhide();
+					g.vid = "f_fill_" + cell.id;
 					g.vhide();
 					g.vid = "f_tail_" + cell.id;
 					g.vhide();
@@ -195,14 +197,16 @@
 					py2 = py + this.bh * 0.45,
 					pxt = px1 + rsize * Math.cos(rad1s),
 					pyt = py1 + rsize * Math.sin(rad1s);
-				var color = this.getQuesNumberColor(cell);
-				g.strokeStyle = color;
+				g.strokeStyle = this.getQuesNumberColor(cell);
+				g.fillStyle = !this.getBGCellColor(cell) ? "#aaddff" : null;
 
-				g.vid = "f_body_" + cell.id;
+				g.vid = "f_fill_" + cell.id;
 				g.beginPath();
 				g.moveTo(px1 + rsize * Math.cos(rad1s), py1 + rsize * Math.sin(rad1s));
 				g.arc(px1, py1, rsize, rad1s, rad1e, false);
 				g.arc(px2, py2, rsize, rad2s, rad2e, false);
+				g.fill();
+				g.vid = "f_outline_" + cell.id;
 				g.stroke();
 
 				g.vid = "f_tail_" + cell.id;
