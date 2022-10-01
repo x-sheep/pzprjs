@@ -62,10 +62,29 @@ ui.debug.addDebugData("anglers", {
 			result:
 				"pzprv3/anglers/2/2/. . 1 . /. . . . /. . 0 . /. . . . /0 0 0 /0 0 0 /0 0 /0 0 /0 0 /"
 		},
-		{ label: "Type number in cell" },
-		{ label: "Type shaded cell" },
-		{ label: "Draw from excell" },
-		{ label: "Prevent draw from invalid excell" },
-		{ label: "Prevent draw through shade" }
+		{
+			label: "Type numbers",
+			input: ["newboard,2,2", "cursor,-1,3", "key,2", "cursor,3,3", "key,q"],
+			result:
+				"pzprv3/anglers/2/2/. . . . /. . . . /2 . # . /. . . . /0 0 0 /0 0 0 /0 0 /0 0 /0 0 /"
+		},
+		{
+			label: "Draw from excell",
+			input: ["playmode", "mouse,left,-1,3,1,3,1,1"],
+			result:
+				"pzprv3/anglers/2/2/. . . . /. . . . /2 . # . /. . . . /0 0 0 /1 0 0 /0 0 /1 0 /0 0 /"
+		},
+		{
+			label: "Prevent draw from invalid excell",
+			input: ["mouse,left,1,1,5,1"],
+			result:
+				"pzprv3/anglers/2/2/. . . . /. . . . /2 . # . /. . . . /0 1 0 /1 0 0 /0 0 /1 0 /0 0 /"
+		},
+		{
+			label: "Prevent draw through shade",
+			input: ["mouse,left,1,3,3,3"],
+			result:
+				"pzprv3/anglers/2/2/. . . . /. . . . /2 . # . /. . . . /0 1 0 /1 0 0 /0 0 /1 0 /0 0 /"
+		}
 	]
 });

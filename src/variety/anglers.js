@@ -169,7 +169,7 @@
 
 		drawFish: function() {
 			var g = this.vinc("cell_fish", "auto");
-			g.lineWidth = (1 + this.cw / 30) | 0;
+			g.lineWidth = (2 + this.cw / 30) | 0;
 			var rsize = this.cw * 0.45;
 			var rad1s = (90 * Math.PI) / 180,
 				rad1e = (180 * Math.PI) / 180;
