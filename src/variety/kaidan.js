@@ -9,12 +9,14 @@
 		use: true,
 		RBShadeCell: true,
 		inputModes: {
-			edit: ["number", "clear"],
+			edit: ["number", "shade", "clear"],
 			play: ["line", "mark-circle", "subcross", "completion"]
 		},
 		mouseinput: function() {
 			var mode = this.inputMode;
-			if (mode === "subcross" || mode === "mark-circle") {
+			if (mode === "shade") {
+				this.inputFixedNumber(-2);
+			} else if (mode === "subcross" || mode === "mark-circle") {
 				this.inputShade();
 			} else {
 				this.common.mouseinput.call(this);

@@ -46,6 +46,11 @@ ui.debug.addDebugData("kaidan", {
 	],
 	inputs: [
 		{
+			label: "Input shades",
+			input: ["newboard,3,1", "editmode,shade", "mouse,left,1,1,3,1"],
+			result: "pzprv3/kaidan/1/3/- - . /0 0 0 /0 0 /"
+		},
+		{
 			label: "Draw line without ends",
 			input: ["newboard,4,1", "playmode", "mouse,left,1,1,5,1"],
 			result: "pzprv3/kaidan/1/4/. . . . /0 0 0 0 /1 1 0 /"
@@ -59,7 +64,7 @@ ui.debug.addDebugData("kaidan", {
 			label: "Click number for completion",
 			input: [
 				"newboard,4,1",
-				"editmode",
+				"editmode,auto",
 				"cursor,3,1",
 				"key,1",
 				"playmode",
