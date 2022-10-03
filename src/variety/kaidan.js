@@ -242,6 +242,7 @@
 		fontShadecolor: "white",
 		fgcellcolor_func: "qnum",
 		qcmpcolor: "rgb(127,127,127)",
+		mbcolor: "rgb(127,127,255)",
 
 		paint: function() {
 			this.drawBGCells();
@@ -339,7 +340,7 @@
 
 					px = cell.bx * this.bw;
 					py = cell.by * this.bh;
-					g.fillStyle = this.getLineColor(dir[1]);
+					g.fillStyle = cell.trial ? this.trialcolor : this.linecolor;
 					var lm = this.lm + this.addlw / 2;
 					if (dir[1].isVert()) {
 						g.fillRectCenter(
