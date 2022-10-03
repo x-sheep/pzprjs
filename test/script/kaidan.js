@@ -96,6 +96,11 @@ ui.debug.addDebugData("kaidan", {
 			label: "Clear line end with drag",
 			input: ["mouse,left,3.7,0.3, 3.7,3.7"],
 			result: "pzprv3/kaidan/2/2/. . /. . /0 0 /0 0 /1 /0 /0 0 /"
+		},
+		{
+			label: "Input peke",
+			input: ["mouse,right,2,3"],
+			result: "pzprv3/kaidan/2/2/. . /. . /0 0 /0 0 /1 /-1 /0 0 /"
 		}
 	]
 });

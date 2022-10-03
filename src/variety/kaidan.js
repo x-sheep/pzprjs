@@ -10,7 +10,7 @@
 		RBShadeCell: true,
 		inputModes: {
 			edit: ["number", "shade", "clear"],
-			play: ["line", "mark-circle", "subcross", "completion"]
+			play: ["line", "mark-circle", "peke", "subcross", "completion"]
 		},
 		mouseinput: function() {
 			var mode = this.inputMode;
@@ -58,6 +58,8 @@
 				cell.draw();
 			} else if (cell.isNum()) {
 				this.inputqcmp();
+			} else if (this.btn === "right" && this.inputpeke_ifborder()) {
+				return;
 			} else {
 				this.inputcell();
 			}
@@ -253,6 +255,7 @@
 
 			this.drawLines();
 			this.drawLineEnds();
+			this.drawPekes();
 
 			this.drawChassis();
 
