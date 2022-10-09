@@ -130,6 +130,7 @@ ui.keypopup = {
 		cts: [121, 0],
 		vslither: [4, 0],
 		tslither: [4, 0],
+		kaidan: [4, 0],
 		anglers: [122, 0]
 	},
 
