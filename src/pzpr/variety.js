@@ -103,6 +103,8 @@
 		"vslither",
 		"tslither",
 		"antmill",
+		"kaidan",
+		"anglers",
 		"heyablock"
 	]);
 
@@ -150,6 +152,7 @@
 			aho: [0, 0, "アホになり切れ", "Aho-ni-Narikire", "shikaku"],
 			amibo: [0, 0, "あみぼー", "Amibo", "amibo"],
 			angleloop: [0, 0, "鋭直鈍ループ", "Angle Loop", "kouchoku"],
+			anglers: [0, 0, "フィッシング", "Anglers"],
 			antmill: [0, 0, "Ant Mill", "Ant Mill", "scrin"],
 			aqre: [0, 0, "Aqre", "Aqre", "aqre"],
 			aquarium: [0, 0, "アクアプレース", "Aquarium", "aquarium"],
@@ -256,6 +259,7 @@
 			interbd: [0, 0, "International Borders", "International Borders"],
 			juosan: [0, 0, "縦横さん", "Juosan"],
 			kaero: [1, 0, "お家に帰ろう", "Return Home"],
+			kaidan: [0, 0, "かいだんしばり", "Stairwell"],
 			kakuro: [0, 1, "カックロ", "Kakuro"],
 			kakuru: [0, 0, "カックル", "Kakuru"],
 			kazunori: [0, 0, "かずのりのへや", "Kazunori Room"],
