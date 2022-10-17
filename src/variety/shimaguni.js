@@ -700,11 +700,13 @@
 	FailCode: {
 		bkShadeDivide: "bkShadeDivide",
 		bkNoShade: "bkNoShade",
-		bkShadeNe: "bkShadeNe"
+		bkShadeNe: "bkShadeNe",
+		cbShade: "cbShade"
 	},
 	"FailCode@shimaguni": {
 		bkShadeDivide: "bkShadeDivide.shimaguni",
 		bkNoShade: "bkNoShade.shimaguni",
-		bkShadeNe: "bkShadeNe.shimaguni"
+		bkShadeNe: "bkShadeNe.shimaguni",
+		cbShade: "cbShade.shimaguni"
 	}
 });
