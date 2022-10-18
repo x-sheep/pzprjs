@@ -422,7 +422,8 @@
 			"checkSideAreaLandSide@shimaguni",
 			"checkRemainingSpace@stostone",
 			"checkCountinuousUnshadeCell@heyablock",
-			"checkNoShadeCellInArea"
+			"checkNoShadeCellInArea",
+			"doneShadingDecided@heyablock"
 		]
 	},
 	"AnsCheck@chocona#1": {
