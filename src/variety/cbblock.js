@@ -10,7 +10,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["cbblock", "dbchoco", "nikoji"], {
+})(["cbblock", "dbchoco", "nikoji", "mirrorbk"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	"MouseEvent@cbblock": {
@@ -106,6 +106,31 @@
 		}
 	},
 
+	"MouseEvent@mirrorbk": {
+		inputModes: {
+			edit: ["number", "border"],
+			play: ["border", "subline"]
+		},
+
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart || this.mousemove) {
+					if (this.btn === "left" && this.isBorderMode()) {
+						this.inputborder();
+					} else {
+						this.inputQsubLine();
+					}
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart || this.mousemove) {
+					this.inputborder();
+				} else if (this.mouseend && this.notInputted()) {
+					this.inputqnum();
+				}
+			}
+		}
+	},
+
 	"KeyEvent@dbchoco": {
 		enablemake: true,
 
@@ -121,15 +146,16 @@
 		}
 	},
 
-	"KeyEvent@nikoji": {
+	"KeyEvent@nikoji,mirrorbk": {
 		enablemake: true
 	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
-	"Border@cbblock": {
-		ques: 1,
-
+	"Border@cbblock#1": {
+		ques: 1
+	},
+	"Border@cbblock,mirrorbk": {
 		enableLineNG: true,
 
 		// 線を引かせたくないので上書き
@@ -169,10 +195,21 @@
 		addExtraInfo: function() {}
 	},
 
+	"Board@mirrorbk": {
+		addExtraInfo: function() {}
+	},
+
 	"Cell@dbchoco": {
 		maxnum: function() {
 			var bd = this.board;
 			return (bd.cols * bd.rows) >> 1;
+		}
+	},
+
+	"Cell@mirrorbk": {
+		maxnum: function() {
+			var bd = this.board;
+			return bd.cols * bd.rows;
 		}
 	},
 
@@ -301,6 +338,9 @@
 			component.num = component.numcell ? component.numcell.qnum : null;
 		}
 	},
+	"AreaRoomGraph@mirrorbk": {
+		enabled: true
+	},
 
 	//---------------------------------------------------------
 	// 画像表示系
@@ -320,7 +360,7 @@
 
 			this.drawPekes();
 
-			if (this.pid === "dbchoco" || this.pid === "nikoji") {
+			if (this.pid !== "cbblock") {
 				this.drawQuesNumbers();
 				this.drawTarget();
 			}
@@ -355,6 +395,24 @@
 
 	"Graphic@nikoji": {
 		bordercolor_func: "qans"
+	},
+
+	"Graphic@mirrorbk": {
+		getBorderColor: function(border) {
+			if (border.ques === 1) {
+				var cell2 = border.sidecell[1];
+				return cell2.isnull || cell2.error === 0 ? "black" : this.errcolor1;
+			} else if (border.qans === 1) {
+				if (border.error === 1) {
+					return this.errcolor1;
+				}
+				if (border.trial) {
+					return this.trialcolor;
+				}
+				return this.qanscolor;
+			}
+			return null;
+		}
 	},
 
 	//---------------------------------------------------------
@@ -437,9 +495,14 @@
 		}
 	},
 
+	// TODO encode mirrorbk
+
 	//---------------------------------------------------------
-	"FileIO@cbblock": {
+	"FileIO@cbblock,mirrorbk": {
 		decodeData: function() {
+			if (this.pid === "mirrorbk") {
+				this.decodeCellQnum();
+			}
 			this.decodeBorder(function(border, ca) {
 				if (ca === "3") {
 					border.ques = 0;
@@ -462,6 +525,9 @@
 			});
 		},
 		encodeData: function() {
+			if (this.pid === "mirrorbk") {
+				this.encodeCellQnum();
+			}
 			this.encodeBorder(function(border) {
 				if (border.qans === 1 && border.qsub === 1) {
 					return "3 ";
@@ -848,5 +914,10 @@
 				}
 			}
 		}
+	},
+	"AnsCheck@mirrorbk": {
+		// TODO mirror split check
+		// TODO mirror shape check
+		checklist: ["checkDoubleNumber", "checkNumberAndSize"]
 	}
 });
