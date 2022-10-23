@@ -406,6 +406,8 @@
 	},
 
 	"Graphic@mirrorbk": {
+		fontsizeratio: 0.75,
+
 		drawMirrorBase: function() {
 			var g = this.vinc("border_mirror", "crispEdges", true);
 
@@ -417,7 +419,7 @@
 				if (border.ques === 1) {
 					var px = border.bx * this.bw,
 						py = border.by * this.bh;
-					var lm = this.lw + this.addlw;
+					var lm = (this.lw + this.addlw) * 1.2;
 
 					g.fillStyle = "black";
 					if (border.isVert()) {
@@ -442,13 +444,13 @@
 				if (border.ques === 1) {
 					var px = border.bx * this.bw,
 						py = border.by * this.bh;
-					var lm = this.lw + this.addlw * 0.8;
+					var lm = (this.lw + this.addlw) * 0.4;
 
 					g.fillStyle = "white";
 					if (border.isVert()) {
-						g.fillRectCenter(px, py, lm / 2, this.bh);
+						g.fillRectCenter(px, py, lm, this.bh);
 					} else {
-						g.fillRectCenter(px, py, this.bw, lm / 2);
+						g.fillRectCenter(px, py, this.bw, lm);
 					}
 				} else {
 					g.vhide();
