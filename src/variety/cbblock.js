@@ -350,11 +350,19 @@
 		paint: function() {
 			this.drawBGCells();
 			this.drawDashedGrid();
+
+			if (this.pid === "mirrorbk") {
+				this.drawMirrorBase();
+				this.drawMirrorSplit();
+			}
+
 			this.drawBorders();
 
 			this.drawBorderQsubs();
 
-			this.drawBaseMarks();
+			if (this.pid !== "mirrorbk") {
+				this.drawBaseMarks();
+			}
 
 			this.drawChassis();
 
@@ -398,20 +406,58 @@
 	},
 
 	"Graphic@mirrorbk": {
-		getBorderColor: function(border) {
-			if (border.ques === 1) {
-				var cell2 = border.sidecell[1];
-				return cell2.isnull || cell2.error === 0 ? "black" : this.errcolor1;
-			} else if (border.qans === 1) {
-				if (border.error === 1) {
-					return this.errcolor1;
+		drawMirrorBase: function() {
+			var g = this.vinc("border_mirror", "crispEdges", true);
+
+			var blist = this.range.borders;
+			for (var i = 0; i < blist.length; i++) {
+				var border = blist[i];
+
+				g.vid = "b_mirror_" + border.id;
+				if (border.ques === 1) {
+					var px = border.bx * this.bw,
+						py = border.by * this.bh;
+					var lm = this.lw + this.addlw;
+
+					g.fillStyle = "black";
+					if (border.isVert()) {
+						g.fillRectCenter(px, py, lm, this.bh);
+					} else {
+						g.fillRectCenter(px, py, this.bw, lm);
+					}
+				} else {
+					g.vhide();
 				}
-				if (border.trial) {
-					return this.trialcolor;
-				}
-				return this.qanscolor;
 			}
-			return null;
+		},
+
+		drawMirrorSplit: function() {
+			var g = this.vinc("border_mirror2", "crispEdges", true);
+
+			var blist = this.range.borders;
+			for (var i = 0; i < blist.length; i++) {
+				var border = blist[i];
+
+				g.vid = "b_mirror2_" + border.id;
+				if (border.ques === 1) {
+					var px = border.bx * this.bw,
+						py = border.by * this.bh;
+					var lm = this.lw + this.addlw * 0.8;
+
+					g.fillStyle = "white";
+					if (border.isVert()) {
+						g.fillRectCenter(px, py, lm / 2, this.bh);
+					} else {
+						g.fillRectCenter(px, py, this.bw, lm / 2);
+					}
+				} else {
+					g.vhide();
+				}
+			}
+		},
+
+		getBorderColor: function(border) {
+			return border.qans ? this.getBorderColor_qans(border) : null;
 		}
 	},
 
@@ -495,7 +541,16 @@
 		}
 	},
 
-	// TODO encode mirrorbk
+	"Encode@mirrorbk": {
+		decodePzpr: function(type) {
+			this.decodeNumber16();
+			this.decodeBorder();
+		},
+		encodePzpr: function(type) {
+			this.encodeNumber16();
+			this.encodeBorder();
+		}
+	},
 
 	//---------------------------------------------------------
 	"FileIO@cbblock,mirrorbk": {
