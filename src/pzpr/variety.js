@@ -105,7 +105,8 @@
 		"antmill",
 		"kaidan",
 		"anglers",
-		"heyablock"
+		"heyablock",
+		"mirrorbk"
 	]);
 
 	(function(Genre, obj) {
