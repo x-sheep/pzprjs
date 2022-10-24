@@ -973,8 +973,52 @@
 		}
 	},
 	"AnsCheck@mirrorbk": {
-		// TODO mirror shape check
-		checklist: ["checkDoubleNumber", "checkNumberAndSize", "checkMirrorUnused"],
+		checklist: [
+			"checkDoubleNumber",
+			"checkNumberAndSize",
+			"checkMirrorShape",
+			"checkMirrorUnused"
+		],
+
+		checkMirrorShape: function() {
+			var borders = this.board.border;
+			for (var id = 0; id < borders.length; id++) {
+				var border = borders[id];
+				if (border.isnull || !border.ques) {
+					continue;
+				}
+				var a1 = border.sidecell[0].room,
+					a2 = border.sidecell[1].room;
+				if (a1 === a2) {
+					continue;
+				}
+
+				if (a1.clist.length === a2.clist.length) {
+					var found = false;
+					for (var i = 0; i < a1.clist.length && !found; i++) {
+						var c1 = a1.clist[i];
+						var c2 = border.isVert()
+							? border.relcell(border.bx - c1.bx, 0)
+							: border.relcell(0, border.by - c1.by);
+
+						if (c2.isnull || c2.room !== a2) {
+							found = true;
+						}
+					}
+
+					if (!found) {
+						continue;
+					}
+				}
+
+				this.failcode.add("bkMirror");
+				if (this.checkOnly) {
+					break;
+				}
+				a1.clist.seterr(1);
+				a2.clist.seterr(1);
+			}
+		},
 
 		checkMirrorUnused: function() {
 			var borders = this.board.border;
@@ -992,8 +1036,7 @@
 				if (this.checkOnly) {
 					break;
 				}
-				borders.setnoerr();
-				border.seterr(1);
+				new this.klass.CellList(border.sidecell).seterr(1);
 			}
 		}
 	}
