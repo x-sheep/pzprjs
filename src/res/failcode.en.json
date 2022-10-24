@@ -49,6 +49,7 @@
     "bdPassStar.tentaisho": "A line goes over a star.",
     "bdUnequal.antmill": "A cross clue does not overlap exactly 1 shaded cell.",
     "bdUnused.lohkous": "There is an unused border.",
+    "bdUnused.mirrorbk": "A mirror does not divide two regions.",
     "bdUnused.tren": "A border is not adjacent to a block.",
     "bdVoxasBlack": "Two areas separated by a black dot have the same size or the same orientation.",
     "bdVoxasGray": "Two areas separated by a gray dot are identical, or have both a different size and different orientation.",

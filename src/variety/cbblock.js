@@ -973,8 +973,28 @@
 		}
 	},
 	"AnsCheck@mirrorbk": {
-		// TODO mirror split check
 		// TODO mirror shape check
-		checklist: ["checkDoubleNumber", "checkNumberAndSize"]
+		checklist: ["checkDoubleNumber", "checkNumberAndSize", "checkMirrorUnused"],
+
+		checkMirrorUnused: function() {
+			var borders = this.board.border;
+			for (var id = 0; id < borders.length; id++) {
+				var border = borders[id];
+				if (border.isnull || !border.ques) {
+					continue;
+				}
+				var a1 = border.sidecell[0].room,
+					a2 = border.sidecell[1].room;
+				if (a1 !== a2) {
+					continue;
+				}
+				this.failcode.add("bdUnused");
+				if (this.checkOnly) {
+					break;
+				}
+				borders.setnoerr();
+				border.seterr(1);
+			}
+		}
 	}
 });
