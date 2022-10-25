@@ -998,8 +998,8 @@
 					for (var i = 0; i < a1.clist.length && !found; i++) {
 						var c1 = a1.clist[i];
 						var c2 = border.isVert()
-							? border.relcell(border.bx - c1.bx, 0)
-							: border.relcell(0, border.by - c1.by);
+							? c1.relcell(2 * (border.bx - c1.bx), 0)
+							: c1.relcell(0, 2 * (border.by - c1.by));
 
 						if (c2.isnull || c2.room !== a2) {
 							found = true;
