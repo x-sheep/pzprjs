@@ -420,12 +420,23 @@
 					var px = border.bx * this.bw,
 						py = border.by * this.bh;
 					var lm = (this.lw + this.addlw) * 1.2;
+					var pad = 0;
 
 					g.fillStyle = "black";
 					if (border.isVert()) {
-						g.fillRectCenter(px, py, lm, this.bh);
+						if (border.relbd(0, 2).ques === 1) {
+							py += 1;
+							pad += 1;
+						}
+
+						g.fillRectCenter(px, py, lm, this.bh + pad);
 					} else {
-						g.fillRectCenter(px, py, this.bw, lm);
+						if (border.relbd(2, 0).ques === 1) {
+							px += 1;
+							pad += 1;
+						}
+
+						g.fillRectCenter(px, py, this.bw + pad, lm);
 					}
 				} else {
 					g.vhide();
@@ -445,12 +456,23 @@
 					var px = border.bx * this.bw,
 						py = border.by * this.bh;
 					var lm = (this.lw + this.addlw) * 0.4;
+					var pad = 0;
 
 					g.fillStyle = "white";
 					if (border.isVert()) {
-						g.fillRectCenter(px, py, lm, this.bh);
+						if (border.relbd(0, 2).ques === 1) {
+							py += 1;
+							pad += 1;
+						}
+
+						g.fillRectCenter(px, py, lm, this.bh + pad);
 					} else {
-						g.fillRectCenter(px, py, this.bw, lm);
+						if (border.relbd(2, 0).ques === 1) {
+							px += 1;
+							pad += 1;
+						}
+
+						g.fillRectCenter(px, py, this.bw + pad, lm);
 					}
 				} else {
 					g.vhide();
