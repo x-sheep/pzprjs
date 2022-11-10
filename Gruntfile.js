@@ -5,7 +5,7 @@ module.exports = function(grunt){
   var fs = require('fs');
   var rulesEN = grunt.file.readYAML('src-ui/res/rules.en.yaml');
   var rulesJA = grunt.file.readYAML('src-ui/res/rules.ja.yaml');
-	var historyEN = grunt.file.readYAML('src-ui/res/history.en.yaml');
+  var historyEN = grunt.file.readYAML('src-ui/res/history.en.yaml');
   var historyJA = grunt.file.readYAML('src-ui/res/history.ja.yaml');
 
   var rulesMTime = Math.max(
@@ -113,8 +113,8 @@ module.exports = function(grunt){
             var pid = filepath.split('/').pop().split('.')[0];
 
             var ruleResult = [
-              {rules: rulesEN[pid] || '', history: historyEN[pid] || ''},
-              {rules: rulesJA[pid] || '', history: historyJA[pid] || ''}
+              { rules: rulesEN[pid] || '', history: historyEN[pid] || '' },
+              { rules: rulesJA[pid] || '', history: historyJA[pid] || '' }
             ];
 
             return "ui.debug.addRules('" + pid + "', " + JSON.stringify(ruleResult) + ");\n" + src;
