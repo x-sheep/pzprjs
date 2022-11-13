@@ -1,0 +1,15 @@
+{
+  "name": "pzpr-redirectonly",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-sheep/pzprjs.git"
+  },
+  "author": "Lennard Sprong",
+  "license": "MIT",
+  "devDependencies": {
+    "@vercel/node": "^2.6.2"
+  }
+}
