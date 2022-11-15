@@ -1,21 +1,24 @@
 {
-	"functions": {
-		"api/pv.ts": {
-			"includeFiles": "dist/js/**"
-		}
-	},
 	"rewrites": [
+		{
+			"source": "/pv:match*",
+			"destination": "/api/clean:match*"
+		},
 		{
 			"source": "/p.html:match*",
 			"destination": "/api/clean:match*"
 		},
 		{
 			"source": "/p:match*",
-			"destination": "/api/p:match*"
+			"destination": "/api/clean:match*"
 		},
 		{
-			"source": "/pv:match*",
-			"destination": "/api/pv:match*"
+			"source": "/list.html:match*",
+			"destination": "/api/clean:match*"
+		},
+		{
+			"source": "/rules.html:match*",
+			"destination": "/api/clean:match*"
 		}
 	]
 }
