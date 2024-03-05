@@ -22,6 +22,7 @@
   },
   "scripts": {
     "build": "eslint --cache --quiet src src-ui && \"./git-hash.sh\" && grunt default",
+    "vercel-build": "\"./git-hash.sh\" && grunt vercel && node \"./src-api/build-saveicons.js\"",
     "release": "npm run clean && eslint --cache --quiet src && grunt release",
     "clean": "del dist/* pzpr-*.{zip,tar.gz,tar.bz2,tgz}",
     "format": "prettier --write \"{src,src-ui,test}/**/*.{js,css}\"",
@@ -38,6 +39,8 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-uglify": "^5.2.1",
+    "grunt-move": "^1.0.3",
+    "grunt-newer": "^1.1.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "prettier": "^1.19.1"
@@ -45,5 +48,10 @@
   "dependencies": {
     "pzpr-canvas": "0.8.2",
     "source-map-support": "^0.5.21"
+  },
+  "optionalDependencies": {
+    "@types/sharp": "^0.29.2",
+    "@vercel/node": "^1.12.1",
+    "sharp": "^0.29.1"
   }
 }
