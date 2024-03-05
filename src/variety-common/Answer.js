@@ -208,6 +208,11 @@ pzpr.classmgr.makeCommon({
 				return cell.isShade();
 			}, "cs2x2");
 		},
+		check2x2UnshadeCell: function() {
+			this.check2x2Block(function(cell) {
+				return cell.isUnshade();
+			}, "cu2x2");
+		},
 
 		//---------------------------------------------------------------------------
 		// ans.checkSameColorTile() 白マスと黒マスが混ざったタイルがないかどうかチェックする
@@ -1323,13 +1328,15 @@ pzpr.classmgr.makeCommon({
 			}
 
 			for (var key in counts) {
-				if (!(key in pieces) || counts[key] > pieces[key].length) {
+				var actual = key in pieces ? pieces[key].length : 0;
+				if (counts[key] > actual) {
 					this.failcode.add("bankLt");
 					if (this.checkOnly) {
 						break;
 					}
+					var skip = actual;
 					this.board.bank.pieces.forEach(function(piece) {
-						if (piece.canonize() === key) {
+						if (piece.canonize() === key && skip-- <= 0) {
 							piece.seterr(1);
 						}
 					});

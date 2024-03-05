@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["heyawake", "ayeheya", "oneroom"], {
+})(["heyawake", "ayeheya", "oneroom", "akichi"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -17,20 +17,8 @@
 			edit: ["border", "number", "clear", "info-blk"],
 			play: ["shade", "unshade", "info-blk"]
 		},
-
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					this.inputcell();
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart || this.mousemove) {
-					this.inputborder();
-				} else if (this.mouseend && this.notInputted()) {
-					this.inputqnum();
-				}
-			}
-		}
+		autoedit_func: "areanum",
+		autoplay_func: "cell"
 	},
 
 	//---------------------------------------------------------
@@ -77,10 +65,15 @@
 		},
 		minnum: 0
 	},
+	"Cell@akichi": {
+		maxnum: function() {
+			return this.room.clist.length;
+		}
+	},
 	Board: {
 		hasborder: 1
 	},
-	"Board@oneroom": {
+	"Board@oneroom,akichi": {
 		addExtraInfo: function() {
 			this.unshrgraph = this.addInfoList(this.klass.AreaUnshadeRoomGraph);
 		}
@@ -141,7 +134,7 @@
 			return (this.allborderlist = borders);
 		}
 	},
-	"AreaUnshadeRoomGraph:AreaUnshadeGraph@oneroom": {
+	"AreaUnshadeRoomGraph:AreaUnshadeGraph@oneroom,akichi": {
 		enabled: true,
 		relation: { "cell.qans": "node", "border.ques": "separator" },
 		setComponentRefs: function(obj, component) {
@@ -195,10 +188,12 @@
 	// URLエンコード/デコード処理
 	Encode: {
 		decodePzpr: function(type) {
+			this.decodeConfig();
 			this.decodeBorder();
 			this.decodeRoomNumber16();
 		},
 		encodePzpr: function(type) {
+			this.encodeConfig();
 			this.encodeBorder();
 			this.encodeRoomNumber16();
 		},
@@ -209,6 +204,9 @@
 		encodeKanpen: function() {
 			this.fio.encodeSquareRoom();
 		},
+
+		decodeConfig: function() {},
+		encodeConfig: function() {},
 
 		decodeHeyaApp: function() {
 			var c = 0,
@@ -257,18 +255,31 @@
 			this.outbstr = barray.join("/");
 		}
 	},
+	"Encode@akichi": {
+		decodeConfig: function() {
+			this.puzzle.setConfig("akichi_maximum", this.checkpflag("x"));
+		},
+		encodeConfig: function() {
+			this.outpflag = this.puzzle.getConfig("akichi_maximum") ? "x" : null;
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
+			this.decodeConfig();
 			this.decodeAreaRoom();
 			this.decodeCellQnum();
 			this.decodeCellAns();
 		},
 		encodeData: function() {
+			this.encodeConfig();
 			this.encodeAreaRoom();
 			this.encodeCellQnum();
 			this.encodeCellAns();
 		},
+
+		decodeConfig: function() {},
+		encodeConfig: function() {},
 
 		kanpenOpen: function() {
 			this.decodeSquareRoom();
@@ -375,6 +386,15 @@
 			}
 		}
 	},
+	"FileIO@akichi": {
+		decodeConfig: function() {
+			this.decodeConfigFlag("x", "akichi_maximum");
+		},
+
+		encodeConfig: function() {
+			this.encodeConfigFlag("x", "akichi_maximum");
+		}
+	},
 
 	//---------------------------------------------------------
 	// 正解判定処理実行部
@@ -385,7 +405,9 @@
 			"checkConnectUnshadeRB",
 			"checkRegionDivided@oneroom",
 			"checkFractal@ayeheya",
-			"checkShadeCellCount",
+			"checkShadeCellCount@!akichi",
+			"checkAttainedSize@akichi",
+			"checkUnshadedSize@akichi",
 			"checkOneDoor@oneroom",
 			"checkCountinuousUnshadeCell@!oneroom",
 			"checkRoomSymm@ayeheya",
@@ -532,6 +554,62 @@
 					border.sidecell[0].seterr(1);
 					border.sidecell[1].seterr(1);
 				});
+			}
+		}
+	},
+	"AnsCheck@akichi": {
+		checkAttainedSize: function() {
+			if (this.puzzle.getConfig("akichi_maximum")) {
+				return;
+			}
+			var rooms = this.board.roommgr.components;
+			var unshrs = this.board.unshrgraph.components;
+			for (var r = 0; r < rooms.length; r++) {
+				rooms[r].isMaxFound = rooms[r].top.qnum <= 0;
+			}
+
+			for (var r = 0; r < unshrs.length; r++) {
+				var size = unshrs[r].clist.length;
+				if (!size) {
+					continue;
+				}
+
+				var room = unshrs[r].clist[0].room;
+				if (size >= room.top.qnum) {
+					room.isMaxFound = true;
+				}
+			}
+
+			for (var r = 0; r < rooms.length; r++) {
+				if (rooms[r].isMaxFound) {
+					continue;
+				}
+
+				this.failcode.add("cuRoomLt");
+				if (this.checkOnly) {
+					break;
+				}
+				rooms[r].clist.seterr(1);
+			}
+		},
+		checkUnshadedSize: function() {
+			var unshrs = this.board.unshrgraph.components;
+			for (var r = 0; r < unshrs.length; r++) {
+				var size = unshrs[r].clist.length;
+				if (!size) {
+					continue;
+				}
+
+				var top = unshrs[r].clist[0].room.top.qnum;
+				if (top < 0 || top >= size) {
+					continue;
+				}
+
+				this.failcode.add("cuRoomGt");
+				if (this.checkOnly) {
+					break;
+				}
+				unshrs[r].clist.seterr(1);
 			}
 		}
 	}

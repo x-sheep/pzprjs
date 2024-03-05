@@ -10,7 +10,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["chainedb"], {
+})(["chainedb", "mrtile"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -19,17 +19,8 @@
 			edit: ["number", "undef", "clear", "info-blk"],
 			play: ["shade", "unshade", "info-blk"]
 		},
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					this.inputcell();
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					this.inputqnum();
-				}
-			}
-		},
+		autoedit_func: "qnum",
+		autoplay_func: "cell",
 		dispInfoBlk: function() {
 			var cell = this.getcell();
 			this.mousereset();
@@ -44,6 +35,12 @@
 			this.inputFixedNumber(-1);
 		}
 	},
+	"MouseEvent@mrtile": {
+		inputModes: {
+			edit: ["number", "undef", "clear"],
+			play: ["shade", "unshade"]
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
@@ -52,9 +49,10 @@
 	},
 
 	AreaShadeGraph: {
+		relation: { "cell.qans": "node", "cell.qnum": "node" },
 		enabled: true
 	},
-	"AreaShade8Graph:AreaShadeGraph": {
+	"AreaShade8Graph:AreaShadeGraph@chainedb": {
 		enabled: true,
 		setComponentRefs: function(obj, component) {
 			obj.blk8 = component;
@@ -79,22 +77,9 @@
 		}
 	},
 
-	Board: {
+	"Board@chainedb": {
 		addExtraInfo: function() {
 			this.sblk8mgr = this.addInfoList(this.klass.AreaShade8Graph);
-		},
-
-		reapplyShades: function() {
-			this.cell.each(function(cell) {
-				if (cell.qnum !== -1) {
-					cell.setQans(1);
-				}
-			});
-		},
-
-		ansclear: function() {
-			this.common.ansclear.call(this);
-			this.reapplyShades();
 		}
 	},
 
@@ -121,33 +106,19 @@
 			} else {
 				this.setQans(1);
 			}
-		},
-
-		getdir8clist: function() {
-			var list = [];
-			var cells = [
-				this.relcell(-2, -2),
-				this.relcell(0, -2),
-				this.relcell(2, -2),
-				this.relcell(-2, 0),
-				this.relcell(2, 0),
-				this.relcell(-2, 2),
-				this.relcell(0, 2),
-				this.relcell(2, 2)
-			];
-			for (var i = 0; i < 8; i++) {
-				if (cells[i].group === "cell" && !cells[i].isnull) {
-					list.push([cells[i], i + 1]);
-				} /* i+1==dir */
-			}
-			return list;
+		}
+	},
+	"Cell@mrtile": {
+		maxnum: function() {
+			var bd = this.board;
+			return ((bd.cols * bd.rows) >> 1) - 1;
 		}
 	},
 
 	//---------------------------------------------------------
 	// 画像表示系
 	Graphic: {
-		qanscolor: "black",
+		qanscolor: "#222222",
 		shadecolor: "#222222",
 		numbercolor_func: "fixed_shaded",
 		fontShadecolor: "white",
@@ -168,11 +139,25 @@
 		},
 
 		getShadedCellColor: function(cell) {
-			if (cell.qans === 1 && !cell.trial && cell.error === -1) {
+			if (!cell.isShade()) {
+				return null;
+			}
+
+			var info = cell.error || cell.qinfo;
+
+			if (info === 1) {
+				return this.errcolor1;
+			} else if (cell.trial) {
+				return this.trialcolor;
+			} else if (info === -1) {
 				return this.noerrcolor;
 			}
-			return this.common.getShadedCellColor.call(this, cell);
+			return cell.qnum !== -1 ? this.shadecolor : this.qanscolor;
 		}
+	},
+	"Graphic@mrtile": {
+		hideHatena: true,
+		shadecolor: "#111111"
 	},
 
 	//---------------------------------------------------------
@@ -180,7 +165,6 @@
 	Encode: {
 		decodePzpr: function(type) {
 			this.decodeNumber16();
-			this.board.reapplyShades();
 		},
 		encodePzpr: function(type) {
 			this.encodeNumber16();
@@ -190,7 +174,6 @@
 	FileIO: {
 		decodeData: function() {
 			this.decodeCellQnumAns();
-			this.board.reapplyShades();
 		},
 		encodeData: function() {
 			this.encodeCellQnumAns();
@@ -205,8 +188,7 @@
 			"checkUniqueShapes",
 			"checkNoNumberInShade",
 			"checkNumberAndShadeSize",
-			"checkNoChain",
-			"doneShadingDecided"
+			"checkNoChain"
 		],
 
 		checkNoNumberInShade: function() {
@@ -234,13 +216,23 @@
 			);
 		},
 		checkNumberAndShadeSize: function() {
-			this.checkAllArea(
-				this.board.sblkmgr,
-				function(w, h, a, n) {
-					return n <= 0 || n === a;
-				},
-				"bkSizeNe"
-			);
+			for (var c = 0; c < this.board.cell.length; c++) {
+				var cell = this.board.cell[c];
+				if (!cell.isShade() || cell.qnum < 0) {
+					continue;
+				}
+
+				var clist = cell.sblk.clist;
+				if (clist.length === cell.qnum) {
+					continue;
+				}
+
+				this.failcode.add("bkSizeNe");
+				if (this.checkOnly) {
+					break;
+				}
+				cell.sblk.clist.seterr(1);
+			}
 		},
 		checkNoChain: function() {
 			var shapes = this.board.sblkmgr.components;
@@ -308,6 +300,63 @@
 							shapes[nnb].clist.seterr(1);
 						}
 					}
+				}
+			}
+		}
+	},
+	"AnsCheck@mrtile": {
+		checklist: [
+			"checkNumberAndShadeSize",
+			"checkAdjacentExist",
+			"doneShadingDecided"
+		],
+
+		checkAdjacentExist: function() {
+			var bd = this.board;
+
+			var blocks = bd.sblkmgr.components;
+			for (var r = 0; r < blocks.length; r++) {
+				blocks[r].valid = false;
+			}
+
+			for (var c = 0; c < bd.cell.length; c++) {
+				var cell = bd.cell[c];
+				if (cell.bx >= bd.maxbx - 1 || cell.by >= bd.maxby - 1) {
+					continue;
+				}
+
+				var bx = cell.bx,
+					by = cell.by;
+				var clist = bd.cellinside(bx, by, bx + 2, by + 2).filter(function(cc) {
+					return cc.isShade();
+				});
+				if (clist.length !== 2) {
+					continue;
+				}
+
+				var ca = clist[0],
+					cb = clist[1];
+
+				if (ca.bx === cb.bx || ca.by === cb.by) {
+					continue;
+				}
+
+				if (
+					ca.sblk !== cb.sblk &&
+					!this.isDifferentShapeBlock(ca.sblk, cb.sblk)
+				) {
+					ca.sblk.valid = true;
+					cb.sblk.valid = true;
+				}
+			}
+
+			for (var r = 0; r < blocks.length; r++) {
+				if (!blocks[r].valid) {
+					this.failcode.add("bkNoChain");
+					if (this.checkOnly) {
+						break;
+					}
+					blocks[r].clist.seterr(1);
 				}
 			}
 		}

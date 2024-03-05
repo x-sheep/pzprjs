@@ -15,17 +15,18 @@
 	var _doc = document;
 	var self = v3index;
 
+	function getEL(id) {
+		return _doc.getElementById(id);
+	}
+
 	self.doclang =
-		JSON.parse(localStorage["pzprv3_config:ui"] || "{}").language || pzpr.lang;
+		JSON.parse(localStorage.getItem("pzprv3_config:ui") || "{}").language ||
+		pzpr.lang;
 
 	if (location.search === "?en" || location.search === "?ja") {
 		self.doclang = location.search.substr(1, 2);
 	}
-	if (
-		location.hostname === "puzz.link" ||
-		location.pathname === "/list" ||
-		location.host.indexOf("vercel.app") >= 0
-	) {
+	if (location.hostname === "puzz.link" || location.pathname === "/list") {
 		// puzz.link serves p.html at puzz.link/p
 		self.phtml = "p";
 	}
@@ -54,6 +55,92 @@
 			self.setTranslation();
 			self.setBlockVisibility();
 			self.translate();
+			self.initializeSort();
+		},
+
+		initializeSort: function() {
+			var enableSort =
+				JSON.parse(localStorage.getItem("pzprv3_config:ui") || "{}").listsort ||
+				"none";
+			var allGenres = _doc.querySelectorAll(".lists > ul > li");
+			for (var i = 0; i < allGenres.length; i++) {
+				if (!allGenres[i].dataset) {
+					return;
+				}
+				allGenres[i].dataset.order = i;
+			}
+
+			Array.prototype.slice
+				.call(_doc.querySelectorAll("#puzmenu > li"))
+				.forEach(function(el) {
+					if (el.id.match(/puzsort_(.+)$/)) {
+						var typename = RegExp.$1;
+						el.className = typename === enableSort ? "puzmenusel" : "puzmenu";
+						el.addEventListener(
+							"click",
+							(function(typename) {
+								return function(e) {
+									self.click_tab(typename);
+								};
+							})(typename),
+							false
+						);
+					}
+				});
+			getEL("puzmenu").style.display = "block";
+			self.apply_sort();
+		},
+
+		click_tab: function(typename) {
+			Array.prototype.slice
+				.call(_doc.querySelectorAll("#puzmenu > li"))
+				.forEach(function(el) {
+					el.className =
+						el.id === "puzsort_" + typename ? "puzmenusel" : "puzmenu";
+				});
+
+			var setting = JSON.parse(
+				localStorage.getItem("pzprv3_config:ui") || "{}"
+			);
+			setting.listsort = typename;
+			localStorage.setItem("pzprv3_config:ui", JSON.stringify(setting));
+			self.apply_sort();
+		},
+
+		apply_sort: function() {
+			var activeSortElement = _doc.querySelector("#puzmenu > li.puzmenusel"),
+				activeSort = activeSortElement
+					? activeSortElement.dataset.sort
+					: "none";
+
+			var pick = function(a) {
+				if (activeSort === "alpha") {
+					return a.innerText.toLowerCase();
+				}
+				return +a.dataset.order;
+			};
+
+			var sortFunc = function(ia, ib) {
+				var a = pick(ia),
+					b = pick(ib);
+				if (a === b) {
+					return 0;
+				}
+				return a < b ? -1 : +1;
+			};
+
+			Array.prototype.slice
+				.call(_doc.querySelectorAll(".lists > ul"))
+				.forEach(function(list) {
+					var subItems = Array.prototype.slice.call(
+						list.querySelectorAll("li")
+					);
+					subItems.sort(sortFunc);
+
+					subItems.forEach(function(el) {
+						list.appendChild(el);
+					});
+				});
 		},
 
 		setBlockVisibility: function() {
@@ -76,9 +163,11 @@
 			self.doclang = lang;
 			self.translate();
 
-			var setting = JSON.parse(localStorage["pzprv3_config:ui"] || "{}");
+			var setting = JSON.parse(
+				localStorage.getItem("pzprv3_config:ui") || "{}"
+			);
 			setting.language = lang;
-			localStorage["pzprv3_config:ui"] = JSON.stringify(setting);
+			localStorage.setItem("pzprv3_config:ui", JSON.stringify(setting));
 		},
 		setTranslation: function() {
 			Array.prototype.slice
@@ -133,196 +222,4 @@
 
 	/* extern */
 	window.v3index = v3index;
-})();
-
-/*********************/
-/* Database function */
-/*********************/
-(function() {
-	var v3index = window.v3index;
-
-	var pstate = {
-		lunch: [
-			"nurikabe",
-			"tilepaint",
-			"norinori",
-			"nurimaze",
-			"heyawake",
-			"hitori",
-			"slither",
-			"mashu",
-			"yajilin",
-			"slalom",
-			"numlin",
-			"hashikake",
-			"herugolf",
-			"shikaku",
-			"tentaisho",
-			"kakuro",
-			"sudoku",
-			"fillomino",
-			"symmarea",
-			"ripple",
-			"akari",
-			"shakashaka"
-		],
-		testa: ["nagare", "dosufuwa", "usoone", "moonsun"],
-		trial: ["stostone", "armyants"],
-		lunch2: ["box", "lits", "kurodoko", "goishi"],
-		lunch3: ["minarism", "factors"],
-		nigun: [
-			"creek",
-			"mochikoro",
-			"tasquare",
-			"kurotto",
-			"shimaguni",
-			"yajikazu",
-			"cave",
-			"country",
-			"reflect",
-			"icebarn",
-			"firefly",
-			"kaero",
-			"yosenabe",
-			"bdblock",
-			"fivecells",
-			"sashigane",
-			"tatamibari",
-			"sukoro",
-			"gokigen",
-			"tateyoko",
-			"kinkonkan",
-			"hebi",
-			"makaro",
-			"juosan"
-		],
-		omopa: [
-			"nuribou",
-			"tawa",
-			"lookair",
-			"paintarea",
-			"chocona",
-			"kurochute",
-			"mejilink",
-			"pipelink",
-			"loopsp",
-			"nagenawa",
-			"kouchoku",
-			"ringring",
-			"pipelinkr",
-			"barns",
-			"icelom",
-			"icelom2",
-			"wblink",
-			"kusabi",
-			"ichimaga",
-			"ichimagam",
-			"ichimagax",
-			"amibo",
-			"bonsan",
-			"heyabon",
-			"rectslider",
-			"nawabari",
-			"triplace",
-			"fourcells",
-			"kramma",
-			"kramman",
-			"shwolf",
-			"loute",
-			"fillmat",
-			"usotatami",
-			"yajitatami",
-			"kakuru",
-			"view",
-			"bosanowa",
-			"nanro",
-			"cojun",
-			"renban",
-			"sukororoom",
-			"hanare",
-			"kazunori",
-			"wagiri",
-			"shugaku",
-			"hakoiri",
-			"roma",
-			"toichika",
-			"cbblock",
-			"nondango",
-			"onsen"
-		],
-		orig: ["mochinyoro", "ayeheya", "aho"],
-		genre: [
-			"tapa",
-			"arukone",
-			"yinyang",
-			"skyscrapers",
-			"kropki",
-			"starbattle",
-			"easyasabc",
-			"walllogic"
-		],
-		add: [
-			"angleloop",
-			"doubleback",
-			"nurimisaki",
-			"meander",
-			"satogaeri",
-			"scrin",
-			"heteromino",
-			"yajilin-regions",
-			"dbchoco",
-			"geradeweg",
-			"pencils",
-			"curvedata",
-			"aquarium",
-			"compass",
-			"castle",
-			"araf",
-			"maxi",
-			"midloop",
-			"balance",
-			"simpleloop",
-			"doppelblock",
-			"tents",
-			"detour",
-			"snake",
-			"nonogram",
-			"coral",
-			"putteria",
-			"haisu",
-			"nikoji",
-			"mines",
-			"interbd",
-			"toichika2",
-			"aqre",
-			"tapaloop",
-			"dotchi",
-			"ovotovata",
-			"crossstitch",
-			"chainedb",
-			"canal",
-			"railpool"
-		]
-	};
-	var tabstate = {
-		lunch: "lunch",
-		lunch2: "lunch",
-		lunch3: "nigun",
-		testa: "nigun",
-		nigun: "nigun",
-		trial: "omopa",
-		omopa: "omopa",
-		orig: "extra",
-		genre: "extra",
-		add: "add"
-	};
-
-	var genres = {};
-	for (var state in pstate) {
-		pstate[state].forEach(function(pid) {
-			genres[pzpr.variety.toPID(pid)] = { state: state, tab: tabstate[state] };
-		});
-	}
-
-	v3index.extend({ variety: genres });
 })();

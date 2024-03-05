@@ -83,7 +83,7 @@ ui.toolarea = {
 				if (!!role) {
 					var roles = role.split(/,/);
 					addbtnevent(el, "mousedown", roles[0]);
-					if (!!role[1]) {
+					if (!!roles[1]) {
 						addbtnevent(el, "mouseup", roles[1]);
 						addbtnevent(el, "mouseleave", roles[1]);
 						addbtnevent(el, "touchcancel", roles[1]);
@@ -121,9 +121,10 @@ ui.toolarea = {
 		getEL("checkpanel").style.display = mandisp;
 
 		/* 経過時間の表示/非表示設定 */
+		var hasTimer = ui.puzzle.playeronly && ui.menuconfig.get("timer");
 		getEL("separator2").style.display =
-			ui.puzzle.playeronly && ui.menuconfig.get("toolarea") ? "" : "none";
-		getEL("timerpanel").style.display = ui.puzzle.playeronly ? "block" : "none";
+			hasTimer && ui.menuconfig.get("toolarea") ? "" : "none";
+		getEL("timerpanel").style.display = hasTimer ? "block" : "none";
 		this.displayVariantPanel();
 
 		for (var idname in this.items) {
@@ -274,6 +275,9 @@ ui.toolarea = {
 				if (idname === "bgcolor") {
 					disabled = ui.puzzle.editmode;
 				}
+				if (idname === "mouseonly") {
+					disabled = ui.puzzle.editmode && ui.puzzle.pid === "magnets";
+				}
 				if (ui.puzzle.config.getvariant(idname)) {
 					disabled = !ui.puzzle.editmode;
 				}
@@ -341,6 +345,9 @@ ui.toolarea = {
 	},
 	resetblocks: function() {
 		ui.puzzle.board.operate("resetpos");
+	},
+	outlineshaded: function() {
+		ui.puzzle.board.operate("outlineshaded");
 	},
 	flushexcell: function() {
 		ui.puzzle.board.flushexcell();

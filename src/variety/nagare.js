@@ -320,7 +320,7 @@
 						val;
 					val = trans[border.qsub - 10];
 					if (!!val) {
-						border.setQsub(val + 10);
+						border.qsub = val + 10;
 					}
 				}
 			}
@@ -339,7 +339,7 @@
 			this.drawDashedGrid();
 			this.drawQuesCells();
 
-			this.drawCellArrows();
+			this.drawCellArrows(true);
 
 			this.drawLines();
 			this.drawPekes();

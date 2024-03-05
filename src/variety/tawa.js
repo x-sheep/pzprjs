@@ -13,17 +13,8 @@
 	MouseEvent: {
 		use: true,
 		inputModes: { edit: ["number", "clear"], play: ["shade", "unshade"] },
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					this.inputcell();
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					this.inputqnum();
-				}
-			}
-		},
+		autoedit_func: "qnum",
+		autoplay_func: "cell",
 
 		// マウス入力時のセルID取得系
 		getcell: function() {
@@ -193,6 +184,10 @@
 		}
 	},
 	BoardExec: {
+		allowedOperations: function(isplaymode) {
+			return this.FLIPX | (!isplaymode ? this.FLIPY : 0);
+		},
+
 		// 拡大縮小・回転反転時の関数
 		execadjust: function(name) {
 			var bd = this.board;
@@ -223,7 +218,7 @@
 				} else if (key === this.FLIPX) {
 					bd.shape = { 0: 0, 1: 2, 2: 1, 3: 3 }[bd.shape];
 				} else {
-					throw "Tawamurenga can't accept turning operation!";
+					throw Error("Tawamurenga can't accept turning operation!");
 				}
 			} else if (key & this.EXPAND) {
 				switch (key & 0x0f) {
@@ -298,6 +293,7 @@
 	//---------------------------------------------------------
 	// 画像表示系
 	Graphic: {
+		shadecolor: "#444444",
 		qanscolor: "black",
 		numbercolor_func: "qnum",
 

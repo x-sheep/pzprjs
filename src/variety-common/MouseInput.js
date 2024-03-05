@@ -64,13 +64,16 @@ pzpr.classmgr.makeCommon({
 				this.inputData = cell.qans !== 1 ? 1 : 0;
 			} else if (this.inputMode === "unshade") {
 				this.inputData = cell.qsub !== 1 ? 2 : 0;
-			} else if (this.puzzle.getConfig("use") === 1) {
+			} else if (
+				this.puzzle.getConfig("use") === 1 &&
+				this.pid !== "patchwork"
+			) {
 				if (this.btn === "left") {
 					this.inputData = cell.qans !== 1 ? 1 : 0;
 				} else if (this.btn === "right") {
 					this.inputData = cell.qsub !== 1 ? 2 : 0;
 				}
-			} else if (this.puzzle.getConfig("use") === 2) {
+			} else {
 				if (!cell.allowShade()) {
 					this.inputData = cell.qsub !== 1 ? 2 : 0;
 				} else if (!cell.allowUnshade()) {
@@ -343,7 +346,7 @@ pzpr.classmgr.makeCommon({
 			cell.draw();
 			this.mouseCell = cell;
 		},
-		inputBGcolor: function(isforceforward) {
+		inputBGcolor: function() {
 			var cell = this.getcell();
 			if (cell.isnull || cell.is51cell() || cell === this.mouseCell) {
 				return;
@@ -353,7 +356,7 @@ pzpr.classmgr.makeCommon({
 				this.inputMode = cell.qsub !== 1 ? 11 : 10;
 			} else if (this.inputMode === "bgcolor2") {
 				this.inputMode = cell.qsub !== 2 ? 12 : 10;
-			} else if (isforceforward || this.btn === "left") {
+			} else if (this.btn === "left") {
 				if (cell.qsub === 0) {
 					this.inputData = 11;
 				} else if (cell.qsub === 1) {
@@ -794,6 +797,8 @@ pzpr.classmgr.makeCommon({
 				) {
 				} else if (this.inputData === 2) {
 					border.setPeke();
+				} else if (this.inputData === 3 && this.puzzle.execConfig("dispmove")) {
+					border.setQsub(0);
 				} else if (this.inputData === 3) {
 					border.removeLineAndQsub();
 				}
@@ -946,13 +951,83 @@ pzpr.classmgr.makeCommon({
 					this.inputData = +(val > 0);
 					this.firstPoint.reset();
 
-					if (this.pid === "tatamibari") {
+					if (this.pid === "tatamibari" || this.pid === "ladders") {
 						this.mousereset();
 					}
 				}
 			}
 
 			this.mouseCell = cell;
+		},
+
+		inputempty: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+
+			if (this.inputData === null) {
+				this.inputData = cell.isEmpty() ? 0 : 7;
+			}
+
+			cell.setValid(this.inputData);
+			this.mouseCell = cell;
+		},
+
+		//---------------------------------------------------------------------------
+		// Prefab auto modes
+		//---------------------------------------------------------------------------
+		mouseinputAutoEdit_qnum: function() {
+			if (this.mousestart) {
+				this.inputqnum();
+			}
+		},
+		mouseinputAutoEdit_areanum: function() {
+			if (this.mousestart || this.mousemove) {
+				this.inputborder();
+			} else if (this.mouseend && this.notInputted()) {
+				this.inputqnum();
+			}
+		},
+
+		mouseinputAutoPlay_cell: function() {
+			this.inputcell();
+		},
+		mouseinputAutoPlay_qnum: function() {
+			if (this.mousestart) {
+				this.inputqnum();
+			}
+		},
+
+		mouseinputAutoPlay_border: function() {
+			if (this.mousestart || this.mousemove) {
+				if (this.btn === "left" && this.isBorderMode()) {
+					this.inputborder();
+				} else {
+					this.inputQsubLine();
+				}
+			}
+		},
+
+		mouseinputAutoPlay_line: function(withMB) {
+			if (this.btn === "left") {
+				if (this.mousestart || this.mousemove) {
+					this.inputLine();
+				}
+			} else if (this.btn === "right") {
+				if (this.mousestart || this.mousemove) {
+					this.inputpeke();
+				}
+			}
+			if (this.mouseend && this.notInputted()) {
+				this.prevPos = new this.klass.Address();
+				if (!this.inputpeke_ifborder() && withMB) {
+					this.inputMB();
+				}
+			}
+		},
+		mouseinputAutoPlay_lineMB: function() {
+			this.mouseinputAutoPlay_line(true);
 		},
 
 		//---------------------------------------------------------------------------

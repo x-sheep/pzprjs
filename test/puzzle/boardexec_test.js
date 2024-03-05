@@ -20,17 +20,16 @@ pzpr.variety.each(function(pid) {
 	describe(pid + " boardexec test", function() {
 		describe("Turn", function() {
 			var puzzle = new pzpr.Puzzle().open(testdata[pid].fullfile);
-			var relyonupdn =
-				pid === "dosufuwa" ||
-				pid === "box" ||
-				pid === "cojun" ||
-				pid === "shugaku" ||
-				pid === "aquarium";
-			var relyon90deg = pid === "stostone";
+			var exec = puzzle.board.exec;
 
-			if (puzzle.pid === "tawa") {
+			if (!(exec.allowedOperations(false) & exec.TURN)) {
 				return;
 			}
+
+			var relyonupdn =
+				(exec.allowedOperations(true) & exec.FLIPY) !== exec.FLIPY;
+			var relyon90deg = !(exec.allowedOperations(true) & exec.TURN);
+
 			it("turn right", function() {
 				var bd = puzzle.board,
 					bd2 = bd.freezecopy();
@@ -91,17 +90,31 @@ pzpr.variety.each(function(pid) {
 				}
 				assert_equal_board(bd, bd2);
 			});
+
+			it("turn right undo redo", function() {
+				var bd = puzzle.board;
+				var bd1 = bd.freezecopy();
+				bd.operate("turnr");
+				var bd2 = bd.freezecopy();
+				puzzle.undo();
+				puzzle.redo();
+				assert_equal_board(bd, bd2);
+				puzzle.undo();
+				assert_equal_board(bd, bd1);
+				assert.equal(puzzle.check()[0], null);
+			});
 		});
 		describe("Flip", function() {
 			var puzzle = new pzpr.Puzzle().open(testdata[pid].fullfile);
+			var exec = puzzle.board.exec;
+
+			if (!(exec.allowedOperations(false) & exec.FLIP)) {
+				return;
+			}
+
 			var relyonupdn =
-				pid === "dosufuwa" ||
-				pid === "box" ||
-				pid === "cojun" ||
-				pid === "shugaku" ||
-				pid === "tawa" ||
-				pid === "aquarium";
-			var relyonanydir = pid === "box" || pid === "shugaku";
+				(exec.allowedOperations(true) & exec.FLIPY) !== exec.FLIPY;
+			var relyonanydir = !(exec.allowedOperations(true) & exec.TURN);
 
 			it("flipX", function() {
 				var bd = puzzle.board,

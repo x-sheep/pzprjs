@@ -11,43 +11,8 @@
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					if (this.btn === "left" && this.isBorderMode()) {
-						this.inputborder();
-					} else {
-						this.inputQsubLine();
-					}
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					if (this.pid === "heteromino") {
-						this.inputempty();
-					} else {
-						this.inputqnum();
-					}
-				}
-			}
-		},
-		mouseinput_other: function() {
-			if (this.inputMode === "empty") {
-				this.inputempty();
-			}
-		},
-		inputempty: function() {
-			var cell = this.getcell();
-			if (cell.isnull || cell === this.mouseCell) {
-				return;
-			}
-
-			if (this.inputData === null) {
-				this.inputData = cell.isEmpty() ? 0 : 7;
-			}
-
-			cell.setValid(this.inputData);
-			this.mouseCell = cell;
-		}
+		autoedit_func: "qnum",
+		autoplay_func: "border"
 	},
 	"MouseEvent@nawabari": {
 		inputModes: { edit: ["number", "clear"], play: ["border", "subline"] }
@@ -59,7 +24,10 @@
 		}
 	},
 	"MouseEvent@heteromino": {
-		inputModes: { edit: ["empty", "clear"], play: ["border", "subline"] }
+		inputModes: { edit: ["empty", "clear"], play: ["border", "subline"] },
+		mouseinputAutoEdit: function() {
+			this.inputempty();
+		}
 	},
 	"MouseEvent@fourcells,fivecells,heteromino": {
 		inputModes: {
@@ -106,17 +74,6 @@
 				}
 			}
 			return cnt;
-		},
-
-		setValid: function(inputData) {
-			this.setQues(inputData);
-			this.setQnum(-1);
-			this.adjborder.top.qans = 0;
-			this.adjborder.bottom.qans = 0;
-			this.adjborder.right.qans = 0;
-			this.adjborder.left.qans = 0;
-			this.drawaround();
-			this.board.roommgr.rebuild();
 		}
 	},
 	"Cell@nawabari": {
@@ -351,7 +308,9 @@
 					cell.qnum = +ca;
 				}
 			});
-			this.decodeBorderAns();
+			this.decodeBorderAns(
+				this.pid === "fourcells" && this.filever === 0 ? 1 : null
+			);
 		},
 		encodeData: function() {
 			if (this.pid === "fourcells") {
@@ -376,18 +335,18 @@
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
+			"checkOverThreeCells@heteromino",
+			"checkTouchDifferent@heteromino",
+			"checkLessThreeCells@heteromino",
 			"checkRoomRect@nawabari",
 			"checkNoNumber@nawabari",
 			"checkDoubleNumber@nawabari",
-			"checkOverThreeCells@heteromino",
 			"checkOverFourCells@fourcells",
 			"checkOverFiveCells@fivecells",
 			"checkdir4BorderAns@!heteromino",
 			"checkBorderDeadend+",
-			"checkLessThreeCells@heteromino",
 			"checkLessFourCells@fourcells",
-			"checkLessFiveCells@fivecells",
-			"checkTouchDifferent@heteromino"
+			"checkLessFiveCells@fivecells"
 		],
 
 		checkOverThreeCells: function() {

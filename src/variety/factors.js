@@ -15,21 +15,8 @@
 			edit: ["border", "number", "clear"],
 			play: ["number", "clear"]
 		},
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart) {
-					this.inputqnum();
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart || this.mousemove) {
-					if (this.btn === "left") {
-						this.inputborder();
-					}
-				} else if (this.mouseend && this.notInputted()) {
-					this.inputqnum();
-				}
-			}
-		}
+		autoedit_func: "areanum",
+		autoplay_func: "qnum"
 	},
 
 	//---------------------------------------------------------
@@ -175,7 +162,11 @@
 				var room = rooms[r],
 					clist = room.clist;
 				var product = clist.getProduct();
-				if (product === 0 || product === room.top.qnum) {
+				if (
+					product === 0 ||
+					product === room.top.qnum ||
+					room.top.qnum === -1
+				) {
 					continue;
 				}
 

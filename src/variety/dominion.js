@@ -13,33 +13,8 @@
 			edit: ["number", "clear"],
 			play: ["shade", "unshade", "info-ublk"]
 		},
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				this.inputcell();
-			} else if (this.puzzle.editmode) {
-				this.inputqnum();
-			}
-		},
-		shadeCount: 0,
-		mousereset: function() {
-			this.shadeCount = 0;
-			this.common.mousereset.call(this);
-		},
-		inputcell: function() {
-			var cell = this.getcell();
-			if (cell.isnull || cell === this.mouseCell) {
-				return;
-			}
-
-			this.common.inputcell.call(this);
-
-			if (this.inputData === 1) {
-				++this.shadeCount;
-				if (this.shadeCount >= 2) {
-					this.mousereset();
-				}
-			}
-		}
+		autoedit_func: "qnum",
+		autoplay_func: "cell"
 	},
 
 	KeyEvent: {
@@ -109,8 +84,7 @@
 			"checkNoNumber",
 			"checkGatheredObject",
 			"checkSingleShadeCell",
-			"checkSameNumberInBlock",
-			"doneShadingDecided"
+			"checkSameNumberInBlock"
 		],
 		checkOverShadeCell: function() {
 			this.checkAllArea(

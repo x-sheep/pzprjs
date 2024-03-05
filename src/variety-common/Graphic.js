@@ -50,6 +50,7 @@ pzpr.classmgr.makeCommon({
 			if (cell.qans !== 1) {
 				return null;
 			}
+			var hasinfo = this.board.haserror || this.board.hasinfo;
 			var info = cell.error || cell.qinfo;
 			if (info === 1) {
 				return this.errcolor1;
@@ -57,7 +58,7 @@ pzpr.classmgr.makeCommon({
 				return this.errcolor2;
 			} else if (cell.trial) {
 				return this.trialcolor;
-			} else if (this.puzzle.execConfig("irowakeblk")) {
+			} else if (this.puzzle.execConfig("irowakeblk") && !hasinfo) {
 				return cell.sblk.color;
 			}
 			return this.shadecolor;
@@ -173,7 +174,7 @@ pzpr.classmgr.makeCommon({
 				if (!!color) {
 					g.fillStyle = color;
 					g.fillRectCenter(
-						cell.bx * this.bw,
+						cell.bx * this.bw + this.getCellHorizontalOffset(cell),
 						cell.by * this.bh,
 						this.bw + 0.5,
 						this.bh + 0.5
@@ -182,6 +183,10 @@ pzpr.classmgr.makeCommon({
 					g.vhide();
 				}
 			}
+		},
+
+		getCellHorizontalOffset: function(cell) {
+			return 0;
 		},
 
 		//---------------------------------------------------------------------------
@@ -241,11 +246,11 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		// pc.drawCellArrows() 矢印だけをCanvasに書き込む
 		//---------------------------------------------------------------------------
-		drawCellArrows: function() {
+		drawCellArrows: function(wide, outline) {
 			var g = this.vinc("cell_arrow", "auto");
 			var al, aw, tl, tw;
 
-			if (this.pid !== "nagare") {
+			if (!wide) {
 				al = this.cw * 0.4; // ArrowLength
 				aw = this.cw * 0.03; // ArrowWidth
 				tl = this.cw * 0.16; // 矢じりの長さの座標(中心-長さ)
@@ -268,7 +273,8 @@ pzpr.classmgr.makeCommon({
 
 				g.vid = "c_arrow_" + cell.id;
 				if (!!color) {
-					g.fillStyle = color;
+					g.lineWidth = 1.5;
+					g.strokeStyle = g.fillStyle = color;
 					g.beginPath();
 					var px = cell.bx * this.bw,
 						py = cell.by * this.bh;
@@ -358,7 +364,11 @@ pzpr.classmgr.makeCommon({
 							);
 							break;
 					}
-					g.fill();
+					if (outline) {
+						g.stroke();
+					} else {
+						g.fill();
+					}
 				} else {
 					g.vhide();
 				}
@@ -390,11 +400,17 @@ pzpr.classmgr.makeCommon({
 				for (var i = 0; i < clist.length; i++) {
 					var cell = clist[i];
 					g.vid = "c_slash_" + slash + "_" + cell.id;
-					if (cell.qans === 33 || cell.qans === (slash ? 32 : 31)) {
+
+					var isQues = cell.ques >= 31 && cell.ques <= 33;
+					var value = isQues ? cell.ques : cell.qans;
+
+					if (value === 33 || value === (slash ? 32 : 31)) {
 						var info = cell.qinfo || cell.error,
 							addwidth = 0,
 							color;
-						if (cell.trial && this.puzzle.execConfig("irowake")) {
+						if (isQues) {
+							addwidth = -basewidth / 2;
+						} else if (cell.trial && this.puzzle.execConfig("irowake")) {
 							addwidth = -basewidth / 2;
 						} else if (
 							(this.pid === "gokigen" || this.pid === "wagiri") &&
@@ -403,7 +419,9 @@ pzpr.classmgr.makeCommon({
 							addwidth = basewidth / 2;
 						}
 
-						if (this.pid !== "kinkonkan" && info > 0) {
+						if (isQues) {
+							color = this.quescolor;
+						} else if (this.pid !== "kinkonkan" && info > 0) {
 							if (info & (slash ? 4 : 8)) {
 								color = this.noerrcolor;
 							} else if (info & 1) {
@@ -413,7 +431,7 @@ pzpr.classmgr.makeCommon({
 							}
 						} else if (info === -1) {
 							color = this.noerrcolor;
-						} else if (irowake && cell.qans === 33) {
+						} else if (irowake && value === 33) {
 							color =
 								!!slash === cell.parity() ? cell.path.color : cell.path2.color;
 						} else if (irowake && cell.path && cell.path.color) {
@@ -421,7 +439,7 @@ pzpr.classmgr.makeCommon({
 						} else if (irowake && cell.path2 && cell.path2.color) {
 							color = cell.path2.color;
 						} else if (cell.trial) {
-							color = this.trialcolor;
+							color = this.linetrialcolor;
 						} else {
 							color = this.linecolor;
 						}
@@ -506,7 +524,7 @@ pzpr.classmgr.makeCommon({
 				g.vid = header + cell.id;
 				if (!!text) {
 					g.fillStyle = colorfunc.call(this, cell);
-					var x = cell.bx * this.bw;
+					var x = cell.bx * this.bw + this.getCellHorizontalOffset(cell);
 					var y = cell.by * this.bh + this.getNumberVerticalOffset(cell);
 					this.disptext(text, x, y, textoption);
 				} else {
@@ -623,7 +641,7 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		// pc.drawSubNumbers()  Cellの補助数字をCanvasに書き込む
 		//---------------------------------------------------------------------------
-		drawSubNumbers: function() {
+		drawSubNumbers: function(onshade) {
 			var g = this.vinc("cell_subnumber", "auto");
 			var posarray = [5, 4, 2, 3];
 
@@ -636,8 +654,14 @@ pzpr.classmgr.makeCommon({
 						: this.getNumberTextCore_letter(cell.snum[n]);
 					g.vid = "cell_subtext_" + cell.id + "_" + n;
 					if (!!text) {
-						g.fillStyle = !cell.trial ? this.subcolor : this.trialcolor;
-						this.disptext(text, cell.bx * this.bw, cell.by * this.bh, {
+						g.fillStyle =
+							onshade && cell.isShade()
+								? this.subshadecolor
+								: !cell.trial
+								? this.subcolor
+								: this.trialcolor;
+						var px = cell.bx * this.bw + this.getCellHorizontalOffset(cell);
+						this.disptext(text, px, cell.by * this.bh, {
 							position: posarray[n],
 							ratio: 0.33,
 							hoffset: 0.8
@@ -859,7 +883,7 @@ pzpr.classmgr.makeCommon({
 				for (var k = 0; k < 4; k++) {
 					g.fillStyle = this.getQuesNumberColor(cell, k);
 					g.vid = "cell_text_" + cell.id + "_" + k;
-					if (k < n && nums[k] !== -1) {
+					if (k < n && nums[k] !== -1 && n <= 4) {
 						var opt = opts[n - 1],
 							px = (bx + opt.pos[k].x) * bw,
 							py = (by + opt.pos[k].y) * bh;
@@ -950,7 +974,7 @@ pzpr.classmgr.makeCommon({
 
 				g.vid = header + border.id;
 				if (!!color) {
-					var px = border.bx * this.bw,
+					var px = border.bx * this.bw + this.getBorderHorizontalOffset(border),
 						py = border.by * this.bh;
 					var lm = (this.lw + this.addlw) / 2;
 					g.fillStyle = color;
@@ -963,6 +987,10 @@ pzpr.classmgr.makeCommon({
 					g.vhide();
 				}
 			}
+		},
+
+		getBorderHorizontalOffset: function(cell) {
+			return 0;
 		},
 
 		getBorderColor: function(border) {
@@ -983,7 +1011,7 @@ pzpr.classmgr.makeCommon({
 				} else if (err === -1) {
 					return this.noerrcolor;
 				} else if (border.trial) {
-					return this.trialcolor;
+					return this.linetrialcolor;
 				} else {
 					return this.qanscolor;
 				}
@@ -1049,9 +1077,9 @@ pzpr.classmgr.makeCommon({
 
 				g.vid = "b_qsub1_" + border.id;
 				if (border.qsub === 1) {
-					var px = border.bx * this.bw,
+					var px = border.bx * this.bw + this.getBorderHorizontalOffset(border),
 						py = border.by * this.bh;
-					g.fillStyle = !border.trial ? this.pekecolor : this.trialcolor;
+					g.fillStyle = !border.trial ? this.pekecolor : this.linetrialcolor;
 					if (border.isHorz()) {
 						g.fillRectCenter(px, py, 0.5, this.bh - m);
 					} else {
@@ -1103,31 +1131,31 @@ pzpr.classmgr.makeCommon({
 					var LTin = cell.bx > 2,
 						RTin = cell.bx < 2 * this.board.cols - 2;
 
-					var isUP = !UPin || adb.top.ques === 1;
-					var isDN = !DNin || adb.bottom.ques === 1;
-					var isLT = !LTin || adb.left.ques === 1;
-					var isRT = !RTin || adb.right.ques === 1;
+					var isUP = !UPin || adb.top.isBorder();
+					var isDN = !DNin || adb.bottom.isBorder();
+					var isLT = !LTin || adb.left.isBorder();
+					var isRT = !RTin || adb.right.isBorder();
 
 					var isUL =
-						!UPin ||
-						!LTin ||
-						cell.relbd(-2, -1).ques === 1 ||
-						cell.relbd(-1, -2).ques === 1;
+						isUP ||
+						isLT ||
+						cell.relbd(-2, -1).isBorder() ||
+						cell.relbd(-1, -2).isBorder();
 					var isUR =
-						!UPin ||
-						!RTin ||
-						cell.relbd(2, -1).ques === 1 ||
-						cell.relbd(1, -2).ques === 1;
+						isUP ||
+						isRT ||
+						cell.relbd(2, -1).isBorder() ||
+						cell.relbd(1, -2).isBorder();
 					var isDL =
-						!DNin ||
-						!LTin ||
-						cell.relbd(-2, 1).ques === 1 ||
-						cell.relbd(-1, 2).ques === 1;
+						isDN ||
+						isLT ||
+						cell.relbd(-2, 1).isBorder() ||
+						cell.relbd(-1, 2).isBorder();
 					var isDR =
-						!DNin ||
-						!RTin ||
-						cell.relbd(2, 1).ques === 1 ||
-						cell.relbd(1, 2).ques === 1;
+						isDN ||
+						isRT ||
+						cell.relbd(2, 1).isBorder() ||
+						cell.relbd(1, 2).isBorder();
 
 					g.beginPath();
 
@@ -1239,7 +1267,7 @@ pzpr.classmgr.makeCommon({
 				} else if (isIrowake) {
 					return border.path.color;
 				} else {
-					return border.trial ? this.trialcolor : this.linecolor;
+					return border.trial ? this.linetrialcolor : this.linecolor;
 				}
 			}
 			return null;
@@ -1511,7 +1539,7 @@ pzpr.classmgr.makeCommon({
 				// 向き補助記号の描画
 				g.vid = "b_daux_" + border.id;
 				if (dir >= 1 && dir <= 8) {
-					g.strokeStyle = !border.trial ? "rgb(64,64,64)" : this.trialcolor;
+					g.strokeStyle = !border.trial ? "rgb(64,64,64)" : this.linetrialcolor;
 					g.beginPath();
 					switch (dir) {
 						case border.UP:
@@ -1594,7 +1622,11 @@ pzpr.classmgr.makeCommon({
 				g.vid = "c_cirb_" + cell.id;
 				if (!!color) {
 					g.fillStyle = color;
-					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, rsize_fill);
+					g.fillCircle(
+						cell.bx * this.bw + this.getCellHorizontalOffset(cell),
+						cell.by * this.bh,
+						rsize_fill
+					);
 				} else {
 					g.vhide();
 				}
@@ -1610,7 +1642,11 @@ pzpr.classmgr.makeCommon({
 				g.vid = "c_cira_" + cell.id;
 				if (!!color) {
 					g.strokeStyle = color;
-					g.strokeCircle(cell.bx * this.bw, cell.by * this.bh, rsize_stroke);
+					g.strokeCircle(
+						cell.bx * this.bw + this.getCellHorizontalOffset(cell),
+						cell.by * this.bh,
+						rsize_stroke
+					);
 				} else {
 					g.vhide();
 				}
@@ -1812,7 +1848,7 @@ pzpr.classmgr.makeCommon({
 			} else if (err !== 0) {
 				color = this.noerrcolor;
 			} else if (cell.trial) {
-				color = this.trialcolor;
+				color = this.linetrialcolor;
 			} else {
 				color = this.linecolor;
 			}
@@ -2019,6 +2055,15 @@ pzpr.classmgr.makeCommon({
 
 			var px = cursor.bx * this.bw,
 				py = cursor.by * this.bh;
+
+			var obj = !cursor.group ? cursor.getobj() : cursor;
+
+			if (obj && obj.group === "cell") {
+				px += this.getCellHorizontalOffset(obj);
+			} else if (obj && obj.group === "border") {
+				px += this.getBorderHorizontalOffset(obj);
+			}
+
 			var t, w, h;
 			if (islarge !== false) {
 				t = Math.max(this.cw / 16, 2) | 0;
@@ -2077,7 +2122,7 @@ pzpr.classmgr.makeCommon({
 			}
 		},
 
-		drawTargetSubNumber: function() {
+		drawTargetSubNumber: function(onshade) {
 			var g = this.vinc("target_subnum", "crispEdges");
 
 			var d = this.range,
@@ -2090,13 +2135,22 @@ pzpr.classmgr.makeCommon({
 			}
 
 			var target = cursor.targetdir;
+			var cell = cursor.getc();
+
+			if (
+				cursor.disableAnum &&
+				this.puzzle.mouse.inputMode.indexOf("number") === -1
+			) {
+				target = 0;
+			}
 
 			g.vid = "target_subnum";
-			g.fillStyle = this.ttcolor;
+			g.fillStyle =
+				onshade && cell && cell.isShade() ? this.ttshadecolor : this.ttcolor;
 			if (this.puzzle.playmode && target !== 0) {
 				var bw = this.bw,
 					bh = this.bh;
-				var px = cursor.bx * bw + 0.5,
+				var px = cursor.bx * bw + 0.5 + this.getCellHorizontalOffset(cell),
 					py = cursor.by * bh + 0.5;
 				var tw = bw * 0.8,
 					th = bh * 0.8;
@@ -2153,7 +2207,7 @@ pzpr.classmgr.makeCommon({
 				d = this.range;
 
 			g.vid = "text_stpos";
-			var cell = bd.startpos.getc();
+			var cell = bd.startpos ? bd.startpos.getc() : bd.emptycell;
 			if (
 				cell.bx >= d.x1 &&
 				d.x2 >= cell.bx &&
@@ -2193,6 +2247,42 @@ pzpr.classmgr.makeCommon({
 					g.vhide();
 				}
 			}
+		},
+
+		fillStar: function(g, px, py, sizeX, sizeY) {
+			// 星を描画するときの頂点の位置
+			var starXOffset = [
+				0,
+				0.235,
+				0.95,
+				0.38,
+				0.588,
+				0,
+				-0.588,
+				-0.38,
+				-0.95,
+				-0.235
+			];
+			var starYOffset = [
+				-1,
+				-0.309,
+				-0.309,
+				0.124,
+				0.809,
+				0.4,
+				0.809,
+				0.124,
+				-0.309,
+				-0.309
+			];
+
+			g.beginPath();
+			g.moveTo(px, py - sizeY);
+			for (var p = 1; p < 10; p++) {
+				g.lineTo(px + sizeX * starXOffset[p], py + sizeY * starYOffset[p]);
+			}
+			g.closePath();
+			g.fill();
 		},
 
 		//--------------------------------------------------------------------------
@@ -2579,7 +2669,7 @@ pzpr.classmgr.makeCommon({
 				return;
 			}
 
-			var g = this.vinc("piecebank", "crispEdges"),
+			var g = this.vinc("piecebank"),
 				bd = this.board;
 
 			var count = Math.max(bd.bank.pieces.length, this.lastBankPieceCount);

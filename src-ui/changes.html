@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html">
+
+<script type="text/javascript">
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister()
+      }
+    })
+  });
+}
+</script>
+
+<title>pzprjs changes</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    margin: 0;
+    padding: 0 0 0 16px;
+  }
+</style>
+</head>
+<body>
+<main>
+<div style="margin-bottom: 5px;"><b>Latest types</b> (<em><a href="/list.html" target="_parent">all types</a></em>)</div>
+<ul>
+  <li><a href="/p?pmemory" target="_parent">Persistence of Memory</a></li>
+  <li><a href="/p?mrtile" target="_parent">Mirroring Tile ミラーリングタイル</a></li>
+  <li><a href="/p?kissing" target="_parent">Kissing Polyominoes</a></li>
+  <li><a href="/p?lineofsight" target="_parent">Line of Sight サイトライン</a></li>
+  <li><a href="/p?tetrominous" target="_parent">Tetrominous</a></li>
+  <li><a href="/p?mannequin" target="_parent">Mannequin Gate マネキンゲート</a></li>
+  <li><a href="/p?nothing" target="_parent">All or Nothing オールｏｒナッシング</a></li>
+</ul>
+</main>
+</body>

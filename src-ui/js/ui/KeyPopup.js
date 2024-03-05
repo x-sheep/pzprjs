@@ -38,6 +38,7 @@ ui.keypopup = {
 		sukoro: [4, 4],
 		sukororoom: [4, 4],
 		lookair: [5, 0],
+		hebi: [5, 5],
 		tawa: [6, 0],
 		hashikake: [8, 0],
 		tapa: [8, 0],
@@ -51,10 +52,10 @@ ui.keypopup = {
 		ayeheya: [10, 0],
 		kurodoko: [10, 0],
 		nagenawa: [10, 0],
-		ringring: [10, 0],
 		numlin: [10, 0],
 		nurikabe: [10, 0],
 		nuribou: [10, 0],
+		norinuri: [10, 0],
 		mochikoro: [10, 0],
 		mochinyoro: [10, 0],
 		shikaku: [10, 0],
@@ -85,10 +86,11 @@ ui.keypopup = {
 		kakuru: [10, 10],
 		kazunori: [10, 10],
 		skyscrapers: [10, 10],
-		kropki: [10, 10],
+		kropki: [0, 10],
 		tilepaint: [51, 0],
 		triplace: [51, 0],
 		kakuro: [51, 10],
+		usoone: [4, 0],
 
 		slalom: [101, 0],
 		reflect: [102, 0],
@@ -98,6 +100,7 @@ ui.keypopup = {
 		tatamibari: [112, 0],
 		hakoiri: [113, 113],
 		kusabi: [114, 0],
+		aqre: [10, 0],
 		doppelblock: [10, 115],
 		interbd: [116, 0],
 		toichika2: [10, 10],
@@ -134,7 +137,63 @@ ui.keypopup = {
 		anglers: [122, 0],
 		heyablock: [10, 0],
 		koburin: [4, 0],
-		mirrorbk: [10, 0]
+		mirrorbk: [10, 0],
+		takoyaki: [4, 0],
+		lightshadow: [10, 0],
+		familyphoto: [10, 0],
+		icelom: [10, 0],
+		icelom2: [10, 0],
+		icewalk: [10, 0],
+		ladders: [10, 0],
+		akichi: [10, 0],
+		slashpack: [10, 0],
+		remlen: [10, 0],
+		cocktail: [10, 0],
+		news: [123, 123],
+		dbchoco: [10, 0],
+		nurimisaki: [10, 0],
+		nonogram: [10, 0],
+		box: [10, 0],
+		aquarium: [10, 0],
+		snake: [10, 0],
+		tents: [10, 0],
+		armyants: [10, 0],
+		araf: [10, 0],
+		bosanowa: [10, 10],
+		meander: [10, 10],
+		juosan: [10, 0],
+		walllogic: [10, 0],
+		mines: [8, 0],
+		pencils: [10, 0],
+		minarism: [10, 10],
+		trainstations: [124, 0],
+		wafusuma: [10, 0],
+		kuroclone: [10, 0],
+		martini: [10, 0],
+		simplegako: [10, 10],
+		tontonbeya: [113, 113],
+		magnets: [125, 0],
+		fracdiv: [51, 0],
+		battleship: [126, 0],
+		heyapin: [10, 0],
+		detour: [10, 0],
+		maxi: [10, 0],
+		tetrochain: [10, 0],
+		brownies: [127, 0],
+		sashikazune: [10, 0],
+		patchwork: [10, 0],
+		waterwalk: [10, 0],
+		haisu: [10, 0],
+		wittgen: [4, 0],
+		aquapelago: [10, 0],
+		compass: [10, 0],
+		mukkonn: [10, 0],
+		tachibk: [10, 0],
+		alter: [113, 113],
+		mannequin: [10, 0],
+		tetrominous: [128, 128],
+		lineofsight: [10, 0],
+		mrtile: [10, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -260,6 +319,18 @@ ui.keypopup = {
 			this.generate_cts(mode);
 		} else if (type === 122) {
 			this.generate_anglers(mode);
+		} else if (type === 123) {
+			this.generate_news(mode);
+		} else if (type === 124) {
+			this.generate_trainstations(mode);
+		} else if (type === 125) {
+			this.generate_magnets(mode);
+		} else if (type === 126) {
+			this.generate_battleship(mode);
+		} else if (type === 127) {
+			this.generate_brownies(mode);
+		} else if (type === 128) {
+			this.generate_tetrominous(mode);
 		}
 	},
 	gentable4: function(mode) {
@@ -337,12 +408,19 @@ ui.keypopup = {
 			pid === "crossstitch" ||
 			pid === "yajisoko"
 		) {
-		} else if (!ui.puzzle.painter.hideHatena) {
-			cap = "?";
 		} else if (pid === "tasquare") {
 			cap = "□";
-		} else if (pid === "rectslider") {
+		} else if (
+			pid === "rectslider" ||
+			pid === "aquapelago" ||
+			pid === "mrtile"
+		) {
 			cap = "■";
+		} else if (pid === "patchwork") {
+			cap = {
+				text: "■",
+				color: "rgb(204,204,204)"
+			};
 		} else if (
 			pid === "kurotto" ||
 			pid === "bonsan" ||
@@ -350,12 +428,39 @@ ui.keypopup = {
 			pid === "heyabon" ||
 			pid === "yosenabe" ||
 			pid === "herugolf" ||
-			pid === "kazunori"
+			pid === "kazunori" ||
+			pid === "nurimisaki" ||
+			pid === "amibo" ||
+			pid === "firefly" ||
+			pid === "shikaku" ||
+			pid === "aho" ||
+			pid === "bosanowa" ||
+			pid === "minarism"
 		) {
 			cap = "○";
+		} else if (!ui.puzzle.painter.hideHatena) {
+			cap = "?";
 		}
 		if (cap !== null) {
 			itemlist.push(["-", cap]);
+		}
+		if (pid === "familyphoto") {
+			itemlist.push(["q", "●"]);
+		}
+		if (
+			pid === "icelom" ||
+			pid === "icelom2" ||
+			pid === "icewalk" ||
+			pid === "waterwalk" ||
+			pid === "dbchoco"
+		) {
+			itemlist.push([
+				"q",
+				{
+					text: "■",
+					color: pid === "dbchoco" ? "rgb(204,204,204)" : "rgb(192,224,255)"
+				}
+			]);
 		}
 		this.generate_main(itemlist, 4);
 	},
@@ -390,7 +495,23 @@ ui.keypopup = {
 	},
 	gentable5: function(mode) {
 		this.generate_main(
-			["1", "2", "3", "4", "5", null, "0", " ", ["-", "?"]],
+			[
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				null,
+				"0",
+				" ",
+				[
+					"-",
+					{
+						text: mode === 1 ? "?" : "・",
+						color: mode === 3 ? "rgb(255, 96, 191)" : ""
+					}
+				]
+			],
 			3
 		);
 	},
@@ -398,7 +519,13 @@ ui.keypopup = {
 		this.generate_main(["1", "2", "3", "4", "5", "6", "0", " ", ["-", "?"]], 3);
 	},
 	gentable8: function(mode) {
-		if (ui.puzzle.pid !== "tapa" && ui.puzzle.pid !== "tapaloop") {
+		var pid = ui.puzzle.pid;
+		if (pid === "brownies") {
+			this.generate_main(
+				["1", "2", "3", "4", "5", "6", "7", "8", " ", ["-", "?"], ["w", "○"]],
+				4
+			);
+		} else if (pid !== "tapa" && pid !== "tapaloop" && pid !== "mines") {
 			this.generate_main(
 				["1", "2", "3", "4", "5", "6", "7", "8", " ", ["-", "○"]],
 				4
@@ -512,22 +639,21 @@ ui.keypopup = {
 		);
 	},
 	generate_hakoiri: function(mode) {
-		this.generate_main(
-			[
-				["1", "○"],
-				["2", "△"],
-				["3", "□"],
-				[
-					"4",
-					{
-						text: mode === 1 ? "?" : "・",
-						color: mode === 3 ? "rgb(255, 96, 191)" : ""
-					}
-				],
-				" "
-			],
-			3
-		);
+		var pid = ui.puzzle.pid,
+			itemlist = [];
+
+		itemlist.push(["1", "○"], ["2", "△"], ["3", "□"]);
+		if (pid === "hakoiri" || pid === "alter") {
+			itemlist.push([
+				"4",
+				{
+					text: mode === 1 ? "?" : "・",
+					color: mode === 3 ? "rgb(255, 96, 191)" : ""
+				}
+			]);
+		}
+		itemlist.push(" ");
+		this.generate_main(itemlist, 3);
 	},
 	generate_kusabi: function(mode) {
 		this.generate_main(
@@ -619,6 +745,17 @@ ui.keypopup = {
 
 		this.generate_main(items, 5);
 	},
+	generate_tetrominous: function(mode) {
+		var items = "ilost".split("").map(function(c) {
+			return [c, { text: c.toUpperCase() }];
+		});
+		if (mode === 1) {
+			items.push(["-", "?"], ["q", "■"]);
+		}
+		items.push(" ");
+
+		this.generate_main(items, 4);
+	},
 	generate_snakepit: function() {
 		this.generate_main(
 			[
@@ -680,6 +817,118 @@ ui.keypopup = {
 				" "
 			],
 			5
+		);
+	},
+	generate_news: function(mode) {
+		var mbcolor = ui.puzzle.painter.mbcolor;
+		this.generate_main(
+			[
+				mode === 3 ? ["z", { text: "○", color: mbcolor }] : " ",
+				["n", "N"],
+				" ",
+				["w", "W"],
+				["x", mode === 3 ? { text: "⋅", color: mbcolor } : "×"],
+				["e", "E"],
+				" ",
+				["s", "S"],
+				" "
+			],
+			3
+		);
+	},
+
+	generate_trainstations: function(mode) {
+		this.generate_main(
+			[
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9",
+				" ",
+				["-", "?"],
+				["q", "╋"]
+			],
+			4
+		);
+	},
+
+	generate_magnets: function(mode) {
+		this.generate_main(
+			[
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9",
+				" ",
+				["q", { text: "■", color: "gray" }],
+				["1", "╋"],
+				["2", "━"]
+			],
+			4
+		);
+	},
+
+	generate_battleship: function(mode) {
+		this.imgCR = [10, 1];
+		this.generate_main(
+			[
+				["7", { image: 6 }],
+				["8", { image: 7 }],
+				["1", { image: 4 }],
+				"1",
+				"2",
+				"3",
+				["9", { image: 8 }],
+				["a", { image: 9 }],
+				["2", { image: 5 }],
+				"4",
+				"5",
+				"6",
+				["3", { image: 2 }],
+				["5", { image: 0 }],
+				["4", { image: 3 }],
+				"7",
+				"8",
+				"9",
+				["6", { image: 1 }],
+				["0", { text: "~", color: "blue" }],
+				["-", "?"],
+				" ",
+				"0"
+			],
+			6
+		);
+	},
+
+	generate_brownies: function(mode) {
+		this.generate_main(
+			[
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				" ",
+				["q", "○"],
+				["w", "■"]
+			],
+			4
 		);
 	},
 
@@ -820,6 +1069,8 @@ ui.keypopup = {
 			"R0lGODlhAAFAAMIEAAICAmBgYJ+fn///////AP//AP//AP//ACH5BAEKAAQALAAAAAAAAUAAAAP+OLrc/jDKSau9OOvNu/9gKI5kaZ5oqq5s675wLM90bd94ru+24AdAH68BKBqHNqNyyWw6n9DSD2oMCHhMZI3K7XqLI0Hgq7TmstoZec0GhMTt8jW5TKvj+OhnnFfOaWh2MH2EdR0ChUtmd0qCMYmJHXxOQFZ/P5OUjEeOL5CFHJmKfxFTmp2oIZ+EG6JVpBVwTQGptR2rfRquAIsbiLO2wRi4eRm7tB+yS7DCzQ7EeBi/yyO7zCiBziTQcRfTfiWuyCzZ2iLcbReu1yDrLeXmIOhsFt9F7CGu74bx5/NkFkSNO2EPAL4R8Prd+vclFpODbxKWkKhQA8OGFAS2EAX+UR6/ih4ueqFQsGPEMiCDieySUZGLkilrreTSEpwLjjFTzaRCweULewNz2tmpR4JPTyhTUBQ6geiTCUBjiFKxlGkEp06gUoMxVelHqxawNpmAE4Y9kxyqevw4dkFbt+XeQhBbtezPrSfUfpDLN67fr8/oNpLQ1SxeE3pDZuv7Ve4Ax4EFgyF8uMVZr4MxZ368+O9mzoCJSJ5cqjILeyAZb3bMuupo0hAucw3tTDUnBa0bu36tNemLwmCRvHbT1Lflo8GHDO9JG0XU5MJ5kzWdwm7e5tBFjyaJXAVMzbCzX5Ve3OaK5+CJizdKnrLx9GgXfl4fWbJD6iQ0rkgMfXmvBX0pfEcVdvT5x113+SF43Xz0MWBgTeYliF+DgLTH3IShMBEUhTc8eCCGxjQRH4fkWAjhe744MSKJ+5l4YoQhisjiDh4GRMmKBRmx4lq3zQiafa08YQlUu+goA3/J1agOFUH44CQQXOyoCoHrKelNkXj08giV4lkpTSJaHslldl5Kg2UXYW4SHotlapAjk1Iu2KOPVplCyZB05pmDk0Lo6eefgAYq6KCEFmrooSwkAAA7",
 		anglers:
 			"R0lGODdhgABAAPQAAP///wICAp+fn4CAgLCwsMDAwD8/PwAAABAQEFBQUKCgoO/v7yAgIDAwMJCQkN/f329vb39/fx8fH8/Pzy8vL6+vr7+/vw8PD2BgYF9fX0BAQE9PT4+PjwAAAAAAAAAAACwAAAAAgABAAAAF/yAgjmRpnmiqrmzrvnAsz3Rt33iu73zv/8CgcEgsGoOBpHLJbDqfUOexGK1ar80pEcvtSrVCr9gLDo/P1plgQCgUyim0HDozHO74hGIBH83/TDFrDHiFdw0OD3CAjAExEIaReAN8Wo2Aj3gSBnaSd5RTl3+ZnyMTERSSDBVHonMxFnknAhKRoFuuaLCyKBEXhhiVZrlju3grvoUNwkDEZzK1d6wqE7+aE8POXTKQdxktqZrMPdpiMhXiLRnKSOXb0HjY6oXBP+7vMRu84IUC9vdY1BSy8CLcHXk8AAass49FtYY6FF6hESvei4oHyUmsUqPTAQbjVHjUoHEjHRoP2O+5wHjA3w6TUWx08/Zi3aGEMJ/cMNjSRUqLEXN+sRFNmgt9pYIKDXTj4aQWAiDaWJoFBzp6DguFpEGVqVVDy1YYdImj65IdTp+mSHYgglKzPB7wTGoCo4G3XX0gVTYAoQi7eKn+iKoKQxsATsOWNZskCFtPYDVInizZLwvGjYXMhMz5AMEXmB0REWCzs6TPLkJPsQCBk2mgqTH3ATDQgu3btrfGkd1Haw7VvY/95r1I+GLGs30fhxv8TuClyY3fAF7c+XDkzQ88Fzo7gne315nPxol9/Evi5sPnTb89J/v38OPLn0+/vv37+PPr3z8+BAA7",
+		battleship:
+			"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",
 		reflect:
 			"R0lGODlhAAFAAIABAAAAAP///yH5BAEKAAEALAAAAAAAAUAAAAL+jI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6bgD8H/A9AMSi8YhMKpdJCPMJjSKdQiCOGJFqt9Mh96vNYq22ogSMflLT7OPZTJ4ZJ+362GGv0+dxmHufh7YW+EXR1cdy+EbINcgoVdGEqCJp+BjmdRlloTSJ0smpCeUoWmlp6hmyhFHKRNoKFwqaCuLKCqvIgJt7OkvLoZaxy4c3fHcx+ruRLGz8WrrMrCxrq+GciQu8OR25HZ2N3dqByS3m/S0eLuqxVf7si76ufvnR6K7bXp9eDK2ff4+gUK1+/DSpEggwCEJ/9OYFEiEIYMSDDQsyGpHmXkb+jBUbGOQ4URmbEh3xXSTRZlpKkict2jGhh1ZMlg8dbqQ50tPLE4Tegfm0s0+eFDVd3oQ5NE5RnkE9NkWaFEhPSjOdriQ6lUdLrDmN2qOaNcejFlethuQatsxYskdN/mS7Vm3cRGcXtAU7V4Y8F3UV9EWb9wVBvgvdkiO8V/BgxIcNn2P8EXJJycG8rtILi3JgzfDsNlacecWuGp/9QqIxDO8+OY89S8M8mmls0q9dV0N9DWVu2rcd84KdGmTwG5XNosJtrArD4cQvW1YuN/nA5NCj/7G8g3qseLuvHDf9m7d2bdqrN79u/JjY8uq7sZeK3jF89ubNvZ/fHnx+7/Q96z9nrtV2bpHRn4A2SUfgfgEpyF+BiziolH8HMNgghP8hqJQTCW3IYYcefghiiCKOSGKJJp6IYooqrlhOAQA7",
 		shitappa:

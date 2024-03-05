@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<meta name="google" content="notranslate">
 
 <link rel="stylesheet" href="./css/ui.css?<%= git.hash %>" type="text/css">
 <script type="text/javascript" src="./js/pzpr.js?<%= git.hash %>"></script>
@@ -48,10 +49,10 @@
        <li data-value="2"><span>__font.serif__</span></li>
      </menu></li>
      <hr>
-     <li class="check" data-config="dispqnumbg"><span>__dispqnumbg__</span></li>
      <li class="check" data-config="undefcell"><span>__undefcell__</span></li>
      <li class="check" data-config="cursor"><span>__cursor__</span></li>
      <li class="check" data-config="trialmarker"><span>__trialmarker__</span></li>
+     <li class="check" data-config="timer"><span>__timer.menu__</span></li>
      <li class="check" data-config="adjsize"><span>__adjsize__</span></li>
      <li class="check" data-config="fullwidth"><span>__fullwidth__</span></li>
      <hr>
@@ -139,6 +140,7 @@
       <div class="child" data-value="water">__inputmode.water__</div>
       <div class="child" data-value="nabe">__inputmode.nabe__</div>
       <div class="child" data-value="box">__inputmode.box__</div>
+      <div class="child" data-value="pin">__inputmode.pin__</div>
       <div class="child" data-value="crossdot">__inputmode.crossdot__</div>
       <div class="child" data-value="ineq">__inputmode.ineq__</div>
       <div class="child" data-value="move-clue">__inputmode.move-clue__</div>
@@ -164,6 +166,7 @@
       <div class="child" data-value="copycircle">__inputmode.copycircle__</div>
       <div class="child" data-value="copynum">__inputmode.copynum__</div>
       <div class="child" data-value="copyletter">__inputmode.copyletter__</div>
+      <div class="child" data-value="copysymbol">__inputmode.copysymbol__</div>
       <div class="child" data-value="dragnum+">__inputmode.dragnum+__</div>
       <div class="child" data-value="dragnum-">__inputmode.dragnum-__</div>
       <div class="child" data-value="objblank">__inputmode.objblank__</div>
@@ -179,6 +182,7 @@
       <div class="child" data-value="info-line">__inputmode.info-line__</div>
       <div class="child" data-value="info-blk">__inputmode.info-blk__</div>
       <div class="child" data-value="info-ublk">__inputmode.info-ublk__</div>
+      <div class="child" data-value="info-room">__inputmode.info-room__</div>
       <div class="child" data-value="info-road">__inputmode.info-road__</div>
      </div>
     </div>
@@ -297,6 +301,24 @@
         <span>__context_marks__</span>
       </label>
     </div>
+    <div class="config" data-config="dispqnumbg">
+      <label>
+        <input type="checkbox">
+        <span>__dispqnumbg__</span>
+      </label>
+    </div>
+    <div class="config" data-config="mouseonly">
+      <label>
+        <input type="checkbox">
+        <span>__mouseonly__</span>
+      </label>
+    </div>
+    <div class="config" data-config="patchwork_leftaux">
+      <label>
+        <input type="checkbox">
+        <span>__patchwork_leftaux__</span>
+      </label>
+    </div>
     <div class="config" data-config="keypopup">
       <label>
         <input type="checkbox">
@@ -356,6 +378,12 @@
         <span>__nuriuzu_connect__</span>
       </label>
     </div>
+    <div class="config" data-config="bdwalk_height">
+      <label>
+        <input type="checkbox">
+        <span>__bdwalk_height__</span>
+      </label>
+    </div>
     <div class="config" data-config="pentopia_transparent">
       <label>
         <input type="checkbox">
@@ -366,6 +394,24 @@
       <label>
         <input type="checkbox">
         <span>__koburin_minesweeper__</span>
+      </label>
+    </div>
+    <div class="config" data-config="akichi_maximum">
+      <label>
+        <input type="checkbox">
+        <span>__akichi_maximum__</span>
+      </label>
+    </div>
+    <div class="config" data-config="magnets_anti">
+      <label>
+        <input type="checkbox">
+        <span>__magnets_anti__</span>
+      </label>
+    </div>
+    <div class="config" data-config="heyapin_overlap">
+      <label>
+        <input type="checkbox">
+        <span>__heyapin_overlap__</span>
       </label>
     </div>
     <div class="config" data-config="variant">
@@ -395,6 +441,8 @@
   <button type="button" class="btn" id="btnflush"   data-button-exec="flushexcell">__flushexcell__</button>
   <button type="button" class="btn" id="btnpresets" data-button-exec="applypreset">__applypreset__</button>
   <button type="button" class="btn" data-disp-pid="stostone" data-press-exec="dropblocks,resetblocks">__dropblocks__</button>
+  <button type="button" class="btn" data-disp-pid="slither" data-button-exec="outlineshaded">__outlineshaded__</button>
+  <button type="button" class="btn" data-disp-pid="myopia" data-button-exec="outlineshaded">__outlineshaded__</button>
   <button type="button" class="btn" id="btntrial"   data-button-exec="enterTrial">__enterTrial__</button>
   <div id="btntrialarea" style="display:none;">
     <button type="button" class="btn btn-ok" id="btntriala"  data-button-exec="acceptTrial">__acceptTrial__</button
@@ -681,9 +729,9 @@
   <div class="popup">
     <div class="titlebar">__network.title__</div>
     <form name="network">
-    <button type="button" class="btn" data-button-exec="coop">Start</button>
+    <button type="button" class="btn" data-button-exec="coop">__network.start__</button>
     <br>
-    Share this link to play with someone: <br>
+    <span>__network.share__</span> <br>
     <a id="urlanchor_network" class="urlanchor" target="_blank"></a>
     <br>
     <button type="button" class="btn" data-button-exec="close">__close__</button>

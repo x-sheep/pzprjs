@@ -12,21 +12,8 @@
 	// マウス入力系
 	MouseEvent: {
 		inputModes: { edit: ["number", "clear"], play: ["border", "subline"] },
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					if (this.btn === "left" && this.isBorderMode()) {
-						this.inputborder();
-					} else {
-						this.inputQsubLine();
-					}
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					this.inputqnum();
-				}
-			}
-		}
+		autoedit_func: "qnum",
+		autoplay_func: "border"
 	},
 
 	//---------------------------------------------------------
@@ -237,7 +224,7 @@
 			this.checkAllArea(
 				this.board.roommgr,
 				function(w, h, a, n) {
-					return n < 0 || n % 3 === 0 || w * h === a;
+					return n === -1 || (n > 0 && n !== a) || a % 3 === 0 || w * h === a;
 				},
 				"bkNotRect3"
 			);
@@ -253,7 +240,8 @@
 				}
 
 				var n = cell.qnum;
-				if (n < 0 || n % 3 !== 0) {
+				var a = clist.length;
+				if (n === -1 || (n > 0 && n !== a) || a % 3 !== 0) {
 					continue;
 				}
 				var d = clist.getRectSize();

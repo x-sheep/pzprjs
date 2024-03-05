@@ -1,6 +1,3 @@
-//
-// パズル固有スクリプト部 ひとりにしてくれ hitori.js
-//
 (function(pidlist, classbase) {
 	if (typeof module === "object" && module.exports) {
 		module.exports = [pidlist, classbase];
@@ -65,8 +62,6 @@
 					dot.setDot(1);
 				} else if (ca === " " || ca === "-" || ca === "0") {
 					dot.setDot(0);
-				} else {
-					return;
 				}
 				dot.draw();
 			}
@@ -168,6 +163,7 @@
 	// 正解判定処理実行部
 	AnsCheck: {
 		checklist: [
+			"checkShadeCellExist",
 			"checkAdjacentShadeCell",
 			"checkShadeOverNum",
 			"checkConnectUnshadeRB",

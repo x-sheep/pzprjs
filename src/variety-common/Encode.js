@@ -732,7 +732,10 @@ pzpr.classmgr.makeCommon({
 					count = 0;
 				}
 			}
-			if (count > 0) {
+			if (count > 0 || cm === "") {
+				// cm == "" && count == 0 happens for 1xn / nx1 boards
+				// with no potential crosses. This is encoded as "0" as
+				// "all 0 of the 0 potential crosses are not crosses"
 				cm += count.toString(36);
 			}
 
@@ -802,36 +805,50 @@ pzpr.classmgr.makeCommon({
 		// enc.encodeIce() cell.ques===6をエンコードする
 		//---------------------------------------------------------------------------
 		decodeBinary: function(prop, val) {
-			var bstr = this.outbstr,
-				bd = this.board;
+			var bd = this.board;
+			this.genericDecodeBinary(bd.cell.length, function(c, newval) {
+				if (newval) {
+					bd.cell[c][prop] = val;
+				}
+			});
+		},
+		genericDecodeBinary: function(length, set_func) {
+			var bstr = this.outbstr;
 
 			var c = 0,
 				twi = [16, 8, 4, 2, 1];
 			for (var i = 0; i < bstr.length; i++) {
 				var num = parseInt(bstr.charAt(i), 32);
 				for (var w = 0; w < 5; w++) {
-					if (!!bd.cell[c]) {
-						if (num & twi[w]) {
-							bd.cell[c][prop] = val;
-						}
+					if (c < length) {
+						set_func(c, !!(num & twi[w]));
 						c++;
 					}
 				}
-				if (!bd.cell[c]) {
+				if (c >= length) {
 					break;
 				}
 			}
 			this.outbstr = bstr.substr(i + 1);
 		},
 		encodeBinary: function(prop, val, skipnone) {
+			var bd = this.board;
+			this.genericEncodeBinary(
+				bd.cell.length,
+				function(c) {
+					return bd.cell[c][prop] === val;
+				},
+				skipnone
+			);
+		},
+		genericEncodeBinary: function(length, get_func, skipnone) {
 			var cm = "",
 				num = 0,
 				pass = 0,
-				twi = [16, 8, 4, 2, 1],
-				bd = this.board;
+				twi = [16, 8, 4, 2, 1];
 			var found = false;
-			for (var c = 0; c < bd.cell.length; c++) {
-				if (bd.cell[c][prop] === val) {
+			for (var c = 0; c < length; c++) {
+				if (get_func(c)) {
 					pass += twi[num];
 					found = true;
 				}
@@ -848,7 +865,9 @@ pzpr.classmgr.makeCommon({
 
 			if (found || !skipnone) {
 				this.outbstr += cm;
+				return true;
 			}
+			return false;
 		},
 		decodeIce: function() {
 			this.decodeBinary("ques", 6);
@@ -860,7 +879,7 @@ pzpr.classmgr.makeCommon({
 			this.decodeBinary("ques", 7);
 		},
 		encodeEmpty: function() {
-			this.encodeBinary("ques", 7, true);
+			return this.encodeBinary("ques", 7, true);
 		},
 
 		//---------------------------------------------------------------------------

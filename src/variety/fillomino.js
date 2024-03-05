@@ -3,18 +3,26 @@
 //
 
 /* global Set:false */
-(function(pidlist, classbase) {
+(function(classbase) {
+	var pidlist = [
+		"fillomino",
+		"symmarea",
+		"pentominous",
+		"snakepit",
+		"wafusuma",
+		"tetrominous"
+	];
 	if (typeof module === "object" && module.exports) {
 		module.exports = [pidlist, classbase];
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["fillomino", "symmarea", "pentominous", "snakepit"], {
+})({
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
 		inputModes: {
-			edit: ["number", "clear"],
+			edit: ["number", "border", "clear"],
 			play: ["copynum", "number", "clear", "border", "subline"]
 		},
 		mouseinput_other: function() {
@@ -36,6 +44,10 @@
 				} else if (this.btn === "right") {
 					this.inputQsubLine();
 				}
+			}
+
+			if (this.puzzle.editmode && this.mousemove && this.pid !== "wafusuma") {
+				this.inputborder();
 			}
 
 			if (this.mouseend && this.notInputted()) {
@@ -82,9 +94,9 @@
 			this.mouseCell = cell;
 		}
 	},
-	"MouseEvent@pentominous": {
+	"MouseEvent@pentominous,tetrominous": {
 		inputModes: {
-			edit: ["empty", "letter", "letter-", "clear"],
+			edit: ["empty", "letter", "letter-", "border", "clear"],
 			play: ["copyletter", "letter", "letter-", "clear", "border", "subline"]
 		},
 
@@ -93,37 +105,18 @@
 				this.inputqnum();
 			} else if (this.inputMode === "copyletter") {
 				this.dragnumber_fillomino();
-			} else if (this.inputMode === "empty") {
-				this.inputempty();
 			}
-		}
-	},
-	"MouseEvent@pentominous,snakepit#2": {
-		inputempty: function() {
-			var cell = this.getcell();
-			if (cell.isnull || cell === this.mouseCell) {
-				return;
-			}
-			if (this.inputData === null) {
-				this.inputData = cell.isEmpty() ? 0 : 7;
-			}
-
-			cell.setQues(this.inputData);
-			cell.drawaround();
-			this.mouseCell = cell;
 		}
 	},
 	"MouseEvent@snakepit": {
 		inputModes: {
-			edit: ["number", "circle-unshade", "shade", "empty", "clear"],
+			edit: ["number", "circle-unshade", "shade", "empty", "border", "clear"],
 			play: ["copynum", "number", "clear", "border", "subline"]
 		},
 
 		mouseinput: function() {
 			if (this.inputMode === "circle-unshade") {
 				this.inputCircle();
-			} else if (this.inputMode === "empty") {
-				this.inputempty();
 			} else {
 				this.common.mouseinput.call(this);
 			}
@@ -141,6 +134,80 @@
 			this.inputIcebarn();
 		}
 	},
+	"MouseEvent@wafusuma": {
+		inputModes: {
+			edit: ["number", "clear"],
+			play: ["copynum", "number", "clear", "border", "subline"]
+		},
+		inputqnum: function() {
+			if (this.puzzle.editmode) {
+				this.inputmark_mouseup();
+			} else {
+				this.common.inputqnum.call(this);
+			}
+		},
+		inputmark_mouseup: function() {
+			var pos = this.getpos(0.33);
+			if (!pos.isinside()) {
+				return;
+			}
+
+			if (!this.cursor.equals(pos)) {
+				this.setcursor(pos);
+				pos.draw();
+			} else {
+				var border = pos.getb();
+				if (border.isnull) {
+					return;
+				}
+
+				var qn = border.qnum,
+					min = border.getminnum(),
+					max = border.maxnum();
+				if (this.btn === "left") {
+					if (qn === -1) {
+						border.setQnum(-2);
+					} else if (qn === -2) {
+						border.setQnum(min);
+					} else if (qn >= max) {
+						border.setQnum(-1);
+					} else {
+						border.setQnum(qn + 1);
+					}
+				} else if (this.btn === "right") {
+					if (qn === -1) {
+						border.setQnum(max);
+					} else if (qn === min) {
+						border.setQnum(-2);
+					} else if (qn === -2) {
+						border.setQnum(-1);
+					} else {
+						border.setQnum(qn - 1);
+					}
+				}
+				border.draw();
+			}
+		},
+		inputFixedNumber: function(num) {
+			if (this.puzzle.playmode) {
+				return this.common.inputFixedNumber.call(this, num);
+			}
+
+			var border = this.getpos(0.33).getb();
+			if (border.isnull || border === this.mouseCell) {
+				return;
+			}
+			var val = border.qnum;
+			if (this.inputData === null) {
+				this.inputData = val === num ? -1 : num;
+			}
+			if (val !== num || this.inputData === -1) {
+				border.setQnum(this.inputData);
+				border.draw();
+			}
+			this.mouseCell = border;
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
@@ -148,7 +215,12 @@
 		enablemake: true,
 		enableplay: true,
 		moveTarget: function(ca) {
-			if (this.puzzle.playmode && (this.isCTRL || this.isX || this.isZ)) {
+			if (this.pid === "wafusuma" && this.puzzle.editmode) {
+				return this.moveTBorder(ca);
+			} else if (
+				this.puzzle.playmode &&
+				(this.isCTRL || this.isX || this.isZ)
+			) {
 				return this.move_fillomino(ca);
 			}
 			return this.moveTCell(ca);
@@ -240,7 +312,7 @@
 		}
 	},
 
-	"KeyEvent@pentominous": {
+	"KeyEvent@pentominous,tetrominous": {
 		keyinput: function(ca) {
 			if (this.puzzle.editmode && ca === "q") {
 				this.key_inputvalid();
@@ -268,6 +340,36 @@
 			return null;
 		}
 	},
+	"KeyEvent@wafusuma": {
+		keyinput: function(ca) {
+			if (this.puzzle.editmode) {
+				this.key_inputmark(ca);
+			} else if (this.puzzle.playmode) {
+				this.key_inputqnum(ca);
+			}
+		},
+		key_inputmark: function(ca) {
+			var border = this.cursor.getb();
+			if (border.isnull) {
+				return;
+			}
+
+			var val = this.getNewNumber(border, ca, border.qnum);
+			if (val === null) {
+				return;
+			}
+			border.setQnum(val);
+
+			this.prev = border;
+			border.draw();
+		}
+	},
+	"TargetCursor@wafusuma": {
+		adjust_modechange: function() {
+			this.bx -= (this.bx + 1) % 2;
+			this.by -= (this.by + 1) % 2;
+		}
+	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
@@ -284,6 +386,16 @@
 			anum: function() {
 				this.rebuildAroundCell();
 			}
+		},
+
+		isSameBlock: function(other) {
+			if (this.getNum() !== -1 && this.eqblk === other.eqblk) {
+				return true;
+			}
+			if (this.nblk === other.nblk) {
+				return this.nblk.complete;
+			}
+			return false;
 		},
 
 		rebuildAroundCell: function() {
@@ -315,8 +427,17 @@
 			});
 		}
 	},
-	"Cell@pentominous": {
+	"Cell@pentominous,tetrominous#1": {
 		enableSubNumberArray: true,
+		prehook: {
+			anum: function(num) {
+				return !this.isValid();
+			}
+		},
+
+		minnum: 0
+	},
+	"Cell@pentominous": {
 		letters: "FILNPTUVWXYZ",
 		lettershapes: [
 			"3:001111010",
@@ -332,39 +453,15 @@
 			"2:01011101",
 			"3:001111100"
 		],
-
-		prehook: {
-			anum: function(num) {
-				return !this.isValid();
-			}
-		},
-
-		setValid: function(inputData) {
-			this.setQues(inputData);
-			this.setQnum(-1);
-			this.adjborder.top.qans = 0;
-			this.adjborder.bottom.qans = 0;
-			this.adjborder.right.qans = 0;
-			this.adjborder.left.qans = 0;
-			this.drawaround();
-			this.board.roommgr.rebuild();
-		},
-
-		minnum: 0,
 		maxnum: 11
+	},
+	"Cell@tetrominous": {
+		letters: "ILOST",
+		lettershapes: ["1:1111", "2:010111", "2:1111", "2:011110", "2:011101"],
+		maxnum: 4
 	},
 	"Cell@snakepit": {
 		minnum: 2,
-
-		isSameBlock: function(other) {
-			if (this.getNum() !== -1 && this.eqblk === other.eqblk) {
-				return true;
-			}
-			if (this.nblk === other.nblk) {
-				return this.nblk.complete;
-			}
-			return false;
-		},
 
 		equalcount: function() {
 			var cell = this;
@@ -375,6 +472,10 @@
 	},
 	Border: {
 		posthook: {
+			ques: function() {
+				this.sidecell[0].rebuildAroundCell();
+				this.sidecell[1].rebuildAroundCell();
+			},
 			qans: function(num) {
 				this.sidecell[0].rebuildAroundCell();
 				this.sidecell[1].rebuildAroundCell();
@@ -399,7 +500,12 @@
 				}
 				return;
 			}
-			var num = this.pid !== "pentominous" ? block.clist[0].getNum() : 5;
+			var num =
+				this.pid === "pentominous"
+					? 5
+					: this.pid === "tetrominous"
+					? 4
+					: block.clist[0].getNum();
 			var newcmp = num === block.clist.length ? 1 : 0;
 
 			if (this.puzzle.pid === "snakepit") {
@@ -431,7 +537,41 @@
 		},
 
 		isQuesBorder: function() {
-			return this.sidecell[0].isEmpty() || this.sidecell[1].isEmpty();
+			return (
+				this.ques || this.sidecell[0].isEmpty() || this.sidecell[1].isEmpty()
+			);
+		}
+	},
+	"Border@wafusuma": {
+		minnum: 3,
+		maxnum: function() {
+			return this.board.cols * this.board.rows;
+		},
+		isBorder: function() {
+			return this.qans > 0;
+		},
+		isQuesBorder: function() {
+			return false;
+		}
+	},
+	"CellList@wafusuma": {
+		hasLooseBorder: function() {
+			for (var i = 0; i < this.length; i++) {
+				var cell = this[i];
+				if (
+					cell.adjborder.right.qnum !== -1 &&
+					cell.isSameBlock(cell.adjacent.right)
+				) {
+					return true;
+				}
+				if (
+					cell.adjborder.bottom.qnum !== -1 &&
+					cell.isSameBlock(cell.adjacent.bottom)
+				) {
+					return true;
+				}
+			}
+			return false;
 		}
 	},
 	Board: {
@@ -454,6 +594,7 @@
 		relation: {
 			"cell.qnum": "node",
 			"cell.anum": "node",
+			"border.ques": "separator",
 			"border.qans": "separator"
 		},
 		enabled: true,
@@ -479,15 +620,11 @@
 			return num1 === num2;
 		}
 	},
-	"Board@pentominous": {
+	"Board@pentominous,tetrominous": {
 		initBoardSize: function(col, row) {
 			this.common.initBoardSize.call(this, col, row);
 
-			if (this.puzzle.playeronly) {
-				return;
-			}
-
-			var odd = (col * row) % 5;
+			var odd = (col * row) % (this.pid === "pentominous" ? 5 : 4);
 			if (odd >= 1) {
 				this.getc(this.minbx + 1, this.minby + 1).ques = 7;
 			}
@@ -509,6 +646,7 @@
 			"cell.ques": "node",
 			"cell.qnum": "node",
 			"cell.anum": "node",
+			"border.ques": "separator",
 			"border.qans": "separator",
 			"border.qcmp": "separator"
 		},
@@ -553,6 +691,7 @@
 			component.number =
 				numkind === 1 ? filled : numkind === 0 ? clist.length : -1;
 			component.complete = clist.length === component.number;
+			component.looseborders = null;
 		},
 
 		getComponentRefs: function(cell) {
@@ -568,6 +707,13 @@
 			component.clist = new this.klass.CellList(component.getnodeobjs());
 			component.numkind = 1;
 			component.number = 5;
+		}
+	},
+	"AreaNumBlockGraph@tetrominous": {
+		setExtraData: function(component) {
+			component.clist = new this.klass.CellList(component.getnodeobjs());
+			component.numkind = 1;
+			component.number = 4;
 		}
 	},
 
@@ -610,18 +756,18 @@
 			this.drawChassis();
 
 			this.drawCursor();
-		}
-	},
+		},
 
-	"Graphic@pentominous": {
 		getBorderColor: function(border) {
 			if (border.isQuesBorder()) {
-				return "black";
+				return border.error === 1 ? this.errcolor1 : "black";
 			}
 
 			return this.getBorderColor_qans(border);
-		},
+		}
+	},
 
+	"Graphic@pentominous,tetrominous": {
 		getNumberTextCore: function(num) {
 			return num === -2 ? "?" : this.klass.Cell.prototype.letters[num] || "";
 		}
@@ -631,14 +777,80 @@
 		fontsizeratio: 0.65
 	},
 
+	"Graphic@wafusuma": {
+		paint: function() {
+			this.drawBGCells();
+			this.drawTargetSubNumber();
+			this.drawDashedGrid();
+
+			this.drawBorders();
+			this.drawCursor(this.puzzle.playmode);
+			this.drawQuesNumbersBD();
+
+			this.drawSubNumbers();
+			this.drawAnsNumbers();
+
+			this.drawBorderQsubs();
+
+			this.drawChassis();
+		},
+
+		drawQuesNumbersBD: function() {
+			var g = this.vinc("border_nums", "auto", true);
+
+			var csize = this.cw * 0.27;
+
+			g.lineWidth = 1;
+			g.strokeStyle = this.quescolor;
+
+			var option = { ratio: 0.45 };
+			var blist = this.range.borders;
+			for (var i = 0; i < blist.length; i++) {
+				var border = blist[i],
+					px = border.bx * this.bw,
+					py = border.by * this.bh;
+
+				// ○の描画
+				g.vid = "b_cp_" + border.id;
+				if (border.qnum !== -1) {
+					g.fillStyle = border.error === 1 ? this.errbcolor1 : "white";
+					g.shapeCircle(px, py, csize);
+				} else {
+					g.vhide();
+				}
+
+				// 数字の描画
+				g.vid = "border_text_" + border.id;
+				if (border.qnum > 0) {
+					g.fillStyle = this.quescolor;
+					this.disptext("" + border.qnum, px, py, option);
+				} else {
+					g.vhide();
+				}
+			}
+		}
+	},
+
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
 	Encode: {
 		decodePzpr: function(type) {
 			this.decodeNumber16();
+			this.decodeBorder();
 		},
 		encodePzpr: function(type) {
 			this.encodeNumber16();
+			this.encodeBorderIfPresent();
+		},
+
+		encodeBorderIfPresent: function() {
+			if (
+				this.board.border.some(function(b) {
+					return b.ques === 1;
+				})
+			) {
+				this.encodeBorder();
+			}
 		},
 
 		decodeKanpen: function() {
@@ -648,9 +860,13 @@
 			this.fio.encodeCellQnum_kanpen();
 		}
 	},
-	"Encode@pentominous": {
+	"Encode@pentominous,tetrominous": {
 		decodePzpr: function(type) {
 			var bd = this.board;
+			for (var c = 0; c < bd.cell.length; c++) {
+				bd.cell[c].setQues(0);
+			}
+
 			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
 				if (val === 12) {
 					bd.cell[c].ques = 7;
@@ -658,22 +874,26 @@
 					bd.cell[c].qnum = val;
 				}
 			});
+			this.decodeBorder();
 		},
 		encodePzpr: function(type) {
 			var bd = this.board;
 			this.genericEncodeNumber16(bd.cell.length, function(c) {
 				return bd.cell[c].isEmpty() ? 12 : bd.cell[c].qnum;
 			});
+			this.encodeBorderIfPresent();
 		}
 	},
 	"Encode@snakepit": {
 		decodePzpr: function(type) {
 			this.decodeNumber16();
 			this.decodeQues();
+			this.decodeBorder();
 		},
 		encodePzpr: function(type) {
 			this.encodeNumber16();
 			this.encodeQues();
+			this.encodeBorderIfPresent();
 		},
 		decodeNumber16: function() {
 			var bd = this.board;
@@ -706,10 +926,32 @@
 			});
 		}
 	},
+	"Encode@wafusuma": {
+		decodePzpr: function(type) {
+			var bds = this.board.border;
+			this.genericDecodeNumber16(bds.length, function(r, val) {
+				bds[r].qnum = val;
+			});
+		},
+		encodePzpr: function(type) {
+			var bds = this.board.border;
+			this.genericEncodeNumber16(bds.length, function(r) {
+				return bds[r].qnum;
+			});
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
-			this.decodeCellQnum();
+			if (this.puzzle.pid === "wafusuma") {
+				this.decodeBorder(function(border, ca) {
+					if (ca !== ".") {
+						border.qnum = +ca;
+					}
+				});
+			} else {
+				this.decodeCellQnum();
+			}
 			if (this.puzzle.pid === "snakepit") {
 				this.decodeCell(function(cell, ca) {
 					cell.ques = ca !== "." ? +ca : 0;
@@ -720,7 +962,13 @@
 			this.decodeBorderAns();
 		},
 		encodeData: function() {
-			this.encodeCellQnum();
+			if (this.puzzle.pid === "wafusuma") {
+				this.encodeBorder(function(border) {
+					return border.qnum === -1 ? ". " : border.qnum + " ";
+				});
+			} else {
+				this.encodeCellQnum();
+			}
 			if (this.puzzle.pid === "snakepit") {
 				this.encodeCell(function(cell) {
 					return cell.ques >= 0 ? cell.ques + " " : ". ";
@@ -729,6 +977,41 @@
 
 			this.encodeCellAnumsub();
 			this.encodeBorderAns();
+		},
+
+		decodeBorderAns: function() {
+			this.decodeBorder(function(border, ca) {
+				if (ca === "-X") {
+					border.qsub = 1;
+					border.ques = 1;
+				} else if (ca === "X") {
+					border.ques = 1;
+				} else if (ca === "2") {
+					border.qans = 1;
+					border.qsub = 1;
+				} else if (ca === "1") {
+					border.qans = 1;
+				} else if (ca === "-1") {
+					border.qsub = 1;
+				}
+			});
+		},
+		encodeBorderAns: function() {
+			this.encodeBorder(function(border) {
+				if (border.ques === 1 && border.qsub === 1) {
+					return "-X ";
+				} else if (border.ques === 1) {
+					return "X ";
+				} else if (border.qans === 1 && border.qsub === 1) {
+					return "2 ";
+				} else if (border.qans === 1) {
+					return "1 ";
+				} else if (border.qsub === 1) {
+					return "-1 ";
+				} else {
+					return "0 ";
+				}
+			});
 		},
 
 		kanpenOpen: function() {
@@ -773,7 +1056,7 @@
 		UNDECIDED_NUM_XML: 0
 	},
 
-	"FileIO@pentominous": {
+	"FileIO@pentominous,tetrominous": {
 		decodeCellQnum: function() {
 			this.decodeCell(function(cell, ca) {
 				cell.ques = 0;
@@ -817,7 +1100,10 @@
 			"checkSideAreaNumberSize",
 			"checkLargeArea",
 			"checkNumKinds",
+			"checkCircleSum@wafusuma",
 			"checkRoomSymm@symmarea",
+			"checkLineOnCircle@wafusuma",
+			"checkGivenLines",
 			"checkNoNumCell_fillomino+"
 		],
 
@@ -884,22 +1170,51 @@
 					return cell.noNum();
 				}, "ceNoNum");
 			}
+		},
+
+		checkGivenLines: function() {
+			var borders = this.board.border;
+			for (var id = 0; id < borders.length; id++) {
+				var border = borders[id];
+				if (border.isnull || !border.isBorder()) {
+					continue;
+				}
+				var a1 = border.sidecell[0].nblk,
+					a2 = border.sidecell[1].nblk;
+				if (
+					a1 !== a2 ||
+					a1.numkind > 1 ||
+					a2.numkind > 1 ||
+					a1.number !== a2.number
+				) {
+					continue;
+				}
+				this.failcode.add("bdUnused");
+				if (this.checkOnly) {
+					break;
+				}
+				borders.setnoerr();
+				border.seterr(1);
+				a1.clist.seterr(1);
+			}
 		}
 	},
 
-	"AnsCheck@pentominous": {
+	"AnsCheck@pentominous,tetrominous#1": {
 		checklist: [
 			"checkSmallArea",
 			"checkLetterBlock",
 			"checkDifferentShapeBlock",
+			"checkGivenLines",
 			"checkLargeArea"
 		],
 
 		checkLetterBlock: function() {
+			var size = this.pid === "pentominous" ? 5 : 4;
 			this.checkAllCell(function(cell) {
 				return (
 					cell.isNum() &&
-					cell.nblk.clist.length === 5 &&
+					cell.nblk.clist.length === size &&
 					cell.lettershapes[cell.getNum()] !==
 						cell.nblk.clist.getBlockShapes().canon
 				);
@@ -908,10 +1223,11 @@
 
 		checkDifferentShapeBlock: function() {
 			var sides = this.board.numblkgraph.getSideAreaInfo();
+			var size = this.pid === "pentominous" ? 5 : 4;
 			for (var i = 0; i < sides.length; i++) {
 				var area1 = sides[i][0],
 					area2 = sides[i][1];
-				if (area1.clist.length !== 5 || area2.clist.length !== 5) {
+				if (area1.clist.length !== size || area2.clist.length !== size) {
 					continue;
 				}
 				if (this.isDifferentShapeBlock(area1, area2)) {
@@ -930,6 +1246,10 @@
 	"FailCode@pentominous": {
 		bkSizeLt: "bkSizeLt5",
 		bkSizeGt: "bkSizeGt5"
+	},
+	"FailCode@tetrominous": {
+		bkSizeLt: "bkSizeLt4",
+		bkSizeGt: "bkSizeGt4"
 	},
 	"AnsCheck@snakepit": {
 		// TODO reduce amount of errors when forceallcell is on
@@ -1045,6 +1365,73 @@
 						break;
 					}
 				}
+			}
+		}
+	},
+	"AnsCheck@wafusuma": {
+		checkCircleSum: function() {
+			var borders = this.board.border;
+			for (var id = 0; id < borders.length; id++) {
+				var border = borders[id];
+				if (
+					border.isnull ||
+					border.qnum <= 0 ||
+					border.sidecell[0].isSameBlock(border.sidecell[1])
+				) {
+					continue;
+				}
+
+				var sum = 0;
+				for (var side = 0; side <= 1 && sum !== -1; side++) {
+					var cell = border.sidecell[side];
+					if (cell.nblk.looseborders === null) {
+						cell.nblk.looseborders = cell.nblk.clist.hasLooseBorder();
+					}
+
+					if (cell.getNum() !== -1) {
+						sum += cell.getNum();
+					} else if (cell.nblk.looseborders) {
+						sum = -1;
+					} else if (cell.nblk.numkind <= 1) {
+						sum += cell.nblk.number;
+					} else {
+						sum = -1;
+					}
+				}
+
+				if (sum === -1 || sum === border.qnum) {
+					continue;
+				}
+
+				this.failcode.add("nmSumNe");
+				if (this.checkOnly) {
+					break;
+				}
+				borders.setnoerr();
+				border.seterr(1);
+				for (var side = 0; side <= 1; side++) {
+					border.sidecell[side].nblk.clist.seterr(1);
+				}
+			}
+		},
+
+		checkLineOnCircle: function() {
+			var borders = this.board.border;
+			for (var id = 0; id < borders.length; id++) {
+				var border = borders[id];
+				if (
+					border.isnull ||
+					border.qnum === -1 ||
+					!border.sidecell[0].isSameBlock(border.sidecell[1])
+				) {
+					continue;
+				}
+
+				this.failcode.add("bdUnusedCircle");
+				if (this.checkOnly) {
+					break;
+				}
+				border.seterr(1);
 			}
 		}
 	}

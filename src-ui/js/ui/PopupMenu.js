@@ -29,7 +29,9 @@ ui.popupmgr = {
 
 	setEvents: function() {
 		ui.event.addEvent(_doc, "mousemove", this, this.titlebarmove);
+		ui.event.addEvent(_doc, "touchmove", this, this.titlebarmove);
 		ui.event.addEvent(_doc, "mouseup", this, this.titlebarup);
+		ui.event.addEvent(_doc, "touchend", this, this.titlebarup);
 	},
 
 	//---------------------------------------------------------------------------
@@ -235,6 +237,13 @@ ui.popupmgr.addpopup("template", {
 //---------------------------------------------------------------------------
 ui.popupmgr.addpopup("newboard", {
 	formname: "newboard",
+
+	translate: function() {
+		ui.popupmgr.popups.template.translate.call(this);
+		if (ui.puzzle.klass.Bank.prototype.enabled) {
+			this.loadpresets();
+		}
+	},
 
 	reset: function() {
 		ui.misc.displayByPid(this.pop);
@@ -892,8 +901,10 @@ ui.popupmgr.addpopup("turnflip", {
 	formname: "turnflip",
 
 	reset: function() {
-		this.form.turnl.disabled = ui.puzzle.pid === "tawa";
-		this.form.turnr.disabled = ui.puzzle.pid === "tawa";
+		var exec = ui.puzzle.board.exec;
+		var allowed = exec.allowedOperations(false);
+		this.form.turnl.disabled = !(allowed & exec.TURN);
+		this.form.turnr.disabled = !(allowed & exec.TURN);
 	},
 
 	adjust: function(e) {

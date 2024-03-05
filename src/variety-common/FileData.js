@@ -236,6 +236,36 @@ pzpr.classmgr.makeCommon({
 			var snumtext = list.join(",");
 			return snumtext !== ",,," ? "[" + snumtext + "]" : "";
 		},
+		decodeCellSnum: function() {
+			this.decodeCell(function(cell, ca) {
+				ca = this.setCellSnum(cell, ca);
+			});
+		},
+		encodeCellSnum: function(isforce) {
+			if (!isforce) {
+				var found = false;
+				var cells = this.board.cell;
+
+				for (var c = 0; c < cells.length && !found; c++) {
+					var cell = cells[c];
+					for (var i = 0; i < cell.snum.length; ++i) {
+						if (cell.snum[i] !== -1) {
+							found = true;
+						}
+					}
+				}
+				if (!found) {
+					return;
+				}
+			}
+			this.encodeCell(function(cell) {
+				var ca = this.getCellSnum(cell);
+				if (ca) {
+					return ca + " ";
+				}
+				return ". ";
+			});
+		},
 		//---------------------------------------------------------------------------
 		// fio.decodeCellQsub() 背景色のデコードを行う
 		// fio.encodeCellQsub() 背景色のエンコードを行う
@@ -302,7 +332,7 @@ pzpr.classmgr.makeCommon({
 		// fio.decodeBorderArrowAns() Decode lines and dir. aux. marks
 		// fio.encodeBorderArrowAns() Encode lines and dir. aux. marks
 		//---------------------------------------------------------------------------
-		decodeBorderAns: function() {
+		decodeBorderAns: function(hasborder) {
 			this.decodeBorder(function(border, ca) {
 				if (ca === "2") {
 					border.qans = 1;
@@ -312,9 +342,9 @@ pzpr.classmgr.makeCommon({
 				} else if (ca === "-1") {
 					border.qsub = 1;
 				}
-			});
+			}, hasborder);
 		},
-		encodeBorderAns: function() {
+		encodeBorderAns: function(hasborder) {
 			this.encodeBorder(function(border) {
 				if (border.qans === 1 && border.qsub === 1) {
 					return "2 ";
@@ -325,7 +355,7 @@ pzpr.classmgr.makeCommon({
 				} else {
 					return "0 ";
 				}
-			});
+			}, hasborder);
 		},
 		decodeBorderArrowAns: function() {
 			this.decodeBorder(function(border, ca) {

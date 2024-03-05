@@ -20,6 +20,9 @@
 				this.dragnumber_nanro();
 			}
 		},
+		mouseinput_clear: function() {
+			this.inputFixedNumber(-1);
+		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
 				if (this.mousestart || this.mousemove) {
@@ -49,9 +52,7 @@
 			}
 			if (this.mouseCell.isnull) {
 				this.inputData = cell.getNum();
-				if (this.inputData === -2) {
-					this.inputData = null;
-				} else if (this.inputData === -1) {
+				if (this.inputData === -1) {
 					if (cell.qsub === 1) {
 						this.inputData = -2;
 					} else if (cell.qsub === 2) {

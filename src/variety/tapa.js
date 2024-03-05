@@ -16,20 +16,22 @@
 			edit: ["number", "clear", "info-blk"],
 			play: ["shade", "unshade", "info-blk"]
 		},
-		mouseinput: function() {
-			// オーバーライド
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					this.inputcell();
-				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					this.inputqnum_tapa();
-				}
+		autoedit_func: "qnum",
+		autoplay_func: "cell",
+		mouseinput_clear: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
 			}
+
+			cell.setQnums([]);
+			cell.setQans(0);
+			cell.setQsub(0);
+			cell.draw();
+			this.mouseCell = cell;
 		},
 
-		inputqnum_tapa: function() {
+		inputqnum: function() {
 			var cell = this.getcell();
 			if (cell.isnull || cell === this.mouseCell) {
 				return;
@@ -188,12 +190,14 @@
 	},
 
 	AreaShadeGraph: {
-		enabled: true
+		enabled: true,
+		coloring: true
 	},
 
 	//---------------------------------------------------------
 	// 画像表示系
 	Graphic: {
+		irowakeblk: true,
 		qanscolor: "black",
 
 		paint: function() {

@@ -616,7 +616,7 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		operate: function(type) {
 			if (this.trialstage > 0 && this.exec.isBoardOp(type)) {
-				throw "board operations are not possible in trial mode";
+				throw Error("board operations are not possible in trial mode");
 			}
 			this.exec.execadjust(type);
 		},
@@ -768,6 +768,9 @@ pzpr.classmgr.makeCommon({
 		// bd.modifyInfo()       黒マス・白マス・境界線や線が入力されたり消された時に情報を変更する
 		//--------------------------------------------------------------------------------
 		rebuildInfo: function() {
+			if (this.bank) {
+				this.bank.rebuildExtraData();
+			}
 			this.infolist.forEach(function(info) {
 				info.rebuild();
 			});

@@ -61,6 +61,7 @@
 			qcmpbgcolor: "rgb(224, 224, 255)",
 			trialcolor: "rgb(160, 160, 160)",
 			subcolor: "rgb(127, 127, 255)",
+			subshadecolor: "rgb(220, 220, 255)",
 
 			// 黒マスの色
 			shadecolor: "black",
@@ -91,6 +92,7 @@
 			linecolor: "rgb(0, 160, 0)", // 色分けなしの場合
 			errlinecolor: "rgb(255, 0, 0)",
 			noerrcolor: "rgb(160, 160, 160)", // エラー表示時, エラーでない線/境界線の描画色
+			linetrialcolor: "rgb(160, 160, 160)",
 
 			movelinecolor: "silver",
 			movetrialcolor: "rgb(255, 160, 0)",
@@ -105,6 +107,7 @@
 			targetColorPlay: "rgb(64,  64, 255)",
 			targetColorTrial: "rgb(255,  64, 255)",
 			ttcolor: "rgb(127,255,127)", // ques=51の入力ターゲット(TargetTriangle)
+			ttshadecolor: "rgb(0,127,0)",
 
 			movecolor: "red",
 
@@ -143,6 +146,8 @@
 			// canvas内での盤面の左上座標
 			x0: 0,
 			y0: 0,
+			basex0: 0,
+			basey0: 0,
 
 			// 描画単位(デフォルト値)
 			cw: 36, // セルの横幅
@@ -341,16 +346,18 @@
 				}
 
 				// 盤面のセルID:0が描画される左上の位置の設定 (Canvas左上からのオフセット)
-				var x0 = (this.x0 =
-					(((cwid - this.cw * this.getBoardCols()) / 2 +
-						this.cw * this.getOffsetCols()) |
-						0) +
-					0.5);
-				var y0 = (this.y0 =
-					(((chgt - this.ch * this.getBoardRows()) / 2 +
-						this.ch * this.getOffsetRows()) |
-						0) +
-					0.5);
+				var x0 =
+					(this.x0 =
+						(((cwid - this.cw * this.getBoardCols()) / 2 +
+							this.cw * this.getOffsetCols()) |
+							0) +
+						0.5) + this.basex0;
+				var y0 =
+					(this.y0 =
+						(((chgt - this.ch * this.getBoardRows()) / 2 +
+							this.ch * this.getOffsetRows()) |
+							0) +
+						0.5) + this.basey0;
 
 				// CanvasのOffset位置変更 (SVGの時、小数点以下の端数調整を行う)
 				if (!g.use.canvas) {
@@ -592,78 +599,56 @@
 			//---------------------------------------------------------------------------
 			// pc.getNewLineColor() 新しい色を返す
 			//---------------------------------------------------------------------------
-			getNewLineColor: function() {
-				var loopcount = 0;
+			labToRgbStr: function(LCoord, aCoord, bCoord) {
+				var delta = 6 / 29,
+					Xn = 95.0489,
+					Yn = 100,
+					Zn = 108.884;
 
-				while (1) {
-					var Rdeg = ((Math.random() * 384) | 0) - 64;
-					if (Rdeg < 0) {
-						Rdeg = 0;
+				var fInv = function(value) {
+					if (value > delta) {
+						return Math.pow(value, 3);
+					} else {
+						return 3 * Math.pow(delta, 2) * (value - 4 / 29);
 					}
-					if (Rdeg > 255) {
-						Rdeg = 255;
-					}
-					var Gdeg = ((Math.random() * 384) | 0) - 64;
-					if (Gdeg < 0) {
-						Gdeg = 0;
-					}
-					if (Gdeg > 255) {
-						Gdeg = 255;
-					}
-					var Bdeg = ((Math.random() * 384) | 0) - 64;
-					if (Bdeg < 0) {
-						Bdeg = 0;
-					}
-					if (Bdeg > 255) {
-						Bdeg = 255;
-					}
+				};
 
-					// HLSの各組成値を求める
-					var Cmax = Math.max(Rdeg, Math.max(Gdeg, Bdeg));
-					var Cmin = Math.min(Rdeg, Math.min(Gdeg, Bdeg));
+				var Ladj = (LCoord + 16) / 116,
+					X = Xn * fInv(Ladj + aCoord / 500),
+					Y = Yn * fInv(Ladj),
+					Z = Zn * fInv(Ladj - bCoord / 500);
 
-					var Hdeg = 0;
-					var Ldeg = ((Cmax + Cmin) * 0.5) / 255;
-					var Sdeg =
-						Cmax === Cmin
-							? 0
-							: (Cmax - Cmin) /
-							  (Ldeg <= 0.5 ? Cmax + Cmin : 2 * 255 - Cmax - Cmin);
+				var r = 2.041369 * X - 0.5649464 * Y - 0.3446944 * Z,
+					g = -0.969266 * X + 1.8760108 * Y + 0.041556 * Z,
+					b = 0.0134474 * X - 0.1183897 * Y + 1.0154096 * Z;
 
-					if (Cmax === Cmin) {
-						Hdeg = 0;
-					} else if (Rdeg >= Gdeg && Rdeg >= Bdeg) {
-						Hdeg = ((60 * (Gdeg - Bdeg)) / (Cmax - Cmin) + 360) % 360;
-					} else if (Gdeg >= Rdeg && Gdeg >= Bdeg) {
-						Hdeg = (120 + (60 * (Bdeg - Rdeg)) / (Cmax - Cmin) + 360) % 360;
-					} else if (Bdeg >= Gdeg && Bdeg >= Rdeg) {
-						Hdeg = (240 + (60 * (Rdeg - Gdeg)) / (Cmax - Cmin) + 360) % 360;
-					}
-
-					// YCbCrのYを求める
-					var Ydeg = (0.29891 * Rdeg + 0.58661 * Gdeg + 0.11448 * Bdeg) / 255;
-
-					if (
-						this.minYdeg < Ydeg &&
-						Ydeg < this.maxYdeg &&
-						Math.abs(this.lastYdeg - Ydeg) > 0.15 &&
-						(Sdeg < 0.02 || 0.4 < Sdeg) &&
-						(360 + this.lastHdeg - Hdeg) % 360 >= 45 &&
-						(360 + this.lastHdeg - Hdeg) % 360 <= 315
-					) {
-						this.lastHdeg = Hdeg;
-						this.lastYdeg = Ydeg;
-						//alert("rgb("+Rdeg+", "+Gdeg+", "+Bdeg+")\nHLS("+(Hdeg|0)+", "+(""+((Ldeg*1000)|0)*0.001).slice(0,5)+", "+(""+((Sdeg*1000|0))*0.001).slice(0,5)+")\nY("+(""+((Ydeg*1000)|0)*0.001).slice(0,5)+")");
-						return "rgb(" + Rdeg + "," + Gdeg + "," + Bdeg + ")";
-					}
-
-					loopcount++;
-					if (loopcount > 100) {
-						return "rgb(" + Rdeg + "," + Gdeg + "," + Bdeg + ")";
-					}
-				}
+				r = Math.max(Math.min(r * 2.55, 255), 0) | 0;
+				g = Math.max(Math.min(g * 2.55, 255), 0) | 0;
+				b = Math.max(Math.min(b * 2.55, 255), 0) | 0;
+				return "rgb(" + r + "," + g + "," + b + ")";
 			},
+			getNewLineColor: function() {
+				var lFloor = 60,
+					maxL = lFloor + this.puzzle.painter.maxYdeg * (100 - lFloor),
+					minL = lFloor + this.puzzle.painter.minYdeg * (100 - lFloor),
+					LCoord = Math.random() * (maxL - minL) + minL;
 
+				if (typeof this.currentColorTheta === "undefined") {
+					this.currentColorTheta = Math.random() * 360;
+				} else {
+					this.currentColorTheta += 137.28;
+				}
+
+				var maxabRadius = 127,
+					minabRadius = 75,
+					abRadius = Math.random() * (maxabRadius - minabRadius) + minabRadius,
+					aCoord =
+						Math.sin((this.currentColorTheta * Math.PI) / 180) * abRadius,
+					bCoord =
+						Math.cos((this.currentColorTheta * Math.PI) / 180) * abRadius;
+
+				return this.labToRgbStr(LCoord, aCoord, bCoord);
+			},
 			//---------------------------------------------------------------------------
 			// pc.repaintBlocks()  色分け時にブロックを再描画する
 			// pc.repaintLines()   ひとつながりの線を再描画する
