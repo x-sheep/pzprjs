@@ -1,6 +1,4 @@
 // test/render.js
-// jshint node:true, browser:false, esnext:true
-/* global describe:false, it:false */
 
 var pzpr = require("../../dist/js/pzpr.js");
 
