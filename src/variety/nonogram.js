@@ -8,7 +8,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["nonogram", "coral", "cts"], {
+})(["nonogram", "coral", "cts", "jsums"], {
 	MouseEvent: {
 		use: true,
 		inputModes: { edit: ["number"], play: ["shade", "unshade", "completion"] },
@@ -74,9 +74,32 @@
 		}
 	},
 
+	"MouseEvent@jsums": {
+		inputModes: {
+			edit: ["number"],
+			play: ["number", "clear", "numexist", "numblank", "completion"]
+		},
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart) {
+					this.inputqcmp();
+					this.inputqnum();
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.inputqnum_excell();
+				}
+			}
+		}
+	},
+
 	KeyEvent: {
 		enablemake: true,
 		moveTarget: function(ca) {
+			if (this.puzzle.playmode) {
+				return this.moveTCell(ca);
+			}
+
 			var cursor = this.cursor;
 			var excell0 = cursor.getex(),
 				dir = excell0.NDIR;
@@ -137,10 +160,62 @@
 			this.cursor.draw();
 		}
 	},
+	"KeyEvent@jsums": {
+		enableplay: true,
+		keyinput: function(ca) {
+			var excell = this.cursor.getex();
+			if (!excell.isnull && this.puzzle.editmode) {
+				this.key_inputqnum_main(excell, ca);
+			} else {
+				this.key_inputqnum(ca);
+			}
+		}
+	},
 
 	TargetCursor: {
 		initCursor: function() {
 			this.init(-1, -1);
+			this.adjust_init();
+		}
+	},
+	"TargetCursor@jsums": {
+		setminmax_customize: function() {
+			if (this.puzzle.editmode) {
+				return;
+			}
+			this.minx = 1;
+			this.miny = 1;
+		},
+
+		adjust_init: function() {
+			if (this.puzzle.editmode && this.bx > 0 && this.by > 0) {
+				if (this.bx > this.by) {
+					this.by = -1;
+				} else {
+					this.bx = -1;
+				}
+			} else {
+				pzpr.common.TargetCursor.prototype.adjust_init.call(this);
+			}
+		}
+	},
+
+	Cell: {
+		getValue: function() {
+			return this.qans ? 1 : -1;
+		}
+	},
+	"Cell@jsums": {
+		maxnum: 9,
+		numberWithMB: true,
+		enableSubNumberArray: true,
+
+		isDot: function() {
+			return this.qsub === 2;
+		},
+
+		getValue: function() {
+			return this.anum;
 		}
 	},
 
@@ -161,6 +236,10 @@
 				this.puzzle.board.excellOffsets = null;
 			}
 		}
+	},
+
+	"ExCell@jsums": {
+		maxnum: 45 // TODO not constant
 	},
 
 	"KeyEvent@cts": {
@@ -303,6 +382,26 @@
 		}
 	},
 
+	"Graphic@jsums": {
+		paint: function() {
+			this.drawBGCells();
+			this.drawDotCells();
+			this.drawTargetSubNumber();
+
+			this.drawGrid();
+
+			this.drawNumbersExCell();
+			this.drawMBs();
+
+			this.drawSubNumbers();
+			this.drawAnsNumbers();
+
+			this.drawChassis(true);
+
+			this.drawCursor();
+		}
+	},
+
 	"Graphic@cts": {
 		getQuesNumberText: function(excell) {
 			if (excell.qnum === 0) {
@@ -322,6 +421,7 @@
 	},
 
 	FileIO: {
+		// TODO implement for jsums
 		decodeData: function() {
 			this.decodeCellExCell(function(obj, ca) {
 				if (ca === ".") {
@@ -361,6 +461,7 @@
 		checklist: ["checkNonogram"],
 
 		excellsInUnknownOrder: false,
+		blankRowsAreWildcards: false,
 
 		checkNonogram: function() {
 			this.checkRowsCols(this.isExCellCount, "exNoMatch");
@@ -385,11 +486,11 @@
 
 			var lines = this.getLines(clist);
 
-			if (this.excellsInUnknownOrder) {
-				if (nums.length === 0) {
-					return true;
-				}
+			if (this.blankRowsAreWildcards && nums.length === 0) {
+				return true;
+			}
 
+			if (this.excellsInUnknownOrder) {
 				nums.sort();
 				lines.sort();
 			}
@@ -397,6 +498,7 @@
 			if (!this.puzzle.pzpr.util.sameArray(nums, lines)) {
 				clist.seterr(1);
 				excells.seterr(1);
+
 				return false;
 			}
 			return true;
@@ -406,9 +508,9 @@
 			var lines = [];
 			var count = 0;
 			for (var i = 0; i < clist.length; i++) {
-				var ans = clist[i].qans;
-				if (ans !== 0) {
-					count++;
+				var ans = clist[i].getValue();
+				if (ans >= 0) {
+					count += ans;
 				} else if (count > 0) {
 					lines.push(count);
 					count = 0;
@@ -430,6 +532,7 @@
 		],
 
 		excellsInUnknownOrder: true,
+		blankRowsAreWildcards: true,
 
 		checkConnectUnshadeOutside: function() {
 			var bd = this.board;
@@ -512,6 +615,16 @@
 				return false;
 			}
 			return true;
+		}
+	},
+	"AnsCheck@jsums": {
+		checklist: ["checkRange", "checkDifferentNumberInLine", "checkNonogram"],
+		blankRowsAreWildcards: true,
+
+		checkRange: function() {
+			this.checkAllCell(function(cell) {
+				return cell.anum > cell.getmaxnum();
+			}, "nmRange");
 		}
 	}
 });
