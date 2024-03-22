@@ -195,7 +195,7 @@
 					this.bx = -1;
 				}
 			} else {
-				pzpr.common.TargetCursor.prototype.adjust_init.call(this);
+				this.common.adjust_init.call(this);
 			}
 		}
 	},
@@ -421,7 +421,6 @@
 	},
 
 	FileIO: {
-		// TODO implement for jsums
 		decodeData: function() {
 			this.decodeCellExCell(function(obj, ca) {
 				if (ca === ".") {
@@ -451,6 +450,53 @@
 					} else if (obj.qsub === 1) {
 						return "+ ";
 					}
+				}
+				return ". ";
+			});
+		}
+	},
+	"FileIO@jsums": {
+		decodeData: function() {
+			this.decodeCellExCell(function(obj, ca) {
+				if (ca === ".") {
+					return;
+				} else if (obj.group === "excell" && !obj.isnull) {
+					if (ca[0] === "c") {
+						obj.qcmp = 1;
+						ca = ca.substring(1);
+					}
+					obj.qnum = +ca;
+				} else if (obj.group === "cell") {
+					if (obj.enableSubNumberArray && ca.indexOf("[") >= 0) {
+						ca = this.setCellSnum(obj, ca);
+					}
+					if (ca === "+") {
+						obj.qsub = 1;
+					} else if (ca === "-") {
+						obj.qsub = 2;
+					} else if (ca !== ".") {
+						obj.anum = +ca;
+					}
+				}
+			});
+		},
+		encodeData: function() {
+			this.encodeCellExCell(function(obj) {
+				if (obj.group === "excell" && !obj.isnull && obj.qnum !== -1) {
+					return (obj.qcmp ? "c" : "") + obj.qnum + " ";
+				} else if (obj.group === "cell") {
+					var ca = ".";
+					if (obj.anum !== -1) {
+						ca = "" + obj.anum;
+					} else if (obj.qsub === 1) {
+						ca = "+";
+					} else if (obj.qsub === 2) {
+						ca = "-";
+					}
+					if (obj.enableSubNumberArray && obj.anum === -1) {
+						ca += this.getCellSnum(obj);
+					}
+					return ca + " ";
 				}
 				return ". ";
 			});
