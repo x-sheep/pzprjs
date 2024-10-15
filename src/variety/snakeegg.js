@@ -229,7 +229,14 @@
 		}
 	},
 	"Cell@meidjuluk": {
-		minnum: 1
+		supportQnumAnum: true,
+		minnum: 1,
+		isNum: function() {
+			return this.isEmpty();
+		},
+		noNum: function() {
+			return this.isValid();
+		}
 	},
 
 	Board: {
@@ -550,13 +557,15 @@
 	"Encode@meidjuluk": {
 		decodePzpr: function() {
 			var bd = this.board;
-			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
-				if (val === 0) {
-					bd.cell[c].ques = 7;
-				} else {
-					bd.cell[c].qnum = val;
-				}
-			});
+			if (this.outbstr[0] !== "/") {
+				this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+					if (val === 0) {
+						bd.cell[c].ques = 7;
+					} else {
+						bd.cell[c].qnum = val;
+					}
+				});
+			}
 			this.decodePieceBank();
 		},
 		encodePzpr: function(type) {
