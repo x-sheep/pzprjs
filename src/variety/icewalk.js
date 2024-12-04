@@ -504,6 +504,9 @@
 		modifyOtherInfo: function(cell, relation) {
 			var nodes = this.getObjNodeList(cell);
 			if (nodes.length !== 2) {
+				if (cell.lcnt > 0) {
+					this.createNodeIfEmpty(cell);
+				}
 				return;
 			}
 

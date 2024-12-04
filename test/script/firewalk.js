@@ -44,6 +44,11 @@ ui.debug.addDebugData("firewalk", {
 			"pzprv3/firewalk/5/5/. 11 . 3 . /. . A A . /. . A B . /. . . 2 . /11 . 11 . # /0 1 0 0 1 0 /0 0 0 1 1 0 /0 0 1 1 1 0 /0 0 0 0 0 0 /0 1 1 0 1 0 /0 0 0 0 0 /1 1 0 1 1 /1 1 1 1 0 /1 0 1 1 0 /1 0 1 1 0 /0 0 0 0 0 /"
 		],
 		[
+			"lnPlLoop",
+			"pzprv3/firewalk/3/3/. . . /. C . /. . . /0 0 0 0 /0 0 1 0 /0 1 0 0 /0 0 0 /0 0 1 /0 1 0 /0 0 0 /",
+			{ skiprules: true }
+		],
+		[
 			"lnDeadEnd",
 			"pzprv3/firewalk/2/2/C . /. . /0 1 0 /0 1 0 /0 0 /1 1 /0 0 /",
 			{ skiprules: true }
@@ -80,6 +85,15 @@ ui.debug.addDebugData("firewalk", {
 				"pzprv3/firewalk/3/3/. . . /. A . /. . . /0 0 1 0 /0 1 1 0 /0 1 0 0 /0 0 0 /0 1 0 /0 1 0 /0 0 0 /"
 		},
 		{
+			result: function(puzzle, assert) {
+				var p1 = puzzle.board.getc(3, 1).path;
+				var p2 = puzzle.board.getc(1, 3).path;
+				var p3 = puzzle.board.getc(5, 3).path;
+				assert.equal(p1, p2);
+				assert.notEqual(p1, p3);
+			}
+		},
+		{
 			input: ["mouse,left,1,3,5,3"],
 			result:
 				"pzprv3/firewalk/3/3/. . . /. # . /. . . /0 0 1 0 /0 0 0 0 /0 1 0 0 /0 0 0 /0 1 0 /0 1 0 /0 0 0 /"
@@ -95,9 +109,22 @@ ui.debug.addDebugData("firewalk", {
 				"pzprv3/firewalk/3/3/. . . /. C . /. . . /0 0 0 0 /0 0 1 0 /0 1 0 0 /0 0 0 /0 0 0 /0 1 0 /0 0 0 /0 0 0 0 /0 1 2 0 /0 0 0 0 /0 0 0 0 /"
 		},
 		{
+			result: function(puzzle, assert) {
+				assert.notEqual(
+					puzzle.board.getc(5, 3).path,
+					puzzle.board.getc(3, 5).path
+				);
+			}
+		},
+		{
 			input: ["mouse,left,3,3"],
 			result:
 				"pzprv3/firewalk/3/3/. . . /. A . /. . . /0 0 0 0 /0 0 1 0 /0 1 0 0 /0 0 0 /0 0 0 /0 1 0 /0 0 0 /0 0 0 0 /0 1 2 0 /0 0 0 0 /0 0 0 0 /"
+		},
+		{
+			result: function(puzzle, assert) {
+				assert.equal(puzzle.board.linegraph.components.length, 1);
+			}
 		}
 	]
 });
