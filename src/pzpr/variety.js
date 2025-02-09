@@ -325,6 +325,7 @@
 			onsen: [0, 0, "温泉めぐり", "Onsen-meguri", "country"],
 			orbital: [0, 0, "オービタル", "Orbital", "nagenawa"],
 			outofsight: [0, 0, "Out Of Sight", "Out Of Sight", "yajikazu"],
+			overlap: [0, 0, "Overlapping Squares", "Overlapping Squares", "snakeegg"],
 			oyakodori: [0, 0, "おやこどり", "Oyakodori", "kaero"],
 			paintarea: [1, 0, "ペイントエリア", "Paintarea"],
 			parquet: [0, 0, "Parquet", "Parquet"],
