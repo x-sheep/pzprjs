@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["snakeegg", "meidjuluk"], {
+})(["snakeegg", "meidjuluk", "overlap"], {
 	MouseEvent: {
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
@@ -72,6 +72,13 @@
 			if (this.mouseend && this.notInputted()) {
 				this.inputqnum();
 			}
+		}
+	},
+	"MouseEvent@overlap": {
+		autoplay_func: "line",
+		inputModes: {
+			edit: ["number", "clear"],
+			play: ["number", "line", "peke"]
 		}
 	},
 
@@ -243,6 +250,11 @@
 			return this.isValid();
 		}
 	},
+	"Cell@overlap": {
+		supportQnumAnum: true, // TODO not functional
+		minnum: 0
+		// TODO maxnum for editmode
+	},
 
 	Board: {
 		getBankPiecesInGrid: function() {
@@ -260,6 +272,15 @@
 	"Board@meidjuluk": {
 		hasborder: 1
 	},
+	"Board@overlap": {
+		hasborder: 2,
+		borderAsLine: true,
+		// TODO crossing in borderAsLine mode is hopelessly broken
+		getBankPiecesInGrid: function() {
+			// TODO implement
+			return [];
+		}
+	},
 	"Border@meidjuluk": {
 		isQuesBorder: function() {
 			return this.sidecell[0].isEmpty() || this.sidecell[1].isEmpty();
@@ -276,6 +297,16 @@
 	},
 	"AreaRoomGraph@meidjuluk": {
 		enabled: true
+	},
+	"LineGraph@overlap": {
+		enabled: true,
+		isLineCross: true,
+		setExtraData: function(component) {
+			this.common.setExtraData.call(this, component);
+
+			// TODO implement this
+			component.square = null;
+		}
 	},
 	Bank: {
 		enabled: true,
@@ -432,8 +463,8 @@
 		paint: function() {
 			this.drawBGCells();
 
-			if (this.pid === "meidjuluk") {
-				this.drawDashedGrid();
+			if (this.pid === "meidjuluk" || this.pid === "overlap") {
+				this.drawDashedGrid(this.pid !== "overlap");
 			} else {
 				this.drawShadedCells();
 				this.drawGrid();
@@ -443,6 +474,9 @@
 			if (this.pid === "meidjuluk") {
 				this.drawBorders();
 				this.drawBorderQsubs();
+			} else if (this.pid === "overlap") {
+				this.drawLines();
+				this.drawPekes();
 			}
 
 			this.drawSubNumbers();
@@ -452,7 +486,9 @@
 				this.drawCircles();
 			}
 
-			this.drawChassis();
+			if (this.pid !== "overlap") {
+				this.drawChassis();
+			}
 
 			this.drawBank();
 			if (this.pid === "meidjuluk") {
@@ -460,10 +496,6 @@
 			} else {
 				this.drawTarget();
 			}
-		},
-
-		getNumberTextCore: function(num) {
-			return num > 0 ? "" + num : num === -2 ? "?" : "";
 		},
 
 		drawBankPiece: function(g, piece, idx) {
@@ -491,6 +523,11 @@
 			this.disptext(str, x, y, { ratio: 0.65 });
 		}
 	},
+	"Graphic@snakeegg,meidjuluk#1": {
+		getNumberTextCore: function(num) {
+			return num > 0 ? "" + num : num === -2 ? "?" : "";
+		}
+	},
 	"Graphic@meidjuluk": {
 		getBGCellColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
@@ -515,6 +552,10 @@
 		getCircleFillColor: function(cell) {
 			return cell.qnum === 0 ? this.quescolor : null;
 		}
+	},
+	"Graphic@overlap": {
+		irowake: true,
+		bordercolor_func: "qans"
 	},
 
 	Encode: {
@@ -584,12 +625,24 @@
 			this.encodePieceBank();
 		}
 	},
+	"Encode@overlap": {
+		decodePzpr: function() {
+			this.decodeNumber16();
+			this.decodePieceBank();
+		},
+		encodePzpr: function(type) {
+			this.encodeNumber16();
+			this.encodePieceBank();
+		}
+	},
 
 	FileIO: {
 		decodeData: function() {
 			this.decodeCellQnum();
 			if (this.pid === "meidjuluk") {
 				this.decodeBorderAns();
+			} else if (this.pid === "overlap") {
+				this.decodeBorderLine();
 			} else {
 				this.decodeCellAns();
 			}
@@ -601,6 +654,8 @@
 			this.encodeCellQnum();
 			if (this.pid === "meidjuluk") {
 				this.encodeBorderAns();
+			} else if (this.pid === "overlap") {
+				this.encodeBorderLine();
 			} else {
 				this.encodeCellAns();
 			}
@@ -743,6 +798,13 @@
 				);
 			}, "bkNumDivisor");
 		}
+	},
+	"AnsCheck@overlap": {
+		checklist: [
+			"checkBankPiecesAvailable",
+			"checkBankPiecesInvalid",
+			"checkBankPiecesUsed"
+		]
 	},
 	FailCode: {
 		shBranch: "shBranch.snake",
