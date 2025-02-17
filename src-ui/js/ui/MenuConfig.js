@@ -90,6 +90,7 @@
 					idname = "disptype_bosanowa";
 					break;
 				case "interbd":
+				case "outofsight":
 					idname = "disptype_interbd";
 					break;
 				case "arukone":
@@ -147,6 +148,9 @@
 				case "balance":
 				case "turnaround":
 				case "turnrun":
+				case "icewalk":
+				case "waterwalk":
+				case "firewalk":
 					idname = "loop_full";
 					break;
 			}
