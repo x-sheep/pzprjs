@@ -43,8 +43,7 @@ export function preview(res: VercelResponse, url: string) {
 		pzv = saveicons[details.pid] ?? pzv;
 	}
 
-	const canvas = {};
-	const p = new pzpr.Puzzle(canvas);
+	const p = new pzpr.Puzzle({ type: 'viewer' });
 	p.open(pzv, async () => {
 		p.setMode('play');
 		p.setConfig('undefcell', false);
