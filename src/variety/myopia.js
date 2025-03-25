@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["myopia"], {
+})(["myopia", "shiftopia"], {
 	MouseEvent: {
 		inputModes: {
 			edit: ["arrow", "undef", "clear", "info-line"],
@@ -69,6 +69,85 @@
 			return inputbg;
 		}
 	},
+	"MouseEvent@shiftopia": {
+		inputModes: {
+			edit: ["arrow", "undef", "clear", "info-line"],
+			play: ["line", "bgcolor", "bgcolor1", "bgcolor2", "clear", "completion"]
+		},
+		inputlight: function() {
+			var cell = this.getcell();
+			if (cell.isnull) {
+				return;
+			}
+
+			if (this.inputdark(cell, 1)) {
+				return;
+			}
+
+			if (this.mouseend && this.notInputted()) {
+				this.mouseCell = this.board.emptycell;
+			}
+			this.inputBGcolor();
+		},
+		inputqcmp: function(val) {
+			var cell = this.getcell();
+			if (cell.isnull) {
+				return;
+			}
+
+			this.inputdark(cell, val, true);
+		},
+		inputdark: function(cell, val, multi) {
+			var cell = this.getcell();
+			if (cell.isnull || (cell === this.mouseCell && multi)) {
+				return false;
+			}
+
+			var targetcell = !this.puzzle.execConfig("dispmove") ? cell : cell.base,
+				distance = 0.6,
+				dx = this.inputPoint.bx - cell.bx /* ここはtargetcellではなくcell */,
+				dy = this.inputPoint.by - cell.by;
+			if (
+				targetcell.isNum() &&
+				(this.inputMode === "completion" ||
+					(targetcell.qnum === -2 && dx * dx + dy * dy < distance * distance))
+			) {
+				if (this.inputData === null) {
+					this.inputData = targetcell.qcmp !== val ? 21 : 20;
+				}
+
+				targetcell.setQcmp(this.inputData === 21 ? val : 0);
+				cell.draw();
+				this.mouseCell = cell;
+				return true;
+			}
+			this.mouseCell = cell;
+			return false;
+		},
+		mouseinput_auto: function() {
+			if (this.puzzle.playmode) {
+				if (this.mousestart) {
+					var cell = this.getcell();
+					this.initFirstCell(cell);
+				}
+
+				if (this.inputData >= 20) {
+					this.inputdark(cell, 1, true);
+				} else if (this.btn === "right" && this.pid === "timebomb") {
+					this.inputBGcolor();
+				} else if (this.mousestart || this.mousemove) {
+					this.inputLine();
+				} else if (this.mouseend && this.notInputted()) {
+					this.inputlight();
+				}
+			} else if (this.puzzle.editmode) {
+				if (this.mousestart) {
+					this.setcursor(this.getcell());
+				}
+				this.inputarrow_cell();
+			}
+		}
+	},
 
 	KeyEvent: {
 		enablemake: true,
@@ -110,6 +189,13 @@
 			if (this.board.isenableSetError()) {
 				this.error |= num;
 			}
+		}
+	},
+	"Cell@shiftopia": {
+		isCmp: function() {
+			return (
+				(!this.puzzle.execConfig("dispmove") ? this : this.base).qcmp === 1
+			);
 		}
 	},
 
@@ -167,7 +253,7 @@
 		}
 	},
 
-	Board: {
+	"Board@myopia": {
 		hasborder: 2,
 		borderAsLine: true,
 
@@ -188,8 +274,11 @@
 			});
 		}
 	},
+	"Board@shiftopia": {
+		hasborder: 1
+	},
 
-	Border: {
+	"Border@myopia": {
 		updateShaded: function() {
 			var c0 = this.sidecell[0],
 				c1 = this.sidecell[1];
@@ -206,25 +295,50 @@
 			this.draw();
 		}
 	},
+	"Border@shiftopia": {
+		prehook: {
+			line: function(num) {
+				return this.puzzle.execConfig("dispmove") && this.checkFormCurve(num);
+			}
+		}
+	},
 
 	LineGraph: {
 		enabled: true
 	},
+	"LineGraph@shiftopia": {
+		moveline: true
+	},
+
+	"Graphic@myopia": {
+		irowake: true,
+		margin: 0.5
+	},
 
 	Graphic: {
-		irowake: true,
 		bgcellcolor_func: "qsub2",
 		numbercolor_func: "qnum",
-		margin: 0.5,
 
 		paint: function() {
 			this.drawBGCells();
-			this.drawLines();
-			this.drawBaseMarks();
+
+			if (this.pid === "shiftopia") {
+				this.drawGrid();
+				this.drawTip();
+				this.drawDepartures();
+				this.drawLines();
+				this.drawCircles();
+			} else {
+				this.drawLines();
+				this.drawBaseMarks();
+			}
 			this.drawCrossErrors();
 			this.drawArrowCombinations();
 			this.drawHatenas();
 			this.drawPekes();
+			if (this.pid === "shiftopia") {
+				this.drawChassis();
+			}
 			this.drawTarget();
 		},
 
@@ -248,7 +362,7 @@
 
 			for (var i = 0; i < clist.length; i++) {
 				var cell = clist[i];
-				var num = Math.max(0, cell.qnum);
+				var num = Math.max(0, cell.base ? cell.base.qnum : cell.qnum);
 
 				for (var dir = 1; dir <= 4; dir++) {
 					if (num & (1 << (dir - 1))) {
@@ -310,6 +424,10 @@
 			}
 		}
 	},
+	"Graphic@shiftopia": {
+		qsubcolor1: "rgb(224, 224, 255)",
+		circlefillcolor_func: "qcmp"
+	},
 
 	Encode: {
 		decodePzpr: function(type) {
@@ -337,7 +455,7 @@
 		}
 	},
 
-	AnsCheck: {
+	"AnsCheck@myopia": {
 		checklist: [
 			"checkBranchLine",
 			"checkCrossLine",
@@ -382,8 +500,9 @@
 				ret.push(row);
 			}
 			return (this._info.lineDirs = ret);
-		},
-
+		}
+	},
+	AnsCheck: {
 		checkLineDirExist: function() {
 			var clues = this.getLineDirs();
 			for (var i in clues) {
@@ -482,6 +601,68 @@
 					}
 				}
 			}
+		}
+	},
+	"AnsCheck@shiftopia": {
+		checklist: [
+			"checkLineExist+",
+			"checkBranchLine",
+			"checkCrossLine",
+
+			"checkConnectObject",
+			"checkLineOverLetter",
+			"checkCurveLine",
+
+			"checkLineDirExist",
+			"checkLineDirCloser",
+			"checkLineDirUnequal",
+
+			"checkDisconnectLine"
+		],
+
+		checkCurveLine: function() {
+			this.checkAllArea(
+				this.board.linegraph,
+				function(w, h, a, n) {
+					return w === 1 || h === 1;
+				},
+				"laCurve"
+			);
+		},
+
+		getLineDirs: function() {
+			if (this._info.lineDirs) {
+				return this._info.lineDirs;
+			}
+			var bd = this.board;
+			var ret = [];
+
+			for (var c = 0; c < bd.cell.length; c++) {
+				var cell0 = bd.cell[c];
+				if (cell0.base.qnum <= 0) {
+					continue;
+				}
+				var row = [cell0, -1, -1, -1, -1];
+				for (var dir = 1; dir <= 4; dir++) {
+					var addr = cell0.getaddr();
+					var cell1 = null;
+					do {
+						addr.movedir(dir, 2);
+						cell1 = addr.getc();
+					} while (!cell1.isnull && (!cell1.base || !cell1.base.isNum()));
+					if (cell1.base && cell1.base.isNum()) {
+						row[dir] =
+							Math.abs(
+								dir === addr.LT || dir === addr.RT
+									? addr.bx - cell0.bx
+									: addr.by - cell0.by
+							) / 2;
+					}
+				}
+				ret.push(row);
+			}
+
+			return (this._info.lineDirs = ret);
 		}
 	}
 });

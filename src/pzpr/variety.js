@@ -378,6 +378,7 @@
 			],
 			scrin: [0, 0, "スクリン", "Scrin"],
 			shakashaka: [0, 1, "シャカシャカ", "Shakashaka"],
+			shiftopia: [0, 0, "Shiftopia", "Shiftopia", "myopia"],
 			shikaku: [0, 1, "四角に切れ", "Shikaku", "shikaku"],
 			shimaguni: [1, 0, "島国", "Shimaguni", "shimaguni"],
 			shugaku: [1, 0, "修学旅行の夜", "School Trip"],
