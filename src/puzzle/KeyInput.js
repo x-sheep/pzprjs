@@ -305,10 +305,13 @@ pzpr.classmgr.makeCommon({
 				pos0 = cursor.getaddr(),
 				flag = true,
 				dir = cursor.NDIR;
+
+			var hasIndicator = this.pid === "easyasabc" || this.pid === "isowatari";
+
 			switch (ca) {
 				case "up":
 					if (
-						(this.pid === "easyasabc" && cursor.by === -1) ||
+						(hasIndicator && cursor.by === cursor.miny) ||
 						cursor.by - mv >= cursor.miny
 					) {
 						dir = cursor.UP;
