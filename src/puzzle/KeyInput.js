@@ -598,11 +598,12 @@ pzpr.classmgr.makeCommon({
 		// tc.setaddr() ターゲットの位置をAddressクラス等のオブジェクトで設定する
 		//---------------------------------------------------------------------------
 		setaddr: function(pos) {
+			var hasIndicator = this.pid === "easyasabc" || this.pid === "isowatari";
 			/* Address, Cellなどのオブジェクトいずれを入力しても良い */
 			if (
 				pos.bx < this.minx ||
 				this.maxx < pos.bx ||
-				pos.by < this.miny - (this.pid === "easyasabc" ? 2 : 0) ||
+				pos.by < this.miny - (hasIndicator ? 2 : 0) ||
 				this.maxy < pos.by
 			) {
 				return;
