@@ -5,7 +5,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["kaidan", "takoyaki", "wittgen", "zabajaba"], {
+})(["kaidan", "takoyaki", "wittgen", "zabajaba", "edamame"], {
 	MouseEvent: {
 		use: true,
 		RBShadeCell: true,
@@ -14,13 +14,26 @@
 			play: ["line", "mark-circle", "peke", "subcross", "completion"]
 		},
 		mouseinput: function() {
-			var mode = this.inputMode;
-			if (mode === "shade") {
-				this.inputFixedNumber(-2);
-			} else if (mode === "subcross" || mode === "mark-circle") {
-				this.inputShade();
-			} else {
-				this.common.mouseinput.call(this);
+			switch (this.inputMode) {
+				case "shade":
+					this.inputFixedNumber(-2);
+					break;
+				case "subcross":
+				case "mark-circle":
+					this.inputShade();
+					break;
+				case "bgcolor":
+					this.inputBGcolor(1);
+					break;
+				case "bgcolor1":
+					this.inputFixedQsub(2);
+					break;
+				case "bgcolor2":
+					this.inputFixedQsub(3);
+					break;
+				default:
+					this.common.mouseinput.call(this);
+					break;
 			}
 		},
 		decIC: function(cell) {
@@ -102,7 +115,7 @@
 			this.common.mousereset.call(this);
 		}
 	},
-	"MouseEvent@kaidan,wittgen": {
+	"MouseEvent@kaidan,wittgen,edamame": {
 		inputLine: function() {
 			var cell = this.getcell();
 			var addcmp = false;
@@ -175,6 +188,22 @@
 			}
 		}
 	},
+	"MouseEvent@edamame#1": {
+		RBShadeCell: false,
+		inputModes: {
+			edit: ["number", "shade", "clear"],
+			play: [
+				"line",
+				"mark-circle",
+				"peke",
+				"subcross",
+				"bgcolor",
+				"bgcolor1",
+				"bgcolor2",
+				"completion"
+			]
+		}
+	},
 	"MouseEvent@wittgen#1": {
 		inputModes: {
 			edit: ["number", "undef", "clear"],
@@ -240,7 +269,7 @@
 	KeyEvent: {
 		enablemake: true
 	},
-	"Border@kaidan": {
+	"Border@kaidan,edamame": {
 		prehook: {
 			line: function(num) {
 				return (num && this.isLineNG()) || this.checkFormCurve(num);
@@ -329,7 +358,7 @@
 					if (cell.line && cell.lcnt !== 1) {
 						cell.setLineVal(0);
 					}
-					if (this.line && cell.qsub) {
+					if (this.line && cell.qsub === 1) {
 						cell.setQsub(0);
 					}
 					cell.draw();
@@ -412,12 +441,20 @@
 			}
 		}
 	},
-	"Cell@takoyaki": {
+	"Cell@takoyaki,edamame": {
 		noLP: function(dir) {
 			return this.isNum();
 		},
 		allowShade: function() {
 			return this.qnum === -1;
+		}
+	},
+	"Cell@edamame#1": {
+		isShade: function() {
+			return !this.isnull && (this.qans === 1 || this.line === 1);
+		},
+		isUnshade: function() {
+			return !this.isnull && this.lcnt === 0 && !this.isShade();
 		}
 	},
 	"Cell@wittgen,zabajaba": {
@@ -474,6 +511,14 @@
 			return !cell.noLP();
 		}
 	},
+	"AreaUnshadeGraph@edamame": {
+		enabled: true,
+		relation: { "border.line": "block", "cell.qans": "node" },
+		modifyOtherInfo: function(border, relation) {
+			this.setEdgeByNodeObj(border.sidecell[0]);
+			this.setEdgeByNodeObj(border.sidecell[1]);
+		}
+	},
 	"AreaUnshadeGraph@wittgen,zabajaba": {
 		enabled: true,
 		relation: { "border.line": "block" },
@@ -493,7 +538,11 @@
 			this.drawBGCells();
 			this.drawGrid();
 
-			if (this.pid !== "wittgen" && this.pid !== "zabajaba") {
+			if (
+				this.pid !== "wittgen" &&
+				this.pid !== "zabajaba" &&
+				this.pid !== "edamame"
+			) {
 				this.drawQuesCells();
 			}
 			this.drawQuesNumbers();
@@ -510,7 +559,8 @@
 			if (
 				this.pid === "kaidan" ||
 				this.pid === "wittgen" ||
-				this.pid === "zabajaba"
+				this.pid === "zabajaba" ||
+				this.pid === "edamame"
 			) {
 				this.drawLineEnds();
 			}
@@ -521,13 +571,15 @@
 			this.drawTarget();
 		}
 	},
-	"Graphic@kaidan,takoyaki#2": {
+	"Graphic@kaidan,takoyaki#3": {
 		hideHatena: true,
-		mbcolor: "rgb(127,127,255)",
 		fontShadecolor: "white",
 		getQuesNumberColor: function(cell) {
 			return cell.qcmp === 1 ? this.qcmpcolor : this.fontShadecolor;
-		},
+		}
+	},
+	"Graphic@kaidan,takoyaki,edamame#2": {
+		mbcolor: "rgb(127,127,255)",
 
 		getCircleStrokeColor: function(cell) {
 			if (cell.qans === 1) {
@@ -556,7 +608,7 @@
 					py,
 					shrink = this.pid === "kaidan" && cell.lcnt;
 				g.vid = "c_MB2_" + cell.id;
-				if (cell.qsub > 0) {
+				if (cell.qsub === 1) {
 					px = cell.bx * this.bw;
 					py = cell.by * this.bh;
 					g.lineWidth = (1 + this.cw / 40) | 0;
@@ -568,7 +620,7 @@
 			}
 		}
 	},
-	"Graphic@kaidan,wittgen,zabajaba": {
+	"Graphic@kaidan,wittgen,zabajaba,edamame": {
 		drawLines: function() {
 			var g = this.vinc("line", "crispEdges");
 			var mx = this.bw / 2;
@@ -668,7 +720,7 @@
 	"Graphic@takoyaki": {
 		irowake: true
 	},
-	"Graphic@wittgen,zabajaba#1": {
+	"Graphic@wittgen,zabajaba,edamame#1": {
 		getQuesNumberColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
 				return this.errcolor1;
@@ -724,6 +776,18 @@
 			return isTrial ? "rgb(222,222,222)" : this.qsubcolor1;
 		}
 	},
+	"Graphic@edamame": {
+		getBGCellColor: function(cell) {
+			if ((cell.error || cell.qinfo) === 1) {
+				return this.errbcolor1;
+			} else if (cell.qsub === 2) {
+				return this.qsubcolor1;
+			} else if (cell.qsub === 3) {
+				return this.qsubcolor2;
+			}
+			return null;
+		}
+	},
 
 	Encode: {
 		decodePzpr: function(type) {
@@ -743,6 +807,7 @@
 	},
 	FileIO: {
 		decodeData: function() {
+			// TODO fileIO for backgrounds
 			var hasQans = this.pid !== "wittgen" && this.pid !== "zabajaba";
 			this.decodeCellQnum();
 			this.decodeCell(function(cell, ca) {
@@ -767,6 +832,7 @@
 			this.decodeBorderLine();
 		},
 		encodeData: function() {
+			// TODO fileIO for backgrounds
 			var hasQans = this.pid !== "wittgen" && this.pid !== "zabajaba";
 			this.encodeCellQnum();
 			this.encodeCell(function(cell) {
@@ -904,6 +970,24 @@
 				return cell.qans === 1 && cell.path ? cell.path.id : -1;
 			});
 		},
+		checkLoop: function() {
+			var paths = this.board.linegraph.components;
+			for (var r = 0; r < paths.length; r++) {
+				var path = paths[r];
+				if (path.circuits === 0) {
+					continue;
+				}
+
+				this.failcode.add("laLoop");
+				if (this.checkOnly) {
+					break;
+				}
+				this.board.border.setnoerr();
+				path.setedgeerr(1);
+			}
+		}
+	},
+	"AnsCheck@takoyaki,edamame#2": {
 		checkNumberOfMiddle: function() {
 			var paths = this.board.linegraph.components;
 			for (var r = 0; r < paths.length; r++) {
@@ -922,22 +1006,6 @@
 				this.board.border.setnoerr();
 				path.setedgeerr(1);
 				circles.seterr(1);
-			}
-		},
-		checkLoop: function() {
-			var paths = this.board.linegraph.components;
-			for (var r = 0; r < paths.length; r++) {
-				var path = paths[r];
-				if (path.circuits === 0) {
-					continue;
-				}
-
-				this.failcode.add("laLoop");
-				if (this.checkOnly) {
-					break;
-				}
-				this.board.border.setnoerr();
-				path.setedgeerr(1);
 			}
 		},
 		checkNoMiddle: function() {
@@ -1093,7 +1161,23 @@
 			this.checkDir8(-1, "nmLineLt");
 		}
 	},
+	"AnsCheck@edamame#1": {
+		checklist: [
+			"checkLineOverlap",
+			"checkDir4ShadeOver",
+			"checkNumberOfMiddle",
+			"checkConnectUnshade",
+			"checkDir4ShadeLess",
+			"checkNoMiddle",
+			"checkMissingEnd"
+		]
+
+		// TODO combine line end with placing circle I guess
+	},
 	"FailCode@takoyaki": {
 		lnOnShade: "lnOnShade"
+	},
+	"FailCode@edamame": {
+		cuDivide: "cuDivide.wittgen"
 	}
 });
