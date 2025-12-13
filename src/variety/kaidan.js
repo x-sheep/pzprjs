@@ -536,7 +536,11 @@
 
 		paint: function() {
 			this.drawBGCells();
-			this.drawGrid();
+			if (this.pid === "edamame") {
+				this.drawDashedGrid();
+			} else {
+				this.drawGrid();
+			}
 
 			if (
 				this.pid !== "wittgen" &&
@@ -580,6 +584,7 @@
 	},
 	"Graphic@kaidan,takoyaki,edamame#2": {
 		mbcolor: "rgb(127,127,255)",
+		circlestrokecolor: "black",
 
 		getCircleStrokeColor: function(cell) {
 			if (cell.qans === 1) {
@@ -588,7 +593,7 @@
 				} else if (cell.trial) {
 					return this.trialcolor;
 				} else {
-					return this.quescolor;
+					return this.circlestrokecolor;
 				}
 			}
 			return null;
@@ -621,10 +626,12 @@
 		}
 	},
 	"Graphic@kaidan,wittgen,zabajaba,edamame": {
+		doubleLineWidth: 0.5,
+
 		drawLines: function() {
 			var g = this.vinc("line", "crispEdges");
-			var mx = this.bw / 2;
-			var my = this.bh / 2;
+			var mx = this.bw * this.doubleLineWidth;
+			var my = this.bh * this.doubleLineWidth;
 
 			var blist = this.range.borders;
 			for (var i = 0; i < blist.length; i++) {
@@ -676,8 +683,8 @@
 		},
 		drawLineEnds: function() {
 			var g = this.vinc("lineends", "auto");
-			var mx = this.bw / 2;
-			var my = this.bh / 2;
+			var mx = this.bw * this.doubleLineWidth;
+			var my = this.bh * this.doubleLineWidth;
 			var clist = this.range.cells;
 			for (var i = 0; i < clist.length; i++) {
 				var cell = clist[i],
@@ -777,6 +784,10 @@
 		}
 	},
 	"Graphic@edamame": {
+		circleratio: [0.25, 0.2],
+		doubleLineWidth: 0.7,
+		circlestrokecolor: "rgb(0, 160, 0)",
+
 		getBGCellColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
 				return this.errbcolor1;
