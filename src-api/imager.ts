@@ -96,7 +96,7 @@ export function preview(res: VercelResponse, url: string) {
 		res.setHeader('Cache-Control', 'max-age=86400, s-maxage=2592000')
 
 		const s = sharp(svg)
-			.trim(0.001)
+			.trim({ threshold: 0.001 })
 			.toFormat('png')
 		
 		var newWidth: number
