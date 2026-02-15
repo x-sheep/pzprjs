@@ -22,13 +22,12 @@
 				case "mark-circle":
 					this.inputShade();
 					break;
-				case "bgcolor":
-					this.inputBGcolor(1);
-					break;
 				case "bgcolor1":
+					// TODO: change this
 					this.inputFixedQsub(2);
 					break;
 				case "bgcolor2":
+					// TODO: change that
 					this.inputFixedQsub(3);
 					break;
 				default:
@@ -212,6 +211,39 @@
 				"bgcolor2",
 				"completion"
 			]
+		},
+		inputBGcolor: function() {
+			var basevalue = 1;
+			var cell = this.getcell();
+			if (cell.isnull || cell.is51cell() || cell === this.mouseCell) {
+				return;
+			}
+			if (this.inputData !== null) {
+			} else if (this.inputMode === "bgcolor1") {
+				this.inputMode = cell.qsub !== 1 + basevalue ? 11 + basevalue : 10;
+			} else if (this.inputMode === "bgcolor2") {
+				this.inputMode = cell.qsub !== 2 + basevalue ? 12 + basevalue : 10;
+			} else if (this.btn === "left") {
+				if (cell.qsub === 0) {
+					this.inputData = 11 + basevalue;
+				} else if (cell.qsub === 1 + basevalue) {
+					this.inputData = 12 + basevalue;
+				} else {
+					this.inputData = 10;
+				}
+			} else {
+				if (cell.qsub === 0) {
+					this.inputData = 12 + basevalue;
+				} else if (cell.qsub === 1 + basevalue) {
+					this.inputData = 10;
+				} else {
+					this.inputData = 11 + basevalue;
+				}
+			}
+			cell.setQsub(this.inputData - 10);
+			cell.draw();
+
+			this.mouseCell = cell;
 		}
 	},
 	"MouseEvent@wittgen#1": {
@@ -798,9 +830,9 @@
 		getBGCellColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
 				return this.errbcolor1;
-			} else if (cell.qsub === 2) {
+			} else if (cell.qsub & 2) {
 				return this.qsubcolor1;
-			} else if (cell.qsub === 3) {
+			} else if (cell.qsub & 4) {
 				return this.qsubcolor2;
 			}
 			return null;
