@@ -68,7 +68,17 @@
 			}
 
 			if (this.pid !== "takoyaki" && cell.lcnt === 1 && this.btn === "left") {
-				cell.setLineVal(+!cell.line);
+				if (this.pid !== "edamame") {
+					cell.setLineVal(+!cell.line);
+				} else if (!cell.qans) {
+					cell.setQans(1);
+					cell.setQsub(0);
+				} else if (!cell.line) {
+					cell.setLineVal(1);
+				} else {
+					cell.setLineVal(0);
+					cell.setQans(0);
+				}
 				cell.draw();
 			} else if (cell.isNum()) {
 				this.inputqcmp();
@@ -450,9 +460,6 @@
 		}
 	},
 	"Cell@edamame#1": {
-		isShade: function() {
-			return !this.isnull && (this.qans === 1 || this.line === 1);
-		},
 		isUnshade: function() {
 			return !this.isnull && this.lcnt === 0 && !this.isShade();
 		}
@@ -1182,8 +1189,6 @@
 			"checkNoMiddle",
 			"checkMissingEnd"
 		]
-
-		// TODO combine line end with placing circle I guess
 	},
 	"FailCode@takoyaki": {
 		lnOnShade: "lnOnShade"
