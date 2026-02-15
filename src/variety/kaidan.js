@@ -23,12 +23,8 @@
 					this.inputShade();
 					break;
 				case "bgcolor1":
-					// TODO: change this
-					this.inputFixedQsub(2);
-					break;
 				case "bgcolor2":
-					// TODO: change that
-					this.inputFixedQsub(3);
+					this.inputBGcolor();
 					break;
 				default:
 					this.common.mouseinput.call(this);
@@ -213,37 +209,38 @@
 			]
 		},
 		inputBGcolor: function() {
-			var basevalue = 1;
 			var cell = this.getcell();
-			if (cell.isnull || cell.is51cell() || cell === this.mouseCell) {
+			if (cell.isnull || cell === this.mouseCell) {
 				return;
 			}
 			if (this.inputData !== null) {
 			} else if (this.inputMode === "bgcolor1") {
-				this.inputMode = cell.qsub !== 1 + basevalue ? 11 + basevalue : 10;
+				this.inputData = cell.qsub & 2 ? 10 : 12;
 			} else if (this.inputMode === "bgcolor2") {
-				this.inputMode = cell.qsub !== 2 + basevalue ? 12 + basevalue : 10;
+				this.inputData = cell.qsub & 4 ? 10 : 14;
 			} else if (this.btn === "left") {
-				if (cell.qsub === 0) {
-					this.inputData = 11 + basevalue;
-				} else if (cell.qsub === 1 + basevalue) {
-					this.inputData = 12 + basevalue;
-				} else {
+				if (cell.qsub & 2) {
+					this.inputData = 14;
+				} else if (cell.qsub & 4) {
 					this.inputData = 10;
+				} else {
+					this.inputData = 12;
 				}
 			} else {
-				if (cell.qsub === 0) {
-					this.inputData = 12 + basevalue;
-				} else if (cell.qsub === 1 + basevalue) {
+				if (cell.qsub & 2) {
 					this.inputData = 10;
+				} else if (cell.qsub & 4) {
+					this.inputData = 12;
 				} else {
-					this.inputData = 11 + basevalue;
+					this.inputData = 14;
 				}
 			}
-			cell.setQsub(this.inputData - 10);
-			cell.draw();
 
-			this.mouseCell = cell;
+			if (this.inputData >= 10) {
+				cell.setQsub((cell.qsub & ~6) | (this.inputData - 10));
+				cell.draw();
+				this.mouseCell = cell;
+			}
 		}
 	},
 	"MouseEvent@wittgen#1": {
@@ -652,7 +649,7 @@
 					py,
 					shrink = this.pid === "kaidan" && cell.lcnt;
 				g.vid = "c_MB2_" + cell.id;
-				if (cell.qsub === 1) {
+				if (cell.qsub & 1) {
 					px = cell.bx * this.bw;
 					py = cell.by * this.bh;
 					g.lineWidth = (1 + this.cw / 40) | 0;
@@ -766,7 +763,7 @@
 	"Graphic@takoyaki": {
 		irowake: true
 	},
-	"Graphic@wittgen,zabajaba,edamame#1": {
+	"Graphic@wittgen,zabajaba#1": {
 		getQuesNumberColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
 				return this.errcolor1;
@@ -826,6 +823,13 @@
 		circleratio: [0.25, 0.2],
 		doubleLineWidth: 0.7,
 		circlestrokecolor: "rgb(0, 160, 0)",
+
+		getQuesNumberColor: function(cell) {
+			if ((cell.error || cell.qinfo) === 1) {
+				return this.errcolor1;
+			}
+			return cell.qcmp ? this.qcmpcolor : this.quescolor;
+		},
 
 		getBGCellColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {

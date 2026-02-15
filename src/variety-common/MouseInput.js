@@ -350,32 +350,31 @@ pzpr.classmgr.makeCommon({
 			cell.draw();
 			this.mouseCell = cell;
 		},
-		inputBGcolor: function(basevalue) {
-			basevalue = basevalue || 0;
+		inputBGcolor: function() {
 			var cell = this.getcell();
 			if (cell.isnull || cell.is51cell() || cell === this.mouseCell) {
 				return;
 			}
 			if (this.inputData !== null) {
 			} else if (this.inputMode === "bgcolor1") {
-				this.inputMode = cell.qsub !== 1 + basevalue ? 11 + basevalue : 10;
+				this.inputMode = cell.qsub !== 1 ? 11 : 10;
 			} else if (this.inputMode === "bgcolor2") {
-				this.inputMode = cell.qsub !== 2 + basevalue ? 12 + basevalue : 10;
+				this.inputMode = cell.qsub !== 2 ? 12 : 10;
 			} else if (this.btn === "left") {
 				if (cell.qsub === 0) {
-					this.inputData = 11 + basevalue;
-				} else if (cell.qsub === 1 + basevalue) {
-					this.inputData = 12 + basevalue;
+					this.inputData = 11;
+				} else if (cell.qsub === 1) {
+					this.inputData = 12;
 				} else {
 					this.inputData = 10;
 				}
 			} else {
 				if (cell.qsub === 0) {
-					this.inputData = 12 + basevalue;
-				} else if (cell.qsub === 1 + basevalue) {
+					this.inputData = 12;
+				} else if (cell.qsub === 1) {
 					this.inputData = 10;
 				} else {
-					this.inputData = 11 + basevalue;
+					this.inputData = 11;
 				}
 			}
 			cell.setQsub(this.inputData - 10);
