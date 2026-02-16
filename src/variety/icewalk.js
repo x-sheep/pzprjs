@@ -13,7 +13,8 @@
 		"forestwalk",
 		"morningwalk",
 		"energywalk",
-		"circuitwalk"
+		"circuitwalk",
+		"roboticwalk"
 	],
 	{
 		MouseEvent: {
@@ -79,7 +80,7 @@
 				}
 			}
 		},
-		"MouseEvent@morningwalk,energywalk,circuitwalk": {
+		"MouseEvent@morningwalk,energywalk,circuitwalk,roboticwalk": {
 			inputModes: {
 				edit: ["shade", "number", "clear", "info-line"],
 				play: ["line", "peke", "info-line"]
@@ -269,6 +270,11 @@
 				return ret;
 			}
 		},
+		"Cell@roboticwalk": {
+			isLineShapeEndpoint: function() {
+				return this.ice();
+			}
+		},
 		"Cell@firewalk": {
 			updateFireQans: function() {
 				if (this.ice() && this.isLineCurve()) {
@@ -405,6 +411,11 @@
 		},
 		"Graphic@circuitwalk": {
 			icecolor: "rgb(118, 165, 175)"
+		},
+		"Graphic@roboticwalk": {
+			icecolor: "rgb(192, 192, 192)"
+			// TODO new line no err color
+			// TODO new trial color
 		},
 		"Graphic@firewalk": {
 			icecolor: "rgb(255, 192, 192)",
@@ -753,6 +764,7 @@
 				"checkForestCell@forestwalk",
 				"checkEnergyCell@energywalk",
 				"checkEnergyLoop@energywalk",
+				"checkSequentialMoves@roboticwalk",
 				"checkCircuitCell@circuitwalk",
 				"checkSelfIntersect@circuitwalk",
 
@@ -972,6 +984,19 @@
 					room1.clist.seterr(1);
 					room2.clist.seterr(1);
 				}
+			}
+		},
+		"AnsCheck@roboticwalk": {
+			checkSequentialMoves: function() {
+				this.checkLineShape(function(path) {
+					var cell1 = path.cells[0],
+						cell2 = path.cells[1];
+					return (
+						cell1.lcnt === 2 &&
+						cell2.lcnt === 2 &&
+						cell1.isLineCurve() === cell2.isLineCurve()
+					);
+				}, "lnCurveEq");
 			}
 		}
 	}
