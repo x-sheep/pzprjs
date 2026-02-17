@@ -41,6 +41,14 @@
 		},
 		mouseinput_auto: function() {
 			if (this.puzzle.playmode) {
+				if (this.mousestart) {
+					this.isDraggingBG = this.pid === "edamame" && this.puzzle.key.isALT;
+				}
+				if (this.isDraggingBG) {
+					this.inputBGcolor();
+					return;
+				}
+
 				if (this.btn === "right") {
 					this.inputdragcross();
 				} else {
@@ -195,7 +203,7 @@
 	"MouseEvent@edamame#1": {
 		RBShadeCell: false,
 		inputModes: {
-			edit: ["number", "shade", "clear"],
+			edit: ["number", "undef", "clear"],
 			play: [
 				"line",
 				"mark-circle",
