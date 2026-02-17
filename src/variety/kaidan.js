@@ -383,7 +383,7 @@
 					if (cell.line && cell.lcnt !== 1) {
 						cell.setLineVal(0);
 					}
-					if (this.line && cell.qsub === 1) {
+					if (this.line && cell.qsub) {
 						cell.setQsub(0);
 					}
 					cell.draw();
@@ -635,7 +635,7 @@
 					py,
 					shrink = this.pid === "kaidan" && cell.lcnt;
 				g.vid = "c_MB2_" + cell.id;
-				if (cell.qsub === 1) {
+				if (cell.qsub > 0) {
 					px = cell.bx * this.bw;
 					py = cell.by * this.bh;
 					g.lineWidth = (1 + this.cw / 40) | 0;

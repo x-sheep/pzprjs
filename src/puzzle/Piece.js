@@ -114,7 +114,8 @@ pzpr.classmgr.makeCommon({
 		},
 		setQsub: function(val) {
 			this.setdata("qsub", val);
-		},setQsub2: function(val) {
+		},
+		setQsub2: function(val) {
 			this.setdata("qsub2", val);
 		},
 		setQcmp: function(val) {
