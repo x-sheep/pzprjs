@@ -62,6 +62,13 @@
 		qsubcolor1: "rgb(224, 224, 255)",
 		qsubcolor2: "rgb(255, 255, 144)",
 
+		getCircleFillColor: function(cell) {
+			if (cell.qnum !== -1) {
+				return "rgba(255,255,255,0.5)";
+			}
+			return null;
+		},
+
 		paint: function() {
 			this.drawBGCells();
 			this.drawDashedGrid(false);
