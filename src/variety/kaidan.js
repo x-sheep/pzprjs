@@ -847,7 +847,6 @@
 	},
 	FileIO: {
 		decodeData: function() {
-			// TODO fileIO for backgrounds
 			var hasQans = this.pid !== "wittgen" && this.pid !== "zabajaba";
 			this.decodeCellQnum();
 			this.decodeCell(function(cell, ca) {
@@ -868,18 +867,30 @@
 				if (val & 8) {
 					cell.qcmp = 1;
 				}
+				if (val & 16) {
+					cell.qsub2 = 1;
+				}
+				if (val & 32) {
+					cell.qsub2 = 2;
+				}
 			});
 			this.decodeBorderLine();
 		},
 		encodeData: function() {
-			// TODO fileIO for backgrounds
 			var hasQans = this.pid !== "wittgen" && this.pid !== "zabajaba";
 			this.encodeCellQnum();
 			this.encodeCell(function(cell) {
 				var ans = hasQans ? cell.qans === 1 : cell.qsub === 2;
 				var sub = cell.qsub === 1;
 
-				return (+ans | (cell.line << 1) | (+sub << 2) | (cell.qcmp << 3)) + " ";
+				var value =
+					+ans |
+					(cell.line << 1) |
+					(+sub << 2) |
+					(cell.qcmp << 3) |
+					(cell.qsub2 << 4);
+
+				return value + " ";
 			});
 			this.encodeBorderLine();
 		}
