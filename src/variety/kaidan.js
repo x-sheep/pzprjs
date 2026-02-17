@@ -208,8 +208,6 @@
 				"completion"
 			]
 		},
-		// TODO change behavior of inputShade with crosses
-		// TODO change behavior of subcross input mode
 		inputBGcolor: function() {
 			var cell = this.getcell();
 			if (cell.isnull || cell === this.mouseCell) {
@@ -217,32 +215,18 @@
 			}
 			if (this.inputData !== null) {
 			} else if (this.inputMode === "bgcolor1") {
-				this.inputData = cell.qsub & 2 ? 10 : 12;
+				this.inputData = cell.qsub2 !== 1 ? 11 : 10;
 			} else if (this.inputMode === "bgcolor2") {
-				this.inputData = cell.qsub & 4 ? 10 : 14;
+				this.inputData = cell.qsub2 !== 2 ? 12 : 10;
 			} else if (this.btn === "left") {
-				if (cell.qsub & 2) {
-					this.inputData = 14;
-				} else if (cell.qsub & 4) {
-					this.inputData = 10;
-				} else {
-					this.inputData = 12;
-				}
+				this.inputData = cell.qsub2 === 0 ? 11 : cell.qsub2 === 1 ? 12 : 10;
 			} else {
-				if (cell.qsub & 2) {
-					this.inputData = 10;
-				} else if (cell.qsub & 4) {
-					this.inputData = 12;
-				} else {
-					this.inputData = 14;
-				}
+				this.inputData = cell.qsub2 === 0 ? 12 : cell.qsub2 === 1 ? 10 : 11;
 			}
+			cell.setQsub2(this.inputData - 10);
+			cell.draw();
 
-			if (this.inputData >= 10) {
-				cell.setQsub((cell.qsub & ~6) | (this.inputData - 10));
-				cell.draw();
-				this.mouseCell = cell;
-			}
+			this.mouseCell = cell;
 		}
 	},
 	"MouseEvent@wittgen#1": {
@@ -651,7 +635,7 @@
 					py,
 					shrink = this.pid === "kaidan" && cell.lcnt;
 				g.vid = "c_MB2_" + cell.id;
-				if (cell.qsub & 1) {
+				if (cell.qsub === 1) {
 					px = cell.bx * this.bw;
 					py = cell.by * this.bh;
 					g.lineWidth = (1 + this.cw / 40) | 0;
@@ -836,9 +820,9 @@
 		getBGCellColor: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
 				return this.errbcolor1;
-			} else if (cell.qsub & 2) {
+			} else if (cell.qsub2 === 1) {
 				return this.qsubcolor1;
-			} else if (cell.qsub & 4) {
+			} else if (cell.qsub2 === 2) {
 				return this.qsubcolor2;
 			}
 			return null;
