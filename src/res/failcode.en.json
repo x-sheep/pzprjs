@@ -465,6 +465,7 @@
     "csNoSupport.aquarium": "A water cell is next to or above an empty cell.",
     "csNotBottom.dosufuwa": "An iron ball is not on the bottom of the row or on another iron ball.",
     "csNotOnShade.tawa": "There are no shaded cells under a shaded cell.",
+    "csNotOnLine.edamame": "A circle is not inside a rectangle.",
     "csNotRect": "A mass of shaded cells is not rectangle.",
     "csNotSquare": "A group of shaded cells is not a square.",
     "csOnArrow": "A cell with a clue is shaded.",

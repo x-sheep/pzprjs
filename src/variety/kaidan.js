@@ -1228,8 +1228,14 @@
 			"checkDir4ShadeLess",
 			"checkEndpoints",
 			"checkNoMiddle",
+			"checkCircleWithoutLine",
 			"checkMissingEnd"
-		]
+		],
+		checkCircleWithoutLine: function() {
+			this.checkAllCell(function(cell) {
+				return cell.qans === 1 && cell.lcnt === 0;
+			}, "csNotOnLine");
+		}
 	},
 	"FailCode@takoyaki": {
 		lnOnShade: "lnOnShade"
