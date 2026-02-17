@@ -237,7 +237,15 @@ ui.keypopup = {
 		distopia: [10, 0],
 		numcity: [10, 10],
 		cityspace: [10, 0],
-		diamond: [4, 0]
+		diamond: [4, 0],
+		sendai: [10, 0],
+		circuitwalk: [10, 0],
+		morningwalk: [10, 0],
+		energywalk: [10, 0],
+		cornerch: [10, 0],
+		keywest: [4, 4],
+		oasis: [10, 0],
+		bhaibahan: [10, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -503,6 +511,9 @@ ui.keypopup = {
 			pid === "waterwalk" ||
 			pid === "firewalk" ||
 			pid === "forestwalk" ||
+			pid === "morningwalk" ||
+			pid === "energywalk" ||
+			pid === "circuitwalk" ||
 			pid === "dbchoco" ||
 			pid === "balloon"
 		) {
@@ -517,6 +528,12 @@ ui.keypopup = {
 							? "rgb(255,192,192)"
 							: pid === "forestwalk"
 							? "rgb(195,253,186)"
+							: pid === "morningwalk"
+							? "rgb(212,180,212)"
+							: pid === "energywalk"
+							? "rgb(255,255,163)"
+							: pid === "circuitwalk"
+							? "rgb(118,165,175)"
 							: "rgb(192,224,255)"
 				}
 			]);
