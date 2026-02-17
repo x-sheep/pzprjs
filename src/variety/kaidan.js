@@ -208,6 +208,8 @@
 				"completion"
 			]
 		},
+		// TODO change behavior of inputShade with crosses
+		// TODO change behavior of subcross input mode
 		inputBGcolor: function() {
 			var cell = this.getcell();
 			if (cell.isnull || cell === this.mouseCell) {
@@ -1222,6 +1224,7 @@
 			"checkNumberOfMiddle",
 			"checkConnectUnshade",
 			"checkDir4ShadeLess",
+			"checkEndpoints",
 			"checkNoMiddle",
 			"checkMissingEnd"
 		]
