@@ -470,6 +470,11 @@
 						this.adjborder[dir].setLineVal(0);
 					}
 				}
+			},
+			line: function(val) {
+				if (val && this.pid === "edamame") {
+					this.setQans(1);
+				}
 			}
 		}
 	},
