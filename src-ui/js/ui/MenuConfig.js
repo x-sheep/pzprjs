@@ -166,6 +166,7 @@
 				case "waterwalk":
 				case "firewalk":
 				case "forestwalk":
+				case "roboticwalk":
 				case "wataridori":
 					idname = "loop_full";
 					break;

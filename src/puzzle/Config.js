@@ -544,6 +544,7 @@
 							"firewalk",
 							"forestwalk",
 							"morningwalk",
+							"roboticwalk",
 							"wataridori"
 						].indexOf(pid) >= 0;
 					break;
