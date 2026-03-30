@@ -605,7 +605,7 @@
 	},
 	"Border@topo": {
 		minnum: 0,
-		maxnum: 99,
+		maxnum: 98,
 
 		updateGhostBorder: function() {},
 		isBorder: function() {
@@ -713,9 +713,11 @@
 
 	"AreaEqualNumberGraph:AreaNumberGraph": {
 		relation: {
+			"cell.ques": "node",
 			"cell.qnum": "node",
 			"cell.anum": "node",
 			"border.ques": "separator",
+			"border.qnum": "separator",
 			"border.qans": "separator"
 		},
 		enabled: true,
@@ -768,6 +770,7 @@
 			"cell.qnum": "node",
 			"cell.anum": "node",
 			"border.ques": "separator",
+			"border.qnum": "separator",
 			"border.qans": "separator",
 			"border.qcmp": "separator"
 		},
