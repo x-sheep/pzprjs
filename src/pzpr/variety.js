@@ -446,6 +446,13 @@
 				"slither"
 			],
 			symmarea: [0, 0, "シンメトリーエリア", "Symmetry Area", "fillomino"],
+			syncskating: [
+				0,
+				0,
+				"シンクロスケート",
+				"Synchronized Skating",
+				"kouchoku"
+			],
 			tachibk: [0, 0, "たちあわせブロック", "Tachiawase Block"],
 			tajmahal: [0, 0, "タージ・マハル", "Taj Mahal", "kouchoku"],
 			takoyaki: [0, 0, "たこ焼き", "Takoyaki", "kaidan"],

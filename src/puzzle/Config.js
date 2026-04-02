@@ -448,7 +448,8 @@
 					break;
 				case "enline":
 				case "lattice":
-					exec = pid === "kouchoku" || pid === "angleloop";
+					exec =
+						pid === "kouchoku" || pid === "angleloop" || pid === "syncskating";
 					break;
 				case "discolor":
 					exec = EDITOR && pid === "tentaisho";

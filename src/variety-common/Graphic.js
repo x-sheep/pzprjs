@@ -922,7 +922,8 @@ pzpr.classmgr.makeCommon({
 			var csize = this.cw * this.crosssize + 1;
 			g.lineWidth = 1;
 
-			var option = { ratio: 0.6 };
+			var ratio = this.textoption ? this.textoption.crossratio : null;
+			var option = { ratio: ratio || 0.6 };
 			var clist = this.range.crosses;
 			for (var i = 0; i < clist.length; i++) {
 				var cross = clist[i],
