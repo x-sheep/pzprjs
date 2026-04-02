@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["kouchoku", "angleloop", "tajmahal"], {
+})(["kouchoku", "angleloop", "tajmahal", "syncskating"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -34,6 +34,7 @@
 			}
 		},
 
+		// TODO some segment inputs are denied for no good reason
 		targetPoint: [null, null],
 		inputsegment: function() {
 			var cross = this.getcross();
@@ -350,6 +351,12 @@
 		}
 	},
 
+	"KeyEvent@syncskating": {
+		keyinput: function(ca) {
+			this.key_inputcross(ca);
+		}
+	},
+
 	"KeyEvent@kouchoku": {
 		keyinput: function(ca) {
 			var cross = this.cursor.getx();
@@ -413,14 +420,15 @@
 		}
 	},
 
-	"TargetCursor@kouchoku,angleloop": {
+	"TargetCursor@kouchoku,angleloop,syncskating": {
 		crosstype: true
 	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
 	"Cross@kouchoku": {
-		maxnum: 26
+		maxnum: 26,
+		numberAsLetter: true
 	},
 	"Cross@angleloop": {
 		disInputHatena: true,
@@ -429,6 +437,17 @@
 	},
 	"Cross@tajmahal": {
 		maxnum: 8
+	},
+	"Cross@syncskating": {
+		maxnum: function() {
+			return this.board.cross.length >> 1;
+		},
+		posthook: {
+			qnum: function() {
+				this.board.linegraph.recountTotal();
+				this.board.linegraph.rebuildExtraInfo();
+			}
+		}
 	},
 	"Cell@tajmahal": {
 		maxnum: 8
@@ -1055,6 +1074,47 @@
 			this.puzzle.painter.repaintLines(segs_all);
 		}
 	},
+	"LineGraph@syncskating": {
+		rebuild: function() {
+			this.recountTotal();
+			this.common.rebuild.call(this);
+		},
+
+		recountTotal: function() {
+			this.targetLength =
+				this.board.cross.filter(function(cross) {
+					return cross.qnum !== -1;
+				}).length >> 1;
+		},
+
+		rebuildExtraInfo: function() {
+			for (var i = 0; i < this.components.length; i++) {
+				this.setExtraData(this.components[i]);
+			}
+		},
+
+		setExtraData: function(component) {
+			this.common.setExtraData.call(this, component);
+
+			var len = component.nodes.length;
+			component.sequence = null;
+			component.isFullSeq = false;
+			component.canReverse = len === this.targetLength;
+
+			if (len === 0 || len > this.targetLength) {
+				return;
+			}
+
+			var start = component.nodes.find(function(node) {
+				return node.obj.lcnt === 1;
+			}).obj;
+			console.log(start);
+
+			// TODO build sequence list in proper direction
+			// TODO set to true if starts at 1
+			// TODO clear canReverse if something is wrong
+		}
+	},
 	GraphComponent: {
 		getLinkObjByNodes: function(node1, node2) {
 			var bx1 = node1.obj.bx,
@@ -1323,6 +1383,21 @@
 					g.vhide();
 				}
 			}
+		}
+	},
+
+	"Graphic@syncskating": {
+		textoption: { crossratio: 0.55 },
+		crosssize: 0.3,
+
+		paint: function() {
+			this.drawDashedGrid(false);
+
+			this.drawSegments();
+
+			this.drawCrosses();
+			this.drawSegmentTarget();
+			this.drawTarget();
 		}
 	},
 
@@ -1977,6 +2052,111 @@
 			"checkCrossLine",
 			"checkAngle"
 		]
+	},
+
+	"AnsCheck@syncskating": {
+		checklist: [
+			"checkSegmentExist",
+			"checkSegmentPoint",
+			"checkSegmentBranch",
+			"checkLoop",
+			"checkSegmentOverClue",
+			"checkDuplicateSegment",
+
+			"checkSelfIntersect",
+			"checkNoSequence",
+			"checkAlonePoint",
+			"checkTwoPaths"
+
+			// TODO check sequence lengths
+			// TODO check matching angles
+		],
+
+		checkSelfIntersect: function() {
+			var result = true,
+				segs = this.board.segment,
+				len = segs.length;
+			for (var i = 0; i < len; i++) {
+				for (var j = i + 1; j < len; j++) {
+					var seg1 = segs[i],
+						seg2 = segs[j];
+					if (
+						seg1 === null ||
+						seg2 === null ||
+						!seg1.isCrossing(seg2) ||
+						seg1.path !== seg2.path
+					) {
+						continue;
+					}
+
+					if (result) {
+						this.failcode.add("lnCrossSelf");
+						if (this.checkOnly) {
+							return;
+						}
+						result = false;
+					}
+					seg1.seterr(1);
+					seg2.seterr(1);
+				}
+			}
+			if (!result) {
+				segs.setnoerr();
+			}
+		},
+
+		checkTwoPaths: function() {
+			var paths = this.board.linegraph.components;
+			if (paths.length === 0 || paths.length === 2) {
+				return;
+			}
+			this.failcode.add("lnPlLoop");
+			if (this.checkOnly) {
+				return;
+			}
+			this.board.segment.setnoerr();
+			paths[0].setedgeerr(1);
+		},
+
+		checkAlonePoint: function() {
+			this.checkSegment(function(cross) {
+				return cross.lcnt === 0 && cross.qnum !== -1;
+			}, "nmLineLt1");
+		},
+
+		checkLoop: function() {
+			var paths = this.board.linegraph.components;
+			for (var r = 0; r < paths.length; r++) {
+				var path = paths[r];
+				if (path.circuits === 0) {
+					continue;
+				}
+
+				this.failcode.add("laLoop");
+				if (this.checkOnly) {
+					break;
+				}
+				this.board.segment.setnoerr();
+				path.setedgeerr(1);
+			}
+		},
+
+		checkNoSequence: function() {
+			var paths = this.board.linegraph.components;
+			for (var r = 0; r < paths.length; r++) {
+				var path = paths[r];
+				if (path.sequence) {
+					continue;
+				}
+
+				this.failcode.add("lnNoSequence");
+				if (this.checkOnly) {
+					break;
+				}
+				this.board.segment.setnoerr();
+				path.setedgeerr(1);
+			}
+		}
 	},
 
 	"AnsCheck@tajmahal": {
