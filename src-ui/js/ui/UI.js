@@ -160,6 +160,7 @@ window.ui = {
 				break;
 
 			case "kouchoku":
+			case "syncskating":
 			case "gokigen":
 			case "wagiri":
 			case "creek":
