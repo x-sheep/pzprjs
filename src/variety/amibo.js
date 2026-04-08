@@ -7,36 +7,29 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["amibo"], {
+})(["amibo", "ruleofthree"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
-		inputModes: { edit: ["number", "clear"], play: ["bar", "peke"] },
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					if (this.btn === "left") {
-						this.inputTateyoko();
-					} else if (this.btn === "right") {
-						this.inputpeke();
-					}
+		mouseinputAutoPlay: function() {
+			if (this.mousestart || this.mousemove) {
+				if (this.btn === "left") {
+					this.inputTateyoko(true);
+				} else if (this.btn === "right") {
+					this.inputpeke();
 				}
-				if (this.mouseend && this.notInputted()) {
-					if (this.inputpeke_ifborder()) {
-						return;
-					}
-					this.clickTateyoko();
+			}
+			if (this.mouseend && this.notInputted()) {
+				if (this.inputpeke_ifborder()) {
+					return;
 				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					this.inputqnum();
-				}
+				this.clickTateyoko();
 			}
 		},
 
 		clickTateyoko: function() {
 			var cell = this.getcell();
-			if (cell.isnull || cell.isNum()) {
+			if (cell.isnull || cell.isNum() || !cell.isValid()) {
 				return;
 			}
 
@@ -48,15 +41,33 @@
 			cell.draw();
 		}
 	},
+	"MouseEvent@amibo": {
+		inputModes: { edit: ["number", "clear"], play: ["crossbar", "peke"] },
+		autoedit_func: "qnum"
+	},
+	"MouseEvent@ruleofthree": {
+		inputModes: { edit: ["empty", "clear"], play: ["crossbar", "peke"] },
+		mouseinputAutoEdit: function() {
+			this.inputempty();
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
-	KeyEvent: {
+	"KeyEvent@amibo": {
 		enablemake: true
 	},
 
 	//---------------------------------------------------------
 	// 盤面管理系
+	Border: {
+		isGrid: function() {
+			return this.sidecell[0].isValid() && this.sidecell[1].isValid();
+		},
+		isQuesBorder: function() {
+			return !!(this.sidecell[0].isEmpty() ^ this.sidecell[1].isEmpty());
+		}
+	},
 	Cell: {
 		numberRemainsUnshaded: true,
 
@@ -94,7 +105,7 @@
 		}
 	},
 	Board: {
-		hasborder: 1,
+		hasborder: 2,
 
 		cols: 8,
 		rows: 8,
@@ -327,23 +338,27 @@
 
 	//---------------------------------------------------------
 	// 画像表示系
+	"Graphic@amibo": {
+		irowake: true,
+		circleratio: [0.45, 0.4]
+	},
 	Graphic: {
 		hideHatena: true,
-
-		irowake: true,
 
 		gridcolor_type: "LIGHT",
 
 		numbercolor_func: "fixed",
-
-		circleratio: [0.45, 0.4],
 
 		setRange: function(x1, y1, x2, y2) {
 			this.common.setRange.call(this, x1 - 2, y1 - 2, x2 + 2, y2 + 2);
 		},
 		paint: function() {
 			this.drawBGCells();
-			this.drawDashedGrid();
+			if (this.pid === "ruleofthree") {
+				this.drawValidGrid();
+			} else {
+				this.drawDashedGrid();
+			}
 
 			this.drawTateyokos();
 			this.drawTateyokos_sub();
@@ -352,9 +367,42 @@
 
 			this.drawPekeBorder();
 
-			this.drawChassis();
+			if (this.pid === "amibo") {
+				this.drawChassis();
+				this.drawTarget();
+			} else {
+				this.drawQuesBorders();
+			}
+		},
 
-			this.drawTarget();
+		getQuesBorderColor: function(border) {
+			return border.isQuesBorder() ? this.quescolor : null;
+		},
+
+		drawValidGrid: function() {
+			var g = this.vinc("grid_waritai", "crispEdges", true);
+
+			g.lineWidth = 1;
+			g.strokeStyle = this.gridcolor;
+
+			var blist = this.range.borders;
+			for (var n = 0; n < blist.length; n++) {
+				var border = blist[n];
+				g.vid = "b_grid_wari_" + border.id;
+				if (border.isGrid()) {
+					var px = border.bx * this.bw,
+						py = border.by * this.bh;
+
+					// TODO change to dashed line
+					if (border.isVert()) {
+						g.strokeLine(px, py - this.bh, px, py + this.bh);
+					} else {
+						g.strokeLine(px - this.bw, py, px + this.bw, py);
+					}
+				} else {
+					g.vhide();
+				}
+			}
 		},
 
 		// 白丸と線の間に隙間があいてしまうので、隙間部分を描画する
@@ -478,12 +526,20 @@
 
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
-	Encode: {
+	"Encode@amibo": {
 		decodePzpr: function(type) {
 			this.decodeNumber10or16();
 		},
 		encodePzpr: function(type) {
 			this.encodeNumber10or16();
+		}
+	},
+	"Encode@ruleofthree": {
+		decodePzpr: function(type) {
+			this.decodeEmpty();
+		},
+		encodePzpr: function(type) {
+			this.encodeEmpty();
 		}
 	},
 	//---------------------------------------------------------
@@ -496,6 +552,8 @@
 					cell.qans = 13;
 				} else if (ca === "+") {
 					cell.qans = 11;
+				} else if (ca === "x") {
+					cell.ques = 7;
 				} else if (ca === "#") {
 					cell.qnum = -2;
 				} else if (ca !== ".") {
@@ -512,6 +570,8 @@
 					return "- ";
 				} else if (cell.qans === 11) {
 					return "+ ";
+				} else if (!cell.isValid()) {
+					return "x ";
 				} else if (cell.qnum >= 0) {
 					return cell.qnum + " ";
 				} else if (cell.qnum === -2) {
@@ -526,7 +586,7 @@
 
 	//---------------------------------------------------------
 	// 正解判定処理実行部
-	AnsCheck: {
+	"AnsCheck@amibo": {
 		checklist: [
 			"checkBarExist+",
 			"checkNotMultiBar",
@@ -678,6 +738,57 @@
 					.setnoerr();
 				this.searchloop(nets[r], bd.netgraph).seterr(4);
 			}
+		}
+	},
+	"AnsCheck@ruleofthree": {
+		checklist: [
+			"checkMaxLength",
+			"checkAdjacentCrossCell",
+			"checkMinLength",
+			"checkNoLine+"
+		],
+
+		checkAdjacentCrossCell: function() {
+			this.checkSideCell(function(cell1, cell2) {
+				return cell1.qans === 11 && cell2.qans === 11;
+			}, "cxAdjacent");
+
+			if (this.failcode.lastcode === "cxAdjacent") {
+				this.board.cell.setnoerr();
+			}
+		},
+
+		checkMaxLength: function() {
+			this.checkLength(+1, "lnLengthGt3");
+		},
+		checkMinLength: function() {
+			this.checkLength(-1, "lnLengthLt3");
+		},
+
+		checkLength: function(type, code) {
+			var bars = this.board.bargraph.components;
+			for (var id = 0, max = bars.length; id < max; id++) {
+				var bar = bars[id];
+				if (
+					(type < 0 && bar.clist.length >= 3) ||
+					(type > 0 && bar.clist.length <= 3)
+				) {
+					continue;
+				}
+
+				this.failcode.add(code);
+				if (this.checkOnly) {
+					return;
+				}
+				bar.clist.setErrorBar(bar.vert);
+				this.board.cell.setnoerr();
+			}
+		},
+
+		checkNoLine: function() {
+			this.checkAllCell(function(cell) {
+				return cell.qans === 0;
+			}, "ceNoLine");
 		}
 	}
 });
