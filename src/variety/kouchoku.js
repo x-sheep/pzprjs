@@ -1105,13 +1105,42 @@
 				return;
 			}
 
-			var start = component.nodes.find(function(node) {
+			var current = component.nodes.find(function(node) {
 				return node.obj.lcnt === 1;
 			}).obj;
-			console.log(start);
+			console.log(current);
 
-			// TODO build sequence list in proper direction
-			// TODO set to true if starts at 1
+			var prevline = null;
+			var sequence = new this.klass.CellList();
+
+			while (current) {
+				sequence.add(current);
+				if (current.seglist.length > 2) {
+					return;
+				}
+
+				var nextpoint = null;
+				for (var i = 0; i < current.seglist.length; i++) {
+					var nextline = current.seglist[i];
+					if (prevline === nextline) {
+						continue;
+					}
+
+					prevline = nextline;
+					for (var j = 0; j < nextline.sideobj.length; j++) {
+						nextpoint = nextline.sideobj[j];
+						if (current !== nextpoint) {
+							break;
+						}
+					}
+					break;
+				}
+				current = current === nextpoint ? null : nextpoint;
+			}
+
+			component.sequence = sequence;
+
+			// TODO set isFullSeq to true if starts at 1
 			// TODO clear canReverse if something is wrong
 		}
 	},
