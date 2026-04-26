@@ -59,13 +59,34 @@
 		minnum: 0,
 		maxnum: 5,
 
-		kana: function() {
+		getCodeNum: function() {
+			if (this.qnum < 0) {
+				return this.qnum;
+			}
+			if (this.qnum === 0) {
+				return this.qchar;
+			}
+			return Math.max(this.getKana().charCodeAt(0) - 12424, -1);
+		},
+		setCodeNum: function(num) {
+			if (num < 0) {
+				this.setQnum(num);
+				this.setQchar(0);
+			} else if (num < 26) {
+				this.setQchar(num);
+				this.setQnum(0);
+			} else {
+				this.setKana(String.fromCharCode(num + 12424));
+			}
+		},
+
+		getKana: function() {
 			if (this.qnum < 0) {
 				return this.qnum === -2 ? "ー" : "";
 			}
 
 			var consonant =
-				this.qchar === 0 ? "" : String.fromCodePoint(97 + this.qchar);
+				this.qchar === 0 ? "" : String.fromCharCode(97 + this.qchar);
 			if (this.qnum) {
 				var result = this.board.letterMap[consonant][this.qnum - 1];
 				if (result === " ") {
@@ -74,6 +95,34 @@
 				return result || consonant;
 			}
 			return consonant === "n" ? "ン" : consonant;
+		},
+
+		setKana: function(ca) {
+			if (!ca || ca === " ") {
+				return;
+			}
+			if (ca === "ー") {
+				this.setQnum(-2);
+				this.setQchar(0);
+				return;
+			}
+			if (ca === "ン") {
+				ca = "n";
+			}
+
+			if (ca in this.board.letterMap) {
+				this.setQchar(ca.charCodeAt(0) - 97);
+				this.setQnum(0);
+			} else {
+				for (var key in this.board.letterMap) {
+					var index = this.board.letterMap[key].indexOf(ca);
+					if (index >= 0) {
+						this.setQchar(key ? key.charCodeAt(0) - 97 : 0);
+						this.setQnum(index + 1);
+						return;
+					}
+				}
+			}
 		}
 	},
 
@@ -102,6 +151,11 @@
 			y: "ヤ ユ ヨ",
 			r: "ラリルレロ",
 			w: "ワヰ ヱヲ"
+		}
+	},
+	BoardExec: {
+		allowedOperations: function(isplaymode) {
+			return isplaymode ? 0 : this.ALLOWALL;
 		}
 	},
 
@@ -135,22 +189,35 @@
 		},
 
 		getQuesNumberText: function(cell) {
-			return cell.kana();
+			return cell.getKana();
 		}
 	},
 
 	//---------------------------------------------------------
 	// URLエンコード/デコード処理
-	Encode: {},
+	Encode: {
+		decodePzpr: function() {
+			var bd = this.board;
+			this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+				bd.cell[c].setCodeNum(val);
+			});
+		},
+		encodePzpr: function(type) {
+			var bd = this.board;
+			this.genericEncodeNumber16(bd.cell.length, function(c) {
+				return bd.cell[c].getCodeNum();
+			});
+		}
+	},
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
-			this.decodeCellQnum();
+			this.decodeCellQnum(); // TODO change
 			this.decodeCellAns();
 			this.decodeBorderLine();
 		},
 		encodeData: function() {
-			this.encodeCellQnum();
+			this.encodeCellQnum(); // TODO change
 			this.encodeCellAns();
 			this.encodeBorderLineIfPresent();
 		}
@@ -163,13 +230,69 @@
 			"checkShadeCellExist",
 			"checkAdjacentShadeCell",
 			"checkConnectUnshadeRB",
-			// TODO letter start 1
-			// TODO letter start 2
-			// TODO letter sequence 1
-			// TODO letter sequence 2
-			// TODO letter sequence 3
-			// TODO unique words
+			"checkBadStart",
+			"checkBadSequence",
+			"checkUniqueWords",
 			"doneShadingDecided"
-		]
+		],
+
+		checkBadStart: function() {
+			this.checkAllCell(function(cell) {
+				if (cell.isShade() || (cell.qnum !== -2 && cell.getKana() !== "ン")) {
+					return false;
+				} else if (
+					!cell.adjacent.left.isUnshade() &&
+					cell.adjacent.right.isUnshade()
+				) {
+					return true;
+				} else if (
+					!cell.adjacent.top.isUnshade() &&
+					cell.adjacent.bottom.isUnshade()
+				) {
+					return true;
+				}
+				return false;
+			}, "cuBadStart");
+		},
+
+		checkBadSequence: function() {
+			this.checkSideCell(function(cell1, cell2) {
+				if (cell1.isShade() || cell2.isShade()) {
+					return false;
+				}
+				var word = cell1.getKana() + cell2.getKana();
+				return word === "ンン" || word === "ンー" || word === "ーー";
+			}, "cuBadSequence");
+		},
+
+		checkUniqueWords: function() {
+			this._info.words = {};
+			this.checkRowsColsPartly(
+				this.isDuplicateWord,
+				function(cell) {
+					return cell.isShade();
+				},
+				"bankGt"
+			);
+		},
+		isDuplicateWord: function(clist) {
+			if (clist.length < 2) {
+				return true;
+			}
+
+			var word = "";
+			clist.each(function(cell) {
+				word += cell.getKana();
+			});
+
+			if (word in this._info.words) {
+				clist.seterr(1);
+				this._info.words[word].seterr(1);
+				return false;
+			} else {
+				this._info.words[word] = clist;
+				return true;
+			}
+		}
 	}
 });
