@@ -14,8 +14,13 @@
 			edit: ["number", "clear", "info-blk"],
 			play: ["shade", "unshade", "peke", "info-blk"]
 		},
-		autoedit_func: "qnum",
-		// TODO change mouse input
+		mouseinputAutoEdit: function() {
+			var cell = this.getcell();
+			if (cell.isnull || cell === this.mouseCell) {
+				return;
+			}
+			this.setcursor(cell);
+		},
 		autoplay_func: "cellpeke"
 	},
 
@@ -98,7 +103,7 @@
 		},
 
 		setKana: function(ca) {
-			if (!ca || ca === " ") {
+			if (!ca || ca === " " || ca === ".") {
 				return;
 			}
 			if (ca === "ー") {
@@ -212,14 +217,38 @@
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
-			this.decodeCellQnum(); // TODO change
+			this.decodeCellKana();
 			this.decodeCellAns();
 			this.decodeBorderLine();
 		},
 		encodeData: function() {
-			this.encodeCellQnum(); // TODO change
+			this.encodeCellKana();
 			this.encodeCellAns();
 			this.encodeBorderLineIfPresent();
+		},
+
+		decodeCellKana: function() {
+			var chars = "";
+			for (var i = 0; i < this.board.rows; i++) {
+				chars += this.readLine() || "";
+			}
+			var cells = this.board.cell;
+			for (var i = 0; i < cells.length; i++) {
+				var kana = chars[i] || "";
+				cells[i].setKana(kana);
+			}
+		},
+		encodeCellKana: function() {
+			var endbx = 2 * this.board.cols - 1,
+				endby = 2 * this.board.rows - 1;
+
+			for (var by = 1; by <= endby; by += 2) {
+				var data = "";
+				for (var bx = 1; bx <= endbx; bx += 2) {
+					data += this.board.getc(bx, by).getKana() || ".";
+				}
+				this.writeLine(data);
+			}
 		}
 	},
 
