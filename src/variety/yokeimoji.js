@@ -30,6 +30,11 @@
 					old.drawRowOrCol(this.cursor.isVert);
 					cell.drawRowOrCol(this.cursor.isVert);
 				}
+			} else {
+				var isVert = this.cursor.getvert(cell, 2);
+				if (typeof isVert === "boolean" && isVert !== this.cursor.isVert) {
+					this.cursor.toggleDir();
+				}
 			}
 		},
 		autoplay_func: "cellpeke"
@@ -40,6 +45,13 @@
 	KeyEvent: {
 		enablemake: true,
 		isTyping: false,
+
+		keyreset: function(isTest) {
+			if (!isTest) {
+				this.isTyping = false;
+			}
+			this.common.keyreset.call(this, isTest);
+		},
 
 		moveTarget: function(ca) {
 			var last = this.cursor.getaddr();

@@ -59,6 +59,16 @@ ui.debug.addDebugData("yokeimoji", {
 		{
 			input: ["key,y,e"],
 			result: "pzprv3/yokeimoji/3/3/アノー/.エ./イ../. . . /. . . /. . . /"
+		},
+		{
+			input: [
+				"newboard,3,3",
+				"mouse,left,1,1,1,3",
+				"key,e,e",
+				"mouse,left,3,1,5,1",
+				"key,i,i"
+			],
+			result: "pzprv3/yokeimoji/3/3/エイイ/エ../.../. . . /. . . /. . . /"
 		}
 	]
 });
