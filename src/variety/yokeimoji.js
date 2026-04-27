@@ -58,7 +58,16 @@
 
 			if (ca === "enter") {
 				this.cursor.toggleDir();
-			} else if (ca === "BS" || ca === " ") {
+			} else if (ca === "BS") {
+				if (this.isTyping) {
+					this.isTyping = false;
+				} else if (cell.qnum === -1 && cell.qchar === 0) {
+					this.cursor.goPrevious();
+					cell = this.cursor.getc();
+				}
+
+				cell.setKana("");
+			} else if (ca === " ") {
 				cell.setKana("");
 			} else if (ca === "-" || ca === "s1" || ca === "1") {
 				cell.setKana("-");
@@ -138,6 +147,19 @@
 				}
 			}
 			this.puzzle.key.isTyping = false;
+		},
+
+		goPrevious: function() {
+			if (this.isVert) {
+				if (!this.getc().adjacent.top.isnull) {
+					this.movedir(this.UP, 2);
+				}
+			} else {
+				if (!this.getc().adjacent.left.isnull) {
+					this.movedir(this.LT, 2);
+				}
+			}
+			this.puzzle.key.isTyping = false;
 		}
 	},
 
@@ -185,9 +207,9 @@
 			if (this.qnum) {
 				var result = this.board.letterMap[consonant][this.qnum - 1];
 				if (result === " ") {
-					return consonant + result;
+					return this.board.letterMap[""][this.qnum - 1];
 				}
-				return result || consonant;
+				return result;
 			}
 			return consonant === "n" ? "ン" : consonant;
 		},
@@ -430,7 +452,7 @@
 
 			var word = "";
 			clist.each(function(cell) {
-				word += cell.getKana();
+				word += cell.getKana() || " ";
 			});
 
 			if (word in this._info.words) {
