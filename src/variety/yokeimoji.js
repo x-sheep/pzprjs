@@ -26,6 +26,7 @@
 					this.cursor.toggleDir();
 				} else {
 					this.cursor.setaddr(cell);
+					this.puzzle.key.isTyping = false;
 					old.drawRowOrCol(this.cursor.isVert);
 					cell.drawRowOrCol(this.cursor.isVert);
 				}
@@ -38,11 +39,13 @@
 	// キーボード入力系
 	KeyEvent: {
 		enablemake: true,
+		isTyping: false,
 
 		moveTarget: function(ca) {
 			var last = this.cursor.getaddr();
 			if (this.moveTCell(ca)) {
 				var curr = this.cursor.getaddr();
+				this.isTyping = false;
 				last.drawRowOrCol(this.cursor.isVert);
 				curr.drawRowOrCol(this.cursor.isVert);
 				return true;
@@ -63,8 +66,11 @@
 			} else if (ca === "2") {
 				cell.setKana("ン");
 				this.cursor.goNext();
+			} else if (ca === "n" && this.isTyping && cell.qchar === 13) {
+				// typing 'nn' will just enter a single 'n', and then continue
+				this.cursor.goNext();
 			} else if (vowel >= 0) {
-				if (cell.qchar !== 0 && cell.qnum > 0) {
+				if (!this.isTyping) {
 					cell.setQchar(0);
 				}
 				var consonant =
@@ -80,10 +86,9 @@
 				this.cursor.goNext();
 			} else if (ca in this.board.letterMap) {
 				var code = ca.charCodeAt(0) - 97;
-				if (code !== cell.qchar) {
-					cell.setQchar(code);
-					cell.setQnum(0);
-				}
+				cell.setQchar(code);
+				cell.setQnum(0);
+				this.isTyping = true;
 			} else {
 				return;
 			}
@@ -132,6 +137,7 @@
 					this.movedir(this.RT, 2);
 				}
 			}
+			this.puzzle.key.isTyping = false;
 		}
 	},
 
@@ -277,6 +283,14 @@
 			this.drawTarget();
 		},
 
+		getQuesNumberColor: function(cell) {
+			if (this.puzzle.key.isTyping && this.puzzle.cursor.equals(cell)) {
+				return "blue";
+			}
+
+			return this.common.getQuesNumberColor_mixed.call(this, cell);
+		},
+
 		getBGCellColor: function(cell) {
 			if (this.puzzle.editmode) {
 				var cursor = this.puzzle.cursor;
@@ -291,6 +305,14 @@
 		},
 
 		getQuesNumberText: function(cell) {
+			if (
+				cell.qchar === 13 &&
+				this.puzzle.key.isTyping &&
+				this.puzzle.cursor.equals(cell)
+			) {
+				return "n";
+			}
+
 			return cell.getKana();
 		}
 	},
