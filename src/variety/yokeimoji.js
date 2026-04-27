@@ -288,7 +288,6 @@
 
 		enablebcolor: true,
 
-		errcolor1: "red",
 		fontShadecolor: "rgb(96,96,96)",
 
 		paint: function() {
