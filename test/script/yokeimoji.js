@@ -36,6 +36,29 @@ ui.debug.addDebugData("yokeimoji", {
 		]
 	],
 	inputs: [
-		// TODO
+		{
+			input: ["newboard,3,3", "editmode", "key,a,n,o,-"],
+			result: "pzprv3/yokeimoji/3/3/アノー/.../.../. . . /. . . /. . . /"
+		},
+		{
+			input: ["mouse,leftx2,3,3", "key,n,n,2"],
+			result: "pzprv3/yokeimoji/3/3/アノー/.ン./.ン./. . . /. . . /. . . /"
+		},
+		{
+			input: ["key,enter,x,u"],
+			result: "pzprv3/yokeimoji/3/3/アノー/.ン./.ウ./. . . /. . . /. . . /"
+		},
+		{
+			input: ["key,BS,BS,i"],
+			result: "pzprv3/yokeimoji/3/3/アノー/.ン./イ../. . . /. . . /. . . /"
+		},
+		{
+			input: ["key,up, "],
+			result: "pzprv3/yokeimoji/3/3/アノー/.../イ../. . . /. . . /. . . /"
+		},
+		{
+			input: ["key,y,e"],
+			result: "pzprv3/yokeimoji/3/3/アノー/.エ./イ../. . . /. . . /. . . /"
+		}
 	]
 });
