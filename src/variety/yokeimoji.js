@@ -19,7 +19,17 @@
 			if (cell.isnull || cell === this.mouseCell) {
 				return;
 			}
-			this.setcursor(cell);
+
+			if (this.mousestart) {
+				var old = this.cursor.getaddr();
+				if (old.equals(cell)) {
+					this.cursor.toggleDir();
+				} else {
+					this.cursor.setaddr(cell);
+					old.drawRowOrCol(this.cursor.isVert);
+					cell.drawRowOrCol(this.cursor.isVert);
+				}
+			}
 		},
 		autoplay_func: "cellpeke"
 	},
@@ -28,15 +38,31 @@
 	// キーボード入力系
 	KeyEvent: {
 		enablemake: true,
+
+		moveTarget: function(ca) {
+			var last = this.cursor.getaddr();
+			if (this.moveTCell(ca)) {
+				var curr = this.cursor.getaddr();
+				last.drawRowOrCol(this.cursor.isVert);
+				curr.drawRowOrCol(this.cursor.isVert);
+				return true;
+			}
+			return false;
+		},
+
 		key_inputqnum_main: function(cell, ca) {
 			var vowel = this.board.vowels.indexOf(ca);
 
-			if (ca === "BS" || ca === " ") {
+			if (ca === "enter") {
+				this.cursor.toggleDir();
+			} else if (ca === "BS" || ca === " ") {
 				cell.setKana("");
 			} else if (ca === "-" || ca === "s1" || ca === "1") {
 				cell.setKana("-");
+				this.cursor.goNext();
 			} else if (ca === "2") {
 				cell.setKana("ン");
+				this.cursor.goNext();
 			} else if (vowel >= 0) {
 				if (cell.qchar !== 0 && cell.qnum > 0) {
 					cell.setQchar(0);
@@ -51,6 +77,7 @@
 				}
 
 				cell.setQnum(vowel + 1);
+				this.cursor.goNext();
 			} else if (ca in this.board.letterMap) {
 				var code = ca.charCodeAt(0) - 97;
 				if (code !== cell.qchar) {
@@ -65,15 +92,67 @@
 		}
 	},
 
+	Position: {
+		drawRowOrCol: function(isVert) {
+			if (isVert) {
+				this.puzzle.painter.paintRange(
+					this.bx,
+					this.board.minby,
+					this.bx,
+					this.board.maxby
+				);
+			} else {
+				this.puzzle.painter.paintRange(
+					this.board.minbx,
+					this.by,
+					this.board.maxbx,
+					this.by
+				);
+			}
+		}
+	},
+
+	TargetCursor: {
+		isVert: false,
+
+		toggleDir: function() {
+			this.isVert = !this.isVert;
+			var addr = this.getaddr();
+			addr.drawRowOrCol(true);
+			addr.drawRowOrCol(false);
+		},
+
+		goNext: function() {
+			if (this.isVert) {
+				if (!this.getc().adjacent.bottom.isnull) {
+					this.movedir(this.DN, 2);
+				}
+			} else {
+				if (!this.getc().adjacent.right.isnull) {
+					this.movedir(this.RT, 2);
+				}
+			}
+		}
+	},
+
+	Address: {
+		drawRowOrCol: function(isVert) {
+			this.klass.Position.prototype.drawRowOrCol.call(this, isVert);
+		}
+	},
+
 	Cell: {
 		minnum: 0,
 		maxnum: 5,
 
+		drawRowOrCol: function(isVert) {
+			this.klass.Position.prototype.drawRowOrCol.call(this, isVert);
+		},
+
 		getCodeNum: function() {
 			if (this.qnum < 0) {
 				return this.qnum;
-			}
-			if (this.qnum === 0) {
+			} else if (this.qnum === 0) {
 				return this.qchar;
 			}
 			return Math.max(this.getKana().charCodeAt(0) - 12424, -1);
@@ -180,7 +259,6 @@
 		gridcolor_type: "LIGHT",
 
 		enablebcolor: true,
-		bgcellcolor_func: "qsub1",
 
 		errcolor1: "red",
 		fontShadecolor: "rgb(96,96,96)",
@@ -197,6 +275,19 @@
 			this.drawPekes();
 
 			this.drawTarget();
+		},
+
+		getBGCellColor: function(cell) {
+			if (this.puzzle.editmode) {
+				var cursor = this.puzzle.cursor;
+				if (cursor.isVert && cell.bx === cursor.bx) {
+					return this.qsubcolor2;
+				}
+				if (!cursor.isVert && cell.by === cursor.by) {
+					return this.qsubcolor2;
+				}
+			}
+			return this.getBGCellColor_qsub1(cell);
 		},
 
 		getQuesNumberText: function(cell) {
