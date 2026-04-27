@@ -11,7 +11,7 @@
 		RBShadeCell: true,
 		use: true,
 		inputModes: {
-			edit: ["number", "clear", "info-blk"],
+			edit: ["clear", "info-blk"],
 			play: ["shade", "unshade", "peke", "info-blk"]
 		},
 		mouseinputAutoEdit: function() {
@@ -32,25 +32,30 @@
 			var vowel = this.board.vowels.indexOf(ca);
 
 			if (ca === "BS" || ca === " ") {
-				cell.setQnum(-1);
-				cell.setQchar(0);
-			} else if (ca === "-" || ca === "s1") {
-				cell.setQnum(-2);
-				cell.setQchar(0);
+				cell.setKana("");
+			} else if (ca === "-" || ca === "s1" || ca === "1") {
+				cell.setKana("-");
+			} else if (ca === "2") {
+				cell.setKana("ン");
 			} else if (vowel >= 0) {
 				if (cell.qchar !== 0 && cell.qnum > 0) {
 					cell.setQchar(0);
 				}
+				var consonant =
+					cell.qchar === 0 ? "" : String.fromCharCode(97 + cell.qchar);
+				if (
+					!(consonant in this.board.letterMap) ||
+					this.board.letterMap[consonant][vowel] === " "
+				) {
+					cell.setQchar(0);
+				}
+
 				cell.setQnum(vowel + 1);
 			} else if (ca in this.board.letterMap) {
 				var code = ca.charCodeAt(0) - 97;
 				if (code !== cell.qchar) {
 					cell.setQchar(code);
 					cell.setQnum(0);
-				} else {
-					// TODO only cycle numbers when repeatedly pressing the same key
-					cell.setQnum(0);
-					// cell.setQnum((cell.qnum + 1) % 6);
 				}
 			} else {
 				return;
@@ -104,9 +109,10 @@
 
 		setKana: function(ca) {
 			if (!ca || ca === " " || ca === ".") {
+				this.setQnum(-1);
+				this.setQchar(0);
 				return;
-			}
-			if (ca === "ー") {
+			} else if (ca === "ー" || ca === "-") {
 				this.setQnum(-2);
 				this.setQchar(0);
 				return;
