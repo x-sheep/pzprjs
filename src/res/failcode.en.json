@@ -487,7 +487,7 @@
     "csWidthGt1.cityspace": "There is a mass of shaded cells that is not a 1xN rectangle.",
     "cu2x2": "There is a 2x2 block of unshaded cells.",
     "cu3.aqre": "There are 4 or more unshaded cells in a row.",
-    "cuBadSequence.yokeimoji": "A word contains an invalid sequence of characters.",
+    "cuBadSequence.yokeimoji": "A word contains the invalid sequence \"ンン\", \"ンー\" or \"ーー\".",
     "cuBadStart.yokeimoji": "A word starts with ー or ン.",
     "cuConnOut": "Some unshaded cells are not connected to the outside.",
     "cuDivide.kaidan": "The rectangles are divided.",
