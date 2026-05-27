@@ -1099,7 +1099,6 @@
 			var len = component.nodes.length;
 			component.sequence = null;
 			component.isFullSeq = false;
-			component.canReverse = len === this.targetLength;
 
 			if (len === 0 || len > this.targetLength) {
 				return;
@@ -1140,8 +1139,41 @@
 
 			component.sequence = sequence;
 
-			// TODO set isFullSeq to true if starts at 1
-			// TODO clear canReverse if something is wrong
+			var ascend_num = -1;
+			var descend_num = -1;
+			var ascend_full = false;
+			var descend_full = false;
+			for (var i = 0; i < sequence.length; i++) {
+				var cell = sequence[i];
+
+				if (ascend_num > 0) {
+					ascend_num++;
+				} else if (cell.qnum > 0 && ascend_num === -1) {
+					ascend_num = cell.qnum;
+					ascend_full = cell.qnum === i + 1;
+				}
+				if (descend_num > 0) {
+					descend_num--;
+				} else if (cell.qnum > 0 && descend_num === -1) {
+					descend_num = cell.qnum;
+					descend_full = cell.qnum === sequence.length - i;
+				}
+
+				if (cell.qnum > 0 && cell.qnum !== ascend_num) {
+					ascend_num = -2;
+				}
+				if (cell.qnum > 0 && cell.qnum !== descend_num) {
+					descend_num = -2;
+				}
+			}
+
+			if (ascend_num === -2 && descend_num !== -2) {
+				// TODO check if descend is useful
+			} else {
+				// TODO do something else
+			}
+			component.isFullSeq = ascend_full || descend_full;
+			component.canReverse = ascend_full && descend_full;
 		}
 	},
 	GraphComponent: {
