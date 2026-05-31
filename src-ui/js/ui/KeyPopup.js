@@ -41,6 +41,7 @@ ui.keypopup = {
 		lookair: [5, 0],
 		hebi: [5, 5],
 		tawa: [6, 0],
+		trizone: [6, 0],
 		hashikake: [8, 0],
 		tapa: [80, 0],
 		tapaloop: [80, 0],
@@ -259,7 +260,8 @@ ui.keypopup = {
 		bramble: [10, 0],
 		golemgrad: [10, 0],
 		topo: [10, 10],
-		soulmates: [10, 10]
+		soulmates: [10, 10],
+		landmeasure: [10, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -508,6 +510,8 @@ ui.keypopup = {
 			pid === "mrtile"
 		) {
 			cap = "■";
+		} else if (pid === "landmeasure") {
+			cap = "∞";
 		} else if (pid === "patchwork") {
 			cap = {
 				text: "■",
