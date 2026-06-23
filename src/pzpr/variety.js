@@ -90,6 +90,7 @@
 			angleloop: [0, 0, "鋭直鈍ループ", "Angle Loop", "kouchoku"],
 			anglers: [0, 0, "フィッシング", "Anglers"],
 			antmill: [0, 0, "Ant Mill", "Ant Mill", "scrin"],
+			anymino: [0, 0, "Anymino", "Anymino", "shimaguni"],
 			archipelago: [0, 0, "アーキペラゴ", "Archipelago", "chainedb"],
 			aqre: [0, 0, "Aqre", "Aqre", "aqre"],
 			aquapelago: [0, 0, "Aquapelago", "Aquapelago"],
@@ -161,6 +162,7 @@
 			doubleback: [0, 0, "Double Back", "Double Back", "country"],
 			easyasabc: [0, 0, "ABCプレース", "Easy as ABC"],
 			edamame: [0, 0, "Edamame", "Edamame", "kaidan"],
+			elasticlink: [0, 0, "Elastic Link", "Elastic Link"],
 			energywalk: [0, 0, "Energy Walk", "Energy Walk", "icewalk"],
 			evolmino: [0, 0, "シンカミノ", "Evolmino"],
 			factors: [0, 0, "因子の部屋", "Rooms of Factors"],
@@ -432,6 +434,7 @@
 				"",
 				{ kanpen: "slitherlink" }
 			],
+			slovak: [0, 0, "Slovak Sums", "Slovak Sums"],
 			smullyan: [0, 0, "Smullyanic Dynasty", "Smullyanic Dynasty", "context"],
 			snake: [0, 0, "Snake", "Snake"],
 			snakeegg: [0, 0, "Snake Egg", "Snake Egg"],
