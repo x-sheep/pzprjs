@@ -92,7 +92,13 @@
 	},
 	"Cell@narrow": {
 		maxnum: 4,
-		disInputHatena: true
+		disInputHatena: true,
+		displayNum: function() {
+			if (this.puzzle.execConfig("autoerr") && this.qnum === -1 && this.qcmp) {
+				return this.qcmp;
+			}
+			return this.qnum;
+		}
 	},
 	"Cell@subomino": {
 		maxnum: function() {
@@ -199,7 +205,14 @@
 			var numlist = clist.filter(function(cell) {
 				return cell.isNum();
 			});
-			component.num = numlist.length === 1 ? numlist[0].getNum() : -1;
+			component.num = numlist.length === 1 ? numlist[0].getNum() : 0;
+
+			clist.each(function(cell) {
+				if (cell.qcmp !== component.num) {
+					cell.qcmp = component.num;
+					cell.draw();
+				}
+			});
 		}
 	},
 
@@ -281,6 +294,16 @@
 	},
 
 	"Graphic@narrow": {
+		getQuesNumberColor: function(cell) {
+			if (cell.qnum === -1) {
+				return cell.qcmp ? this.qcmpcolor : null;
+			}
+			if ((cell.error || cell.qinfo) === 1) {
+				return this.errcolor1;
+			}
+			return this.quescolor;
+		},
+
 		drawQuesNumbers: function() {
 			var g = this.vinc("cell_mark", "auto");
 
@@ -294,7 +317,7 @@
 				g.strokeStyle = this.getQuesNumberColor(cell);
 				var px = cell.bx * this.bw,
 					py = cell.by * this.bh;
-				switch (cell.getNum()) {
+				switch (cell.displayNum()) {
 					case 1:
 						g.strokeCircle(px, py, rsize);
 						break;
