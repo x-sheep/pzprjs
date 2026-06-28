@@ -305,6 +305,7 @@
 			mochinyoro: [1, 0, "モチにょろ", "Mochinyoro", "nurikabe"],
 			moonsun: [0, 0, "月か太陽", "Moon or Sun", "country"],
 			morningwalk: [0, 0, "Morning Walk", "Morning Walk", "icewalk"],
+			mrokmrno: [0, 0, "OKさんとNOくん", "Mr. OK and Mr. NO"],
 			mrtile: [0, 0, "ミラーリングタイル", "Mirroring Tile", "chainedb"],
 			mukkonn: [0, 0, "Mukkonn Enn", "Mukkonn Enn", "compass"],
 			myopia: [0, 0, "Myopia", "Myopia"],
@@ -422,7 +423,7 @@
 			shugaku: [1, 0, "修学旅行の夜", "School Trip"],
 			shwolf: [0, 0, "ヤギとオオカミ", "Goats and Wolves", "kramma"],
 			simplegako: [0, 0, "シンプルガコ", "Simple Gako"],
-			simpleloop: [0, 0, "シンプルループ", "Simple Loop", "country"],
+			simpleloop: [0, 0, "シンプルループ", "Simple Loop"],
 			slalom: [1, 1, "スラローム", "Slalom", "", { alias: "suraromu" }],
 			slashpack: [0, 0, "Slash Pack", "Slash Pack"],
 			slither: [
