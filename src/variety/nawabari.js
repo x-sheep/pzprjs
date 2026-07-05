@@ -96,6 +96,18 @@
 		qcmp2: 0,
 
 		disInputHatena: true,
+
+		posthook: {
+			qnum: function() {
+				if (this.room) {
+					this.board.roommgr.setExtraData(this.room);
+				}
+				if (this.eqblk) {
+					this.board.eqblkgraph.setExtraData(this.eqblk);
+				}
+			}
+		},
+
 		displayNum: function() {
 			var qcmp = this.qcmp1 || this.qcmp2;
 			if (this.puzzle.execConfig("autoerr") && this.qnum === -1 && qcmp) {
