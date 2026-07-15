@@ -17,7 +17,7 @@
 
 		autohide_cursor: function() {},
 		inputDot: function() {
-			this.inputFixedQsub(2);
+			this.inputFixedNumber(-3);
 		},
 		mouseinput_auto: function() {
 			var pos = this.getpos(0);
