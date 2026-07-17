@@ -57,5 +57,18 @@ ui.debug.addDebugData("golemgrad", {
 			"pzprv3/golemgrad/6/6/3 0 . . . . /. . . . . 0 /. 0 . 4 . 0 /. . . . . . /. 1 . 0 . . /. . . . - 0 /0 1 0 1 1 1 /0 1 1 1 0 1 /0 1 0 0 1 1 /1 1 0 0 1 0 /1 0 1 1 1 1 /1 1 1 0 0 1 /0 0 0 1 1 /0 1 1 0 0 /0 0 0 0 1 /1 0 0 0 0 /0 0 1 0 1 /1 1 0 0 0 /0 1 0 1 0 1 /0 0 0 0 0 0 /0 1 0 0 1 0 /1 0 0 0 1 0 /1 0 1 0 0 1 /"
 		]
 	],
-	inputs: []
+	inputs: [
+		{
+			input: [
+				"newboard,2,2",
+				"editmode,circle-unshade",
+				"mouse,left,1,1",
+				"editmode,auto",
+				"mouse,leftx2,3,3",
+				"playmode",
+				"mouse,left,1,1,3,1,3,3"
+			],
+			result: "pzprv3/golemgrad/2/2/0 . /. - /0 0 /0 0 /1 /0 /0 0 /"
+		}
+	]
 });

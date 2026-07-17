@@ -33,10 +33,22 @@
 	},
 
 	Board: {
-		hasborder: 1
+		hasborder: 1,
+
+		rebuildIfStale: function() {
+			if (this.isStale) {
+				this.isStale = false;
+				this.rebuildInfo();
+			}
+		}
 	},
 	Border: {
-		enableLineNG: true
+		enableLineNG: true,
+		posthook: {
+			line: function(val) {
+				this.board.isStale = true;
+			}
+		}
 	},
 	"Cell@golemgrad": {
 		minnum: 0
@@ -160,8 +172,12 @@
 				return cell.lcnt > 0 && cell.isNum() && cell.qnum !== 0;
 			}, "lnOverlap");
 		},
-
+		checkConnectShade: function() {
+			this.board.rebuildIfStale();
+			this.checkOneArea(this.board.sblkmgr, "csDivide");
+		},
 		checkDoubleNumberInUnshade: function() {
+			this.board.rebuildIfStale();
 			this.checkAllBlock(
 				this.board.ublkmgr,
 				function(cell) {
@@ -174,6 +190,7 @@
 			);
 		},
 		checkNumberAndUnshadeSize: function() {
+			this.board.rebuildIfStale();
 			this.checkAllCell(function(cell) {
 				if (cell.qnum <= 0) {
 					return false;
@@ -191,6 +208,7 @@
 		},
 
 		checkNoNumberInUnshade: function() {
+			this.board.rebuildIfStale();
 			this.checkAllBlock(
 				this.board.ublkmgr,
 				function(cell) {

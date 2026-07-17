@@ -110,7 +110,8 @@
 		numberRemainsUnshaded: true,
 
 		maxnum: function() {
-			return Math.max(this.board.cols, this.board.rows) >> 1;
+			var liar = this.puzzle.getConfig("lapaz_liar") ? 1 : 0;
+			return liar + (Math.max(this.board.cols, this.board.rows) >> 1);
 		},
 		minnum: 0,
 
@@ -118,7 +119,8 @@
 			return this.isValid();
 		},
 		allowShade: function() {
-			return this.isValid() && !this.isNum();
+			var isLiar = this.puzzle.getConfig("lapaz_liar");
+			return this.isValid() && (isLiar || !this.isNum());
 		},
 
 		posthook: {
@@ -265,8 +267,18 @@
 		decodePzpr: function(type) {
 			this.decodeNumber16();
 			this.decodeEmpty();
+			if (this.pid === "lapaz") {
+				this.puzzle.setConfig("lapaz_liar", this.checkpflag("l"));
+			} else {
+				this.puzzle.setConfig("trizone_ghost", this.checkpflag("g"));
+			}
 		},
 		encodePzpr: function(type) {
+			if (this.pid === "lapaz") {
+				this.outpflag = this.puzzle.getConfig("lapaz_liar") ? "l" : null;
+			} else {
+				this.outpflag = this.puzzle.getConfig("trizone_ghost") ? "g" : null;
+			}
 			this.encodeNumber16();
 			this.encodeEmpty();
 		}
@@ -274,11 +286,21 @@
 	//---------------------------------------------------------
 	FileIO: {
 		decodeData: function() {
+			if (this.pid === "lapaz") {
+				this.decodeConfigFlag("l", "lapaz_liar");
+			} else {
+				this.decodeConfigFlag("g", "trizone_ghost");
+			}
 			this.decodeCellQnum();
 			this.decodeBorderAns(1);
 			this.decodeCellAns();
 		},
 		encodeData: function() {
+			if (this.pid === "lapaz") {
+				this.encodeConfigFlag("l", "lapaz_liar");
+			} else {
+				this.encodeConfigFlag("g", "trizone_ghost");
+			}
 			this.encodeCellQnum();
 			this.encodeBorderAns(1);
 			this.encodeCellAns();
@@ -331,6 +353,10 @@
 		},
 
 		checkNumberRegionSize: function() {
+			if (this.puzzle.getConfig("lapaz_liar")) {
+				return;
+			}
+
 			this.checkAllCell(function(cell) {
 				return cell.qnum !== -1 && cell.room.clist.length === 1;
 			}, "nmLt1");
@@ -398,6 +424,10 @@
 	},
 	"AnsCheck@trizone": {
 		checkNoNumber: function() {
+			if (this.puzzle.getConfig("trizone_ghost")) {
+				return;
+			}
+
 			var rooms = this.board.roommgr.components;
 			for (var r = 0; r < rooms.length; r++) {
 				var room = rooms[r],

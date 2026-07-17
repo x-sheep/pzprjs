@@ -152,6 +152,12 @@
 				case "fillomino":
 					idname = "fillomino_tri";
 					break;
+				case "lapaz":
+					idname = "lapaz_liar";
+					break;
+				case "trizone":
+					idname = "trizone_ghost";
+					break;
 				case "slither":
 				case "tslither":
 				case "swslither":
