@@ -4,40 +4,27 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["balance"], {
+})(["balance", "lring"], {
 	MouseEvent: {
 		inputModes: {
 			edit: ["number", "shade", "clear"],
 			play: ["line", "peke", "info-line"]
 		},
-		mouseinput_auto: function() {
-			if (this.puzzle.playmode) {
-				if (this.mousestart || this.mousemove) {
-					if (this.btn === "left") {
-						this.inputLine();
-					} else if (this.btn === "right") {
-						this.inputpeke();
-					}
-				} else if (this.mouseend && this.notInputted()) {
-					if (this.inputpeke_ifborder()) {
-						return;
-					}
+		autoplay_func: "line",
+		mouseinputAutoEdit: function() {
+			if (this.mousestart) {
+				var cell = this.getcell();
+				if (cell.isnull) {
+					return;
 				}
-			} else if (this.puzzle.editmode) {
-				if (this.mousestart) {
-					var cell = this.getcell();
-					if (cell.isnull) {
+				if (cell === this.cursor.getc() || this.btn === "left") {
+					this.inputqnum();
+				} else {
+					if (cell.qnum === -1) {
 						return;
 					}
-					if (cell === this.cursor.getc() || this.btn === "left") {
-						this.inputqnum();
-					} else {
-						if (cell.qnum === -1) {
-							return;
-						}
-						cell.ques = 1 - cell.ques;
-						cell.draw();
-					}
+					cell.ques = 1 - cell.ques;
+					cell.draw();
 				}
 			}
 		},
@@ -55,6 +42,15 @@
 				}
 
 				cell.draw();
+			}
+		}
+	},
+	"MouseEvent@lring": {
+		mouseinputAutoEdit: function() {
+			if (this.mousestart || this.mousemove) {
+				this.inputarrow_cell();
+			} else if (this.mouseend && this.notInputted()) {
+				this.inputqnum();
 			}
 		}
 	},
@@ -87,6 +83,34 @@
 					this.key_inputqnum(ca);
 				}
 			}
+		}
+	},
+	"KeyEvent@lring": {
+		moveTarget: function(ca) {
+			if (ca.match(/shift/)) {
+				return false;
+			}
+			return this.moveTCell(ca);
+		},
+
+		keyinput: function(ca) {
+			this.key_toichika(ca);
+		},
+		key_toichika: function(ca) {
+			if (ca === "1" || ca === "w" || ca === "shift+up") {
+				ca = "1";
+			} else if (ca === "2" || ca === "s" || ca === "shift+right") {
+				ca = "4";
+			} else if (ca === "3" || ca === "z" || ca === "shift+down") {
+				ca = "2";
+			} else if (ca === "4" || ca === "a" || ca === "shift+left") {
+				ca = "3";
+			} else if (ca === "5" || ca === "q" || ca === "-") {
+				ca = "s1";
+			} else if (ca === "6" || ca === "e" || ca === " ") {
+				ca = " ";
+			}
+			this.key_inputqnum(ca);
 		}
 	},
 
@@ -142,10 +166,17 @@
 			}
 
 			var lengths = [];
+			this.horizlength = 0;
+			this.vertlength = 0;
 			for (var dir = 1; dir <= 4; dir++) {
 				var l = this.getSegmentDir(dir).length;
 				if (l > 0) {
 					lengths.push(l);
+				}
+				if (dir === this.UP || dir === this.DN) {
+					this.vertlength += l;
+				} else {
+					this.horizlength += l;
 				}
 			}
 			if (lengths[0] === lengths[1]) {
@@ -160,6 +191,10 @@
 		invalidate: function() {
 			this.counted = false;
 		}
+	},
+	"Cell@lring": {
+		numberAsObject: true,
+		maxnum: 4
 	},
 	Border: {
 		posthook: {
@@ -197,13 +232,15 @@
 		enabled: true
 	},
 
+	"Graphic@balance": {
+		hideHatena: true,
+		textoption: { ratio: 0.65 }
+	},
 	Graphic: {
 		irowake: true,
 
 		numbercolor_func: "qnum",
 		gridcolor_type: "LIGHT",
-
-		hideHatena: true,
 
 		circleratio: [0.4, 0.35],
 
@@ -224,8 +261,6 @@
 			return cell.ques === 0 ? "black" : "white";
 		},
 
-		textoption: { ratio: 0.65 },
-
 		minYdeg: 0.36,
 		maxYdeg: 0.74,
 
@@ -233,8 +268,13 @@
 			this.drawBGCells();
 			this.drawDashedGrid();
 
-			this.drawCircles();
-			this.drawQuesNumbers();
+			if (this.pid === "lring") {
+				this.drawCellArrows(true);
+				this.drawHatenas();
+			} else {
+				this.drawCircles();
+				this.drawQuesNumbers();
+			}
 			this.drawLines();
 
 			this.drawPekes();
@@ -243,7 +283,7 @@
 		}
 	},
 
-	Encode: {
+	"Encode@balance": {
 		decodePzpr: function(type) {
 			var c = 0,
 				i = 0,
@@ -312,7 +352,17 @@
 			this.outbstr += cm;
 		}
 	},
-	FileIO: {
+	"Encode@lring": {
+		decodePzpr: function() {
+			this.decode4Cell();
+			this.puzzle.setConfig("loop_full", this.checkpflag("f"));
+		},
+		encodePzpr: function() {
+			this.outpflag = this.puzzle.getConfig("loop_full") ? "f" : null;
+			this.encode4Cell();
+		}
+	},
+	"FileIO@balance": {
 		decodeData: function() {
 			this.decodeConfigFlag("f", "loop_full");
 			this.decodeCell(function(cell, ca) {
@@ -338,7 +388,7 @@
 		}
 	},
 
-	AnsCheck: {
+	"AnsCheck@balance": {
 		checklist: [
 			"checkBranchLine",
 			"checkCrossLine",
@@ -416,6 +466,23 @@
 			this.checkAllCell(function(cell) {
 				return cell.isNum() && cell.lcnt === 0;
 			}, "circNoLine");
+		}
+	},
+
+	"AnsCheck@lring": {
+		checklist: [
+			"checkBranchLine",
+			"checkCrossLine",
+			"checkTurnOnArrow",
+			// TODO check lengths of arrow
+			// TODO check question mark having length diff of 1
+			"checkDeadendLine+",
+			"checkOneLoop",
+			"checkNoLineIfVariant"
+		],
+
+		checkTurnOnArrow: function() {
+			// TODO check arrow has a turn in the right direction
 		}
 	}
 });
