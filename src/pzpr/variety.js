@@ -313,6 +313,7 @@
 			nagenawa: [0, 0, "なげなわ", "Nagenawa", "nagenawa"],
 			nanameguri: [0, 0, "ななめぐり", "Nanameguri"],
 			nanro: [0, 1, "ナンロー", "Nanro"],
+			nansuke: [0, 0, "ナンスケ", "Nansuke", "scrabble"],
 			narrow: [0, 0, "Narrowfence", "Narrowfence", "nawabari"],
 			nawabari: [1, 0, "なわばり", "Nawabari", "nawabari"],
 			news: [0, 0, "NEWS", "NEWS", "toichika"],

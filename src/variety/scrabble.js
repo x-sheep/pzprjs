@@ -4,7 +4,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["scrabble"], {
+})(["scrabble", "nansuke"], {
 	//---------------------------------------------------------
 	// マウス入力系
 	MouseEvent: {
@@ -60,6 +60,12 @@
 			}
 		}
 	},
+	"MouseEvent@nansuke": {
+		inputModes: {
+			edit: ["empty", "clear"],
+			play: ["clear"]
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
@@ -84,13 +90,22 @@
 				return;
 			}
 
-			if (ca === "+" && this.puzzle.playmode) {
-				ca = "s1";
-			} else if ((ca === " " || ca === "-") && this.puzzle.playmode) {
-				ca = "s2";
+			if (this.pid === "nansuke") {
+				if (this.puzzle.editmode && (ca === "x" || ca === "-")) {
+					ca = "s1";
+				}
+			} else {
+				if (ca === "+" && this.puzzle.playmode) {
+					ca = "s1";
+				} else if ((ca === " " || ca === "-") && this.puzzle.playmode) {
+					ca = "s2";
+				}
 			}
 
 			var current = this.puzzle.editmode ? cell.qnum : cell.qsub || cell.anum;
+			if (cell.ques) {
+				current = -2;
+			}
 			if (this.cursor.targetdir === 0 && ca === "BS" && current === -1) {
 				this.cursor.goPrevious();
 				cell.draw();
@@ -98,12 +113,14 @@
 			}
 
 			this.common.key_inputqnum_main.call(this, cell, ca);
-			var wasInput =
-				ca === " " ||
-				ca === "-" ||
-				ca === "s1" ||
-				ca === "s2" ||
-				(ca >= "a" && ca <= "z" && ca.length === 1);
+			var wasInput = ca === " " || ca === "-" || ca === "s1" || ca === "s2";
+
+			if (cell.numberAsLetter) {
+				wasInput |= ca >= "a" && ca <= "z" && ca.length === 1;
+			} else {
+				wasInput |= ca >= "0" && ca <= "9";
+			}
+
 			if (this.cursor.targetdir === 0 && wasInput) {
 				this.cursor.goNext();
 			}
@@ -125,6 +142,30 @@
 		},
 		drawRowOrCol: function(isVert) {
 			this.klass.Position.prototype.drawRowOrCol.call(this, isVert);
+		}
+	},
+	"Cell@nansuke": {
+		minnum: 0,
+		maxnum: 9,
+		numberWithMB: false,
+		numberAsLetter: false,
+
+		getNum: function() {
+			return this.ques === 7 ? -2 : this.qnum !== -1 ? this.qnum : this.anum;
+		},
+		setNum: function(val) {
+			if (this.puzzle.editmode) {
+				if (val === -2) {
+					this.setValid(7);
+					return;
+				} else {
+					this.setValid(0);
+				}
+			} else if (this.ques) {
+				return;
+			}
+
+			this.common.setNum.call(this, val);
 		}
 	},
 
@@ -205,6 +246,9 @@
 
 	Board: {
 		getBankPiecesInGrid: function() {
+			return this.getBankPiecesInGrid_scrabble(false);
+		},
+		getBankPiecesInGrid_scrabble: function(allcells) {
 			var ret = [];
 			this.puzzle.checker.checkRowsColsPartly(
 				function(clist) {
@@ -232,10 +276,15 @@
 					return true;
 				},
 				function(cell) {
-					return !cell.isNum();
+					return allcells ? !cell.isValid() : !cell.isNum();
 				}
 			);
 			return ret;
+		}
+	},
+	"Board@nansuke": {
+		getBankPiecesInGrid: function() {
+			return this.getBankPiecesInGrid_scrabble(true);
 		}
 	},
 	BoardExec: {
@@ -260,29 +309,37 @@
 		],
 		copyAnswer: function() {
 			var p = new this.klass.BankPiece();
-			var pieces = this.board.getBankPiecesInGrid().map(function(pair) {
+			var pieces = this.board.getBankPiecesInGrid(false).map(function(pair) {
 				p.deserialize(pair[0]);
 				return p.serialize();
 			});
 
+			// TODO sort by character length too
 			pieces.sort();
 			return pieces;
 		},
 
+		// TODO replace this mess with a single function that accepts an entire textfield
+		splitBy: /[^a-zA-Z]/g,
 		sanitizeItem: function(str) {
 			var tokens = str.toUpperCase().split("");
+			var numberAsLetter = this.board.emptycell.numberAsLetter;
 			tokens = tokens.filter(function(ca) {
-				return ca >= "A" && ca <= "Z";
+				return numberAsLetter ? ca >= "A" && ca <= "Z" : ca >= "0" && ca <= "9";
 			});
 			return tokens.join("");
 		}
 	},
+	"Bank@nansuke": {
+		splitBy: /[^0-9]/g
+	},
 	BankPiece: {
 		str: "",
 		deserialize: function(str) {
+			var letters = this.board.emptycell.numberAsLetter;
 			for (var i = 0; i < str.length; i++) {
 				var point = str.codePointAt(i);
-				if (point < 65 || point > 90) {
+				if (letters ? point < 65 || point > 90 : point < 48 || point > 57) {
 					throw Error("Invalid character");
 				}
 			}
@@ -317,6 +374,11 @@
 
 		getBGCellColor: function(cell) {
 			var cursor = this.puzzle.cursor;
+
+			if (!cell.isValid()) {
+				return "black";
+			}
+
 			if (
 				!this.board.haserror &&
 				!this.board.hasinfo &&
@@ -368,6 +430,18 @@
 			this.encodePieceBank();
 		}
 	},
+	"Encode@nansuke": {
+		decodePzpr: function(type) {
+			this.decodeEmpty();
+			this.decodeNumber16();
+			this.decodePieceBank();
+		},
+		encodePzpr: function(type) {
+			this.encodeBinary("ques", 7);
+			this.encodeNumber16();
+			this.encodePieceBank();
+		}
+	},
 
 	FileIO: {
 		decodeData: function() {
@@ -388,7 +462,8 @@
 		checklist: [
 			"checkBankPiecesAvailable",
 			"checkBankPiecesInvalid",
-			"checkConnectNumber",
+			"checkConnectNumber@scrabble",
+			"checkNoNumCell@nansuke",
 			"checkBankPiecesUsed"
 		]
 	}
