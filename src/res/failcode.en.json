@@ -489,6 +489,7 @@
     "csMismatch": "A given piece has missing cells.",
     "csNoLevel.aquarium": "A body of water has different surface levels.",
     "csNoSupport.aquarium": "A water cell is next to or above an empty cell.",
+    "csNoSupport.korokoro": "A ball is above an empty cell.",
     "csNotBottom.dosufuwa": "An iron ball is not on the bottom of the row or on another iron ball.",
     "csNotOnShade.tawa": "There are no shaded cells under a shaded cell.",
     "csNotOnLine.edamame": "A circle is not inside a rectangle.",

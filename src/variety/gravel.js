@@ -7,7 +7,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["gravel"], {
+})(["gravel", "korokoro"], {
 	MouseEvent: {
 		use: true,
 		inputModes: {
@@ -113,10 +113,22 @@
 			return new this.klass.Address(bx, by);
 		}
 	},
+	"MouseEvent@korokoro": {
+		inputModes: {
+			edit: ["border", "empty", "info-blk"],
+			play: ["shade", "unshade", "info-blk"]
+		},
+		mouseinputAutoEdit: function() {
+			this.inputborder();
+		},
+		mouseinputAutoPlay: function() {
+			this.inputShade();
+		}
+	},
 
 	//---------------------------------------------------------
 	// キーボード入力系
-	KeyEvent: {
+	"KeyEvent@gravel": {
 		enablemake: true,
 
 		keyinput: function(ca) {
@@ -185,7 +197,9 @@
 			return this.qans > 0 || this.isQuesBorder();
 		},
 		isQuesBorder: function() {
-			return !!(this.sidecell[0].isEmpty() ^ this.sidecell[1].isEmpty());
+			return (
+				this.ques || !!(this.sidecell[0].isEmpty() ^ this.sidecell[1].isEmpty())
+			);
 		},
 
 		prehook: {
@@ -300,13 +314,15 @@
 		enabled: true
 	},
 	AreaRoomGraph: {
+		enabled: true
+	},
+	"AreaRoomGraph@gravel": {
 		relation: {
 			"cell.ques": "node",
 			"cell.qans": "node",
 			"border.ques": "separator",
 			"border.qans": "separator"
 		},
-		enabled: true,
 		isnodevalid: function(cell) {
 			return cell.isValid() && cell.isUnshade() && cell.allowUnshade();
 		},
@@ -597,8 +613,9 @@
 				border.sidecell[0].isShade() !== border.sidecell[1].isShade()
 				? this.ghostcolor
 				: null;
-		},
-
+		}
+	},
+	"Graphic@gravel": {
 		getCircleStrokeColor: function(cell) {
 			if (cell.ques === 1) {
 				return cell.error === 1 ? this.errcolor1 : this.quescolor;
@@ -614,8 +631,26 @@
 			return null;
 		}
 	},
+	"Graphic@korokoro": {
+		circleratio: [0.25, 0.25],
+		paint: function() {
+			this.drawBGCells();
+			this.drawValidDashedGrid();
 
-	Encode: {
+			this.drawCircles();
+
+			this.drawQuesBorders();
+			this.drawInvalidIndicators(this.puzzle.editmode);
+		},
+		getCircleStrokeColor: function() {
+			return null;
+		},
+		getCircleFillColor: function(cell) {
+			return this.common.getShadedCellColor.call(this, cell);
+		}
+	},
+
+	"Encode@gravel": {
 		decodePzpr: function(type) {
 			this.genericDecodeThree(function(cell, val) {
 				cell.ques = val;
@@ -631,8 +666,17 @@
 			this.encodeEmpty();
 		}
 	},
-
-	FileIO: {
+	"Encode@korokoro": {
+		decodePzpr: function(type) {
+			this.decodeBorder();
+			this.decodeEmpty();
+		},
+		encodePzpr: function(type) {
+			this.encodeBorder();
+			this.encodeEmpty();
+		}
+	},
+	"FileIO@gravel": {
 		decodeData: function() {
 			this.decodeCellQnumAns();
 			this.decodeBorderAns(1);
@@ -685,8 +729,41 @@
 			});
 		}
 	},
+	"FileIO@korokoro": {
+		decodeData: function() {
+			this.decodeBorderQues();
+			this.decodeCellAns();
+		},
+		encodeData: function() {
+			this.encodeBorderQues();
+			this.encodeCellAns();
+		},
+		decodeCellAns: function() {
+			this.decodeCell(function(cell, ca) {
+				if (ca === "x") {
+					cell.ques = 7;
+				} else if (ca === "#") {
+					cell.qans = 1;
+				} else if (ca === "+") {
+					cell.qsub = 1;
+				}
+			});
+		},
+		encodeCellAns: function() {
+			this.encodeCell(function(cell) {
+				if (cell.ques === 7) {
+					return "x ";
+				} else if (cell.qans) {
+					return "# ";
+				} else if (cell.qsub) {
+					return "+ ";
+				}
+				return ". ";
+			});
+		}
+	},
 
-	AnsCheck: {
+	"AnsCheck@gravel": {
 		checklist: [
 			"checkUnshadeOnCircle",
 			"checkShadeOnCircle",
@@ -816,7 +893,49 @@
 			}
 		}
 	},
-	FailCode: {
+	"AnsCheck@korokoro": {
+		checklist: [
+			"check2x2ShadeCell",
+			"checkGravity",
+			"checkSideAreaShadeCount",
+			"checkConnectShade",
+			"checkNoShadeCellInArea",
+			"doneShadingDecided"
+		],
+		checkGravity: function() {
+			this.checkAllCell(function(cell) {
+				if (!cell.isShade()) {
+					return false;
+				}
+
+				if (
+					!cell.adjacent.bottom.isShade() &&
+					!cell.adjborder.bottom.isQuesBorder()
+				) {
+					return true;
+				}
+				if (
+					!cell.adjacent.right.isShade() &&
+					!cell.adjborder.right.isQuesBorder()
+				) {
+					return true;
+				}
+				return false;
+			}, "csNoSupport");
+		},
+		checkSideAreaShadeCount: function() {
+			this.checkSideAreaSize(
+				this.board.roommgr,
+				function(area) {
+					return area.clist.filter(function(cell) {
+						return cell.isShade();
+					}).length;
+				},
+				"bsEqShade"
+			);
+		}
+	},
+	"FailCode@gravel": {
 		bkSideNe: "bkSideNe.squarejam"
 	}
 });
