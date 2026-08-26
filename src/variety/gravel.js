@@ -116,7 +116,7 @@
 	"MouseEvent@korokoro": {
 		inputModes: {
 			edit: ["border", "empty", "info-blk"],
-			play: ["shade", "unshade", "info-blk"]
+			play: ["shade", "unshade", "number", "info-blk"]
 		},
 		mouseinputAutoEdit: function() {
 			this.inputborder();
@@ -149,6 +149,14 @@
 				cell.setQues(cell.ques === 7 ? 0 : 7);
 				cell.draw();
 			} else {
+				this.key_inputqnum(ca);
+			}
+		}
+	},
+	"KeyEvent@korokoro": {
+		enableplay: true,
+		keyinput: function(ca) {
+			if (this.puzzle.mouse.inputMode.indexOf("number") !== -1) {
 				this.key_inputqnum(ca);
 			}
 		}
@@ -186,6 +194,13 @@
 					}
 				}
 			}
+		}
+	},
+	"Cell@korokoro": {
+		enableSubNumberArray: true,
+		disableAnum: true,
+		maxnum: function() {
+			return Math.min(999, this.room.clist.length);
 		}
 	},
 
@@ -638,15 +653,69 @@
 			this.drawValidDashedGrid();
 
 			this.drawCircles();
+			this.drawTargetSubNumber();
 
 			this.drawQuesBorders();
 			this.drawInvalidIndicators(this.puzzle.editmode);
+
+			this.drawSubNumbers(true);
+			this.drawCursor(true);
 		},
 		getCircleStrokeColor: function() {
 			return null;
 		},
 		getCircleFillColor: function(cell) {
 			return this.common.getShadedCellColor.call(this, cell);
+		},
+
+		drawTargetSubNumber: function() {
+			var g = this.vinc("target_subnum", "crispEdges");
+
+			var d = this.range,
+				cursor = this.puzzle.cursor;
+			if (cursor.bx < d.x1 || d.x2 < cursor.bx) {
+				return;
+			}
+			if (cursor.by < d.y1 || d.y2 < cursor.by) {
+				return;
+			}
+
+			var target = cursor.targetdir;
+			var cell = cursor.getc();
+
+			if (!cursor.isActive) {
+				target = 0;
+			}
+
+			g.vid = "target_subnum";
+			g.fillStyle = this.ttcolor;
+			if (this.puzzle.playmode && target !== 0) {
+				var bw = this.bw,
+					bh = this.bh;
+				var px = cursor.bx * bw + this.getCellHorizontalOffset(cell),
+					py = cursor.by * bh + this.getCellVerticalOffset(cell);
+				var tw = bw * 0.45,
+					th = bh * 0.45;
+				if (target === 5) {
+					py -= th;
+				} else if (target === 4) {
+					px -= tw;
+				} else if (target === 2) {
+					px += tw;
+				} else if (target === 3) {
+					py += th;
+				}
+
+				g.beginPath();
+				g.moveTo(px + tw, py);
+				g.lineTo(px, py + th);
+				g.lineTo(px - tw, py);
+				g.lineTo(px, py - th);
+				g.closePath();
+				g.fill();
+			} else {
+				g.vhide();
+			}
 		}
 	},
 
@@ -733,10 +802,12 @@
 		decodeData: function() {
 			this.decodeBorderQues();
 			this.decodeCellAns();
+			this.decodeCellSnum();
 		},
 		encodeData: function() {
 			this.encodeBorderQues();
 			this.encodeCellAns();
+			this.encodeCellSnum();
 		},
 		decodeCellAns: function() {
 			this.decodeCell(function(cell, ca) {
