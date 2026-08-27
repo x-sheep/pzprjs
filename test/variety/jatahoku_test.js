@@ -122,9 +122,13 @@ describe("Variety:jatahoku", function() {
 		assert.equal(puzzle.board.getc(5, 1).anum, 4);
 		assert.equal(puzzle.painter.qanscolor, "rgb(0, 160, 0)");
 
-		puzzle.mouse.setInputMode("subcircle");
+		assert.notEqual(puzzle.mouse.getInputModeList().indexOf("objblank"), -1);
+		assert.equal(puzzle.mouse.getInputModeList().indexOf("dot"), -1);
+		assert.equal(puzzle.mouse.getInputModeList().indexOf("subcircle"), -1);
+		puzzle.mouse.setInputMode("objblank");
 		puzzle.mouse.inputPath(7, 1);
 		assert.equal(puzzle.board.getc(7, 1).qsub, 1);
+		assert.equal(puzzle.board.getc(7, 1).isDot(), true);
 
 		puzzle.key.inputKeys("w");
 		assert.equal(puzzle.board.getc(5, 1).qsub, 2);

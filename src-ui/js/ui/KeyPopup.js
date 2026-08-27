@@ -657,9 +657,10 @@ ui.keypopup = {
 	},
 	generate_jatahoku: function() {
 		var count = ui.puzzle.board.indicator.count,
+			qanscolor = ui.puzzle.painter.qanscolor,
 			mbcolor = ui.puzzle.painter.mbcolor,
 			items = [
-				["q", { text: "○", color: mbcolor }],
+				["q", { text: "・", color: qanscolor }],
 				["w", { text: "×", color: mbcolor }],
 				" ",
 				null

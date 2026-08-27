@@ -11,7 +11,10 @@
 	MouseEvent: {
 		inputModes: {
 			edit: ["number", "border", "clear"],
-			play: ["number", "subcircle", "subcross", "clear"]
+			play: ["number", "objblank", "subcross", "clear"]
+		},
+		inputDot: function() {
+			this.inputFixedQsub(1);
 		},
 
 		mouseinput_number: function() {
@@ -685,7 +688,8 @@
 			this.drawTargetSubNumber();
 			this.drawGrid();
 			this.drawBorders();
-			this.drawMBs();
+			this.drawDotCells();
+			this.drawJatahokuCrosses();
 			this.drawSubNumbers();
 			this.drawAnsNumbers();
 			this.drawQuesNumbers();
@@ -703,6 +707,26 @@
 		},
 		getQuesNumberText: function(obj) {
 			return obj.qnum === -3 ? "??" : this.getNumberText(obj, obj.qnum);
+		},
+		drawJatahokuCrosses: function() {
+			var g = this.vinc("cell_mb", "auto", true),
+				rsize = this.cw * 0.35,
+				clist = this.range.cells;
+			g.lineWidth = Math.max(1, this.cw * 0.04);
+
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+				g.vid = "c_MB1_" + cell.id;
+				g.vhide();
+
+				g.vid = "c_MB2_" + cell.id;
+				if (cell.qsub === 2) {
+					g.strokeStyle = !cell.trial ? this.mbcolor : "rgb(192, 192, 192)";
+					g.strokeCross(cell.bx * this.bw, cell.by * this.bh, rsize);
+				} else {
+					g.vhide();
+				}
+			}
 		},
 		drawIndicator: function() {
 			var g = this.vinc("indicator", "auto", true),
