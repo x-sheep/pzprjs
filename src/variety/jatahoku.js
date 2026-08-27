@@ -412,6 +412,7 @@
 		rows: 6,
 		hasborder: 1,
 		hasexcell: 1,
+		hasflush: 1,
 		indicator: null,
 
 		excellRows: function(cols, rows) {
