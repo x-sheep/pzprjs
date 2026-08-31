@@ -56,6 +56,7 @@
 							this.inputqnum();
 						}
 					} else if (this.mousestart || this.mousemove) {
+						// TODO where does hym fall under this?
 						if (this.pid === "yajilin" || this.pid === "lixloop") {
 							this.inputdirec();
 						} else if (this.pid === "yajilin-regions") {
@@ -194,7 +195,7 @@
 				}
 			}
 		},
-		"Cell@yajilin,koburin,lixloop,retsurin": {
+		"Cell@yajilin,koburin,lixloop,retsurin,heyajirimisaki": {
 			minnum: 0,
 			maxnum: function() {
 				return Math.max(this.board.cols, this.board.rows) >> 1;
@@ -275,6 +276,12 @@
 						bs[i].draw();
 					}
 				}
+			}
+		},
+		"Cell@heyajirimisaki#2": {
+			maxnum: function() {
+				var room = this.room ? this.room.clist.count : 0;
+				return Math.max(room, this.board.cols, this.board.rows);
 			}
 		},
 		"Cell@koburin#2": {
@@ -471,7 +478,7 @@
 				this.common.rebuildInfo.call(this);
 			}
 		},
-		"Board@yajilin,lixloop,retsurin": {
+		"Board@yajilin,lixloop,retsurin,heyajirimisaki": {
 			redrawAffected: function(cells) {
 				var minx = this.maxbx,
 					maxx = this.minbx,
@@ -525,7 +532,7 @@
 				}
 			}
 		},
-		"BoardExec@yajilin,lixloop": {
+		"BoardExec@yajilin,lixloop,heyajirimisaki": {
 			adjustBoardData: function(key, d) {
 				this.adjustNumberArrow(key, d);
 			}
@@ -533,6 +540,9 @@
 		"AreaRoomGraph@yajilin-regions": {
 			enabled: true,
 			hastop: true
+		},
+		"AreaRoomGraph@heyajirimisaki": {
+			enabled: true
 		},
 		LineGraph: {
 			enabled: true
@@ -564,15 +574,24 @@
 
 				this.drawBorders();
 
-				if (this.pid === "yajilin" || this.pid === "lixloop") {
+				if (
+					this.pid === "yajilin" ||
+					this.pid === "lixloop" ||
+					this.pid === "heyajirimisaki"
+				) {
 					this.drawArrowNumbers();
 				}
 
 				this.drawLines();
 
-				if (this.pid !== "yajilin" && this.pid !== "lixloop") {
+				if (this.pid === "heyajirimisaki") {
+					this.drawCornerNumbers();
+				} else if (this.pid !== "yajilin" && this.pid !== "lixloop") {
 					this.drawQuesNumbers();
 				}
+
+				// TODO draw circled numbers
+				// TODO draw topleft numbers
 
 				this.drawPekes();
 
@@ -641,6 +660,11 @@
 		},
 		"Graphic@yajilin-regions": {
 			textoption: { ratio: 0.4, position: 5, hoffset: 0.8, voffset: 0.75 }
+		},
+		"Graphic@heyajirimisaki": {
+			drawCornerNumbers: function() {
+				// TODO draw funny extra numbers
+			}
 		},
 
 		//---------------------------------------------------------
@@ -914,7 +938,11 @@
 				"checkLineOnShadeCell",
 				"checkAdjacentShadeCell",
 				"checkDeadendLine+",
-				"checkArrowNumber@yajilin,koburin,lixloop",
+				"checkArrowNumber@yajilin,koburin,lixloop,heyajirimisaki",
+				// TODO shaded cell region count
+				// TODO heyawake sight lines
+				// TODO nurimisaki dead-ends
+				// TODO nurimisaki viewcount
 				"checkShadeCellCount@yajilin-regions",
 				"checkCountsEqual@retsurin",
 				"checkCountsDiffer@retsurin",
