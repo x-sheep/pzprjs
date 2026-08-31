@@ -217,6 +217,7 @@
 				"heyawake",
 				{ alias: "heyawacky" }
 			],
+			heyajirimisaki: [0, 0, "Heyajirimisaki", "Heyajirimisaki","yajilin"],
 			hinge: [0, 0, "ちょうつがい", "Hinge", "shimaguni"],
 			hitori: [0, 1, "ひとりにしてくれ", "Hitori"],
 			icebarn: [1, 0, "アイスバーン", "Icebarn", "icebarn"],
