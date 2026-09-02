@@ -811,6 +811,30 @@
 				this.outpflag = flags.length ? flags : null;
 			}
 		},
+		"Encode@heyajirimisaki": {
+			decodePzpr: function() {
+				this.decodeBorder();
+				this.decodeCornerNumber();
+				this.decodeArrowNumber16();
+			},
+			encodePzpr: function() {
+				this.encodeBorder();
+				this.encodeCornerNumber();
+				this.encodeArrowNumber16();
+			},
+			decodeCornerNumber: function() {
+				var bd = this.board;
+				this.genericDecodeNumber16(bd.cell.length, function(c, val) {
+					bd.cell[c].qnum2 = val;
+				});
+			},
+			encodeCornerNumber: function() {
+				var bd = this.board;
+				this.genericEncodeNumber16(bd.cell.length, function(c) {
+					return bd.cell[c].qnum2;
+				});
+			}
+		},
 		//---------------------------------------------------------
 		"FileIO@yajilin,lixloop": {
 			decodeData: function() {
@@ -985,6 +1009,50 @@
 				this.encodeConfigFlag("o", "yajilin_out");
 				this.encodeConfigFlag("m", "koburin_minesweeper");
 				this.encodeConfigFlag("b", "disptype_yajilin", 2, 1);
+			}
+		},
+		"FileIO@heyajirimisaki": {
+			decodeData: function() {
+				this.decodeBorderQues();
+				this.decodeHeyajirimisaki();
+				this.decodeCellAns();
+				this.decodeBorderLine();
+			},
+			encodeData: function() {
+				this.encodeBorderQues();
+				this.encodeHeyajirimisaki();
+				this.encodeCellAns();
+				this.encodeBorderLine();
+			},
+			decodeHeyajirimisaki: function() {
+				this.decodeCell(function(cell, ca) {
+					if (ca === ".") {
+						return;
+					}
+					var inp = ca.split(",");
+					var dir = inp[0] !== "0" ? +inp[0] : 0;
+					var num = inp[1] !== "-" ? +inp[1] : -2;
+
+					if (dir === 5) {
+						cell.qnum2 = num;
+					} else {
+						cell.qdir = dir;
+						cell.qnum = num;
+					}
+				});
+			},
+			encodeHeyajirimisaki: function() {
+				this.encodeCell(function(cell) {
+					if (cell.qnum2 >= 0) {
+						return "5," + cell.qnum2 + " ";
+					} else if (cell.qnum !== -1) {
+						var ca1 = cell.qdir !== 0 ? "" + cell.qdir : "0";
+						var ca2 = cell.qnum !== -2 ? "" + cell.qnum : "-";
+						return [ca1, ",", ca2, " "].join("");
+					} else {
+						return ". ";
+					}
+				});
 			}
 		},
 		//---------------------------------------------------------
