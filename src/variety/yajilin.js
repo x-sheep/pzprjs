@@ -58,6 +58,7 @@
 					} else if (this.mousestart || this.mousemove) {
 						// TODO where does hym fall under this?
 						if (this.pid === "yajilin" || this.pid === "lixloop") {
+							// TODO this doesn't work right in hym with qnum2
 							this.inputdirec();
 						} else if (this.pid === "yajilin-regions") {
 							this.inputborder();
@@ -141,6 +142,32 @@
 					return cur & (cur - 1) || -1;
 				}
 				return null;
+			}
+		},
+		"KeyEvent@heyajirimisaki": {
+			keyinput: function(ca) {
+				if (ca === "q") {
+					var cell = this.cursor.getc();
+					if (cell.qdir > 0) {
+						cell.setQdir(0);
+					} else if (cell.qnum2 !== -1) {
+						cell.setQnum(cell.qnum2);
+						cell.setQnum2(-1);
+					} else if (cell.qnum === -1) {
+						cell.setQnum(-2);
+					} else {
+						var num = Math.max(-1, cell.qnum);
+						cell.setQnum2(num);
+						cell.setQnum(-1);
+					}
+					cell.draw();
+					return;
+				}
+
+				if (this.key_inputdirec(ca)) {
+					return;
+				}
+				this.key_inputqnum(ca);
 			}
 		},
 
@@ -280,8 +307,31 @@
 		},
 		"Cell@heyajirimisaki#2": {
 			maxnum: function() {
-				var room = this.room ? this.room.clist.count : 0;
+				var room = this.room ? this.room.clist.length : 0;
 				return Math.max(room, this.board.cols, this.board.rows);
+			},
+			getNum: function() {
+				return this.qnum2 !== -1 ? this.qnum2 : this.qnum;
+			},
+			setNum: function(val) {
+				if (val === -2) {
+					this.setQnum(this.qnum === -2 ? -1 : -2);
+					this.setQnum2(-1);
+				} else if (this.qnum !== -1) {
+					this.setQnum(val);
+				} else {
+					this.setQnum2(val);
+				}
+
+				this.setQcmp(0);
+			},
+			posthook: {
+				qdir: function() {
+					if (this.qdir > 0 && this.qnum2 !== -1) {
+						this.setQnum(this.qnum2);
+						this.setQnum2(-1);
+					}
+				}
 			}
 		},
 		"Cell@koburin#2": {
@@ -566,7 +616,7 @@
 
 			paint: function() {
 				this.drawBGCells();
-				if (this.pid === "yajilin-regions") {
+				if (this.pid === "yajilin-regions" || this.pid === "heyajirimisaki") {
 					this.drawShadedCells();
 				}
 				this.drawDotCells();
@@ -591,13 +641,12 @@
 				}
 
 				// TODO draw circled numbers
-				// TODO draw topleft numbers
 
 				this.drawPekes();
 
 				this.drawChassis();
 
-				if (this.pid === "yajilin-regions") {
+				if (this.pid === "yajilin-regions" || this.pid === "heyajirimisaki") {
 					this.drawBoxBorders(false);
 				}
 
@@ -663,7 +712,16 @@
 		},
 		"Graphic@heyajirimisaki": {
 			drawCornerNumbers: function() {
-				// TODO draw funny extra numbers
+				this.vinc("cell_number2", "auto");
+				this.drawNumbers_com(
+					this.getCornerNumberText,
+					this.getQuesNumberColor,
+					"cell_text2_",
+					{ ratio: 0.4, position: 5, hoffset: 0.8, voffset: 0.75 }
+				);
+			},
+			getCornerNumberText: function(cell) {
+				return this.getNumberTextCore(cell.qnum2);
 			}
 		},
 
