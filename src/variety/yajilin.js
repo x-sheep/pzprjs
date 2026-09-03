@@ -332,6 +332,22 @@
 						this.setQnum2(-1);
 					}
 				}
+			},
+			isPromontory: function() {
+				var countUnshade = 0;
+				if (this.adjacent.left.isUnshade()) {
+					countUnshade++;
+				}
+				if (this.adjacent.right.isUnshade()) {
+					countUnshade++;
+				}
+				if (this.adjacent.top.isUnshade()) {
+					countUnshade++;
+				}
+				if (this.adjacent.bottom.isUnshade()) {
+					countUnshade++;
+				}
+				return countUnshade === 1;
 			}
 		},
 		"Cell@koburin#2": {
@@ -1065,10 +1081,10 @@
 				"checkAdjacentShadeCell",
 				"checkDeadendLine+",
 				"checkArrowNumber@yajilin,koburin,lixloop,heyajirimisaki",
-				// TODO shaded cell region count
-				// TODO heyawake sight lines
-				// TODO nurimisaki dead-ends
-				// TODO nurimisaki viewcount
+				"checkCornerCellCount@heyajirimisaki",
+				"checkCountinuousUnshadeCell@heyajirimisaki",
+				"checkViewOfNumber@heyajirimisaki",
+				"checkCirclePromontory@heyajirimisaki",
 				"checkShadeCellCount@yajilin-regions",
 				"checkCountsEqual@retsurin",
 				"checkCountsDiffer@retsurin",
@@ -1170,6 +1186,59 @@
 
 				var ret = { x: x, y: y };
 				return (this._info.counts = ret);
+			}
+		},
+		"AnsCheck@heyajirimisaki": {
+			checkCornerCellCount: function() {
+				// TODO qnum2
+			},
+			checkCountinuousUnshadeCell: function() {
+				var savedflag = this.checkOnly;
+				this.checkOnly = true; /* エラー判定を一箇所だけにしたい */
+				this.checkRowsColsPartly(
+					this.isBorderCount,
+					function(cell) {
+						return cell.isShade();
+					},
+					"bkUnshadeConsecGt3"
+				);
+				this.checkOnly = savedflag;
+			},
+			isBorderCount: function(clist) {
+				var d = clist.getRectSize(),
+					count = 0,
+					bd = this.board,
+					bx,
+					by;
+				if (d.x1 === d.x2) {
+					bx = d.x1;
+					for (by = d.y1 + 1; by <= d.y2 - 1; by += 2) {
+						if (bd.getb(bx, by).isBorder()) {
+							count++;
+						}
+					}
+				} else if (d.y1 === d.y2) {
+					by = d.y1;
+					for (bx = d.x1 + 1; bx <= d.x2 - 1; bx += 2) {
+						if (bd.getb(bx, by).isBorder()) {
+							count++;
+						}
+					}
+				}
+
+				var result = count <= 1;
+				if (!result) {
+					clist.seterr(1);
+				}
+				return result;
+			},
+			checkViewOfNumber: function() {
+				// TODO copypaste from kurodoko
+			},
+			checkCirclePromontory: function() {
+				this.checkAllCell(function(cell) {
+					return cell.isNum() && !cell.isPromontory();
+				}, "circleNotPromontory");
 			}
 		},
 		"FailCode@koburin": {
