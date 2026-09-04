@@ -651,12 +651,11 @@
 				this.drawLines();
 
 				if (this.pid === "heyajirimisaki") {
+					this.drawCircles();
 					this.drawCornerNumbers();
 				} else if (this.pid !== "yajilin" && this.pid !== "lixloop") {
 					this.drawQuesNumbers();
 				}
-
-				// TODO draw circled numbers
 
 				this.drawPekes();
 
@@ -727,17 +726,33 @@
 			textoption: { ratio: 0.4, position: 5, hoffset: 0.8, voffset: 0.75 }
 		},
 		"Graphic@heyajirimisaki": {
+			fontsizeratio: 0.65,
 			drawCornerNumbers: function() {
 				this.vinc("cell_number2", "auto");
 				this.drawNumbers_com(
 					this.getCornerNumberText,
 					this.getQuesNumberColor,
 					"cell_text2_",
-					{ ratio: 0.4, position: 5, hoffset: 0.8, voffset: 0.75 }
+					this.textoption
 				);
+			},
+			getNumberText: function(cell, num) {
+				if (cell.qdir === 0 && num === -2) {
+					return "";
+				}
+				return this.getNumberTextCore(num);
 			},
 			getCornerNumberText: function(cell) {
 				return this.getNumberTextCore(cell.qnum2);
+			},
+			getCircleStrokeColor: function(cell) {
+				if (cell.qnum === -1 || cell.qdir !== 0) {
+					return null;
+				}
+				return this.getQuesNumberColor(cell);
+			},
+			getCircleFillColor: function(cell) {
+				return null;
 			}
 		},
 
