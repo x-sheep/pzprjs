@@ -1079,12 +1079,12 @@
 				"checkCrossLine",
 				"checkLineOnShadeCell",
 				"checkAdjacentShadeCell",
-				"checkDeadendLine+",
-				"checkArrowNumber@yajilin,koburin,lixloop,heyajirimisaki",
 				"checkCornerCellCount@heyajirimisaki",
-				"checkCountinuousUnshadeCell@heyajirimisaki",
 				"checkViewOfNumber@heyajirimisaki",
 				"checkCirclePromontory@heyajirimisaki",
+				"checkDeadendLine+",
+				"checkArrowNumber@yajilin,koburin,lixloop,heyajirimisaki",
+				"checkCountinuousUnshadeCell@heyajirimisaki",
 				"checkShadeCellCount@yajilin-regions",
 				"checkCountsEqual@retsurin",
 				"checkCountsDiffer@retsurin",
@@ -1190,7 +1190,21 @@
 		},
 		"AnsCheck@heyajirimisaki": {
 			checkCornerCellCount: function() {
-				// TODO qnum2
+				this.checkAllCell(function(cell) {
+					if (cell.qnum2 < 0) {
+						return false;
+					}
+					var count = cell.room.clist.filter(function(c) {
+						return c.isShade();
+					}).length;
+
+					if (cell.qnum2 !== count) {
+						cell.room.clist.seterr(1);
+						return true;
+					}
+
+					return false;
+				}, "bkShadeNe");
 			},
 			checkCountinuousUnshadeCell: function() {
 				var savedflag = this.checkOnly;
@@ -1237,7 +1251,7 @@
 			},
 			checkCirclePromontory: function() {
 				this.checkAllCell(function(cell) {
-					return cell.isNum() && !cell.isPromontory();
+					return cell.isNum() && cell.qdir === 0 && !cell.isPromontory();
 				}, "circleNotPromontory");
 			}
 		},
