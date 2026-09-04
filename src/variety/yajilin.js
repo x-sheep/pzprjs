@@ -1262,7 +1262,34 @@
 				return result;
 			},
 			checkViewOfNumber: function() {
-				// TODO copypaste from kurodoko
+				var boardcell = this.board.cell;
+				for (var cc = 0; cc < boardcell.length; cc++) {
+					var cell = boardcell[cc];
+					if (!cell.isValidNum() || cell.qdir !== 0 || !cell.isPromontory()) {
+						continue;
+					}
+
+					var clist = new this.klass.CellList();
+					clist.add(cell);
+					for (var dir in cell.adjacent) {
+						var target = cell;
+						do {
+							if (cell !== target) {
+								clist.add(target);
+							}
+							target = target.adjacent[dir];
+						} while (target.isUnshade() && !target.isnull);
+					}
+					if (cell.qnum === clist.length) {
+						continue;
+					}
+
+					this.failcode.add("nmSumViewNe");
+					if (this.checkOnly) {
+						break;
+					}
+					clist.seterr(1);
+				}
 			},
 			checkCirclePromontory: function() {
 				this.checkAllCell(function(cell) {
