@@ -267,7 +267,8 @@ ui.keypopup = {
 		elasticlink: [10, 0],
 		slovak: [136, 10],
 		gravel: [120, 0],
-		seiza: [4, 0]
+		seiza: [4, 0],
+		heyajirimisaki: [10, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -546,7 +547,7 @@ ui.keypopup = {
 		if (pid === "familyphoto") {
 			itemlist.push(["q", "●"]);
 		}
-		if (pid === "elasticlink") {
+		if (pid === "elasticlink" || pid === "heyajirimisaki") {
 			itemlist.push(["q", "○"]);
 		}
 		if (
