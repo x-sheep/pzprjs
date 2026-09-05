@@ -106,7 +106,7 @@ ui.keypopup = {
 		aqre: [10, 0],
 		doppelblock: [10, 115],
 		japanesesums: [10, 115],
-		jatahoku: [80, 138],
+		jatahoku: [10, 138],
 		interbd: [116, 0],
 		toichika2: [10, 10],
 		crossstitch: [10, 0],
