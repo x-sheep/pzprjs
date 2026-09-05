@@ -56,11 +56,16 @@
 							this.inputqnum();
 						}
 					} else if (this.mousestart || this.mousemove) {
-						// TODO where does hym fall under this?
-						if (this.pid === "yajilin" || this.pid === "lixloop") {
-							// TODO this doesn't work right in hym with qnum2
+						if (
+							(this.pid === "heyajirimisaki" && !this.isBorderMode()) ||
+							this.pid === "yajilin" ||
+							this.pid === "lixloop"
+						) {
 							this.inputdirec();
-						} else if (this.pid === "yajilin-regions") {
+						} else if (
+							(this.pid === "heyajirimisaki" && this.isBorderMode()) ||
+							this.pid === "yajilin-regions"
+						) {
 							this.inputborder();
 						}
 					} else if (this.mouseend && this.notInputted()) {
@@ -88,8 +93,53 @@
 		},
 		"MouseEvent@heyajirimisaki": {
 			inputModes: {
-				edit: ["number", "direc", "border", "clear", "info-line"],
+				edit: [
+					"number",
+					"circle-unshade",
+					"direc",
+					"border",
+					"clear",
+					"info-line"
+				],
 				play: ["line", "peke", "shade", "unshade", "info-line", "completion"]
+			},
+			mouseinput: function() {
+				if (this.inputMode === "circle-unshade") {
+					if (this.mousestart) {
+						var cell = this.getcell();
+						if (!cell.isnull) {
+							cell.toggleCircle();
+							cell.draw();
+						}
+					}
+				} else {
+					this.common.mouseinput.call(this);
+				}
+			},
+			inputdirec: function() {
+				var pos = this.getpos(0);
+				if (this.prevPos.equals(pos)) {
+					return;
+				}
+
+				var cell = this.prevPos.getc();
+				if (cell.qnum !== -1 || cell.qnum2 !== -1) {
+					var dir = this.prevPos.getdir(pos, 2);
+					if (dir !== cell.NDIR && cell.qdir !== dir) {
+						if (cell.qnum2 !== -1) {
+							cell.swapNums();
+						}
+						cell.setQdir(dir);
+						cell.draw();
+					} else if (dir !== cell.NDIR && cell.qdir === dir) {
+						if (cell.qnum !== -1) {
+							cell.swapNums();
+						}
+						cell.setQdir(0);
+						cell.draw();
+					}
+				}
+				this.prevPos = pos;
 			}
 		},
 		"MouseEvent@yajilin-regions": {
@@ -148,18 +198,7 @@
 			keyinput: function(ca) {
 				if (ca === "q") {
 					var cell = this.cursor.getc();
-					if (cell.qdir > 0) {
-						cell.setQdir(0);
-					} else if (cell.qnum2 !== -1) {
-						cell.setQnum(cell.qnum2);
-						cell.setQnum2(-1);
-					} else if (cell.qnum === -1) {
-						cell.setQnum(-2);
-					} else {
-						var num = Math.max(-1, cell.qnum);
-						cell.setQnum2(num);
-						cell.setQnum(-1);
-					}
+					cell.toggleCircle();
 					cell.draw();
 					return;
 				}
@@ -309,6 +348,25 @@
 			maxnum: function() {
 				var room = this.room ? this.room.clist.length : 0;
 				return Math.max(room, this.board.cols, this.board.rows);
+			},
+			toggleCircle: function() {
+				if (this.qdir > 0) {
+					this.setQdir(0);
+				} else if (this.qnum === -1 && this.qnum2 === -1) {
+					this.setQnum(-2);
+				} else {
+					this.swapNums();
+				}
+			},
+			swapNums: function() {
+				if (this.qnum2 !== -1) {
+					this.setQnum(this.qnum2);
+					this.setQnum2(-1);
+				} else {
+					var num = Math.max(-1, this.qnum);
+					this.setQnum2(num);
+					this.setQnum(-1);
+				}
 			},
 			getNum: function() {
 				return this.qnum2 !== -1 ? this.qnum2 : this.qnum;
