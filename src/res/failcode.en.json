@@ -437,6 +437,7 @@
     "ceWrongSmile.mrokmrno": "A smiling face is next to the word NO.",
     "ceWrongFrown.mrokmrno": "A frowning face is next to the word OK.",
     "ciNotOnCnr.loute": "A circle is not at the corner of an area.",
+    "circleNotPromontory.heyajirimisaki": "A circle is not adjacent to exactly one unshaded cell.",
     "circleNotPromontory.kurodoko": "A circle is not a dead end.",
     "circleShade.kissing": "A crossed cell is shaded.",
     "circleShade": "A white circle is shaded.",

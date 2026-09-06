@@ -31,6 +31,18 @@ describe("Variety:jatahoku", function() {
 		assert.equal(board.indicator.count, 5);
 	});
 
+	it("trims unused top and left clue space in the player", function() {
+		var player = new pzpr.Puzzle({ type: "player" }).open("jatahoku/6/6");
+		var editor = new pzpr.Puzzle({ type: "editor" }).open("jatahoku/6/6");
+		player.board.getex(1, -1).qnum = 3;
+		player.board.getex(-1, 1).qnum = 3;
+
+		assert.equal(editor.painter.getBoardCols(), 10);
+		assert.equal(editor.painter.getBoardRows(), 10);
+		assert.equal(player.painter.getBoardCols(), 9);
+		assert.equal(player.painter.getBoardRows(), 8);
+	});
+
 	it("round-trips gray clues and one/two digit unknown sums", function() {
 		var puzzle = new pzpr.Puzzle().open("jatahoku/6/6");
 		var board = puzzle.board;

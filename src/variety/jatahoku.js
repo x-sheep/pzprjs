@@ -746,6 +746,56 @@
 		cursorIsOnBoard: function() {
 			var cursor = this.puzzle.cursor;
 			return cursor.by <= this.board.maxby;
+		},
+		getBoardCols: function() {
+			return this.getOffsetCols() + this.board.maxbx / 2;
+		},
+		getBoardRows: function() {
+			return this.getOffsetRows() + this.board.maxby / 2;
+		},
+		getOffsetCols: function() {
+			var bd = this.board,
+				offset = 0;
+
+			if (this.puzzle.playeronly || this.outputImage) {
+				var left = bd.minbx / -2;
+
+				for (var bx = bd.minbx + 1; bx < 0; bx += 2) {
+					for (var by = 1; by < bd.maxby; by += 2) {
+						if (bd.getex(bx, by).qnum !== -1) {
+							left = (bd.minbx + 1 - bx) / -2;
+							bx = 0;
+							break;
+						}
+					}
+				}
+
+				offset = Math.min(left, Math.max(0, bd.minbx / -2 - 2));
+			}
+
+			return -bd.minbx / 2 - offset;
+		},
+		getOffsetRows: function() {
+			var bd = this.board,
+				offset = 0;
+
+			if (this.puzzle.playeronly || this.outputImage) {
+				var top = bd.minby / -2;
+
+				for (var by = bd.minby + 1; by < 0; by += 2) {
+					for (var bx = 1; bx < bd.maxbx; bx += 2) {
+						if (bd.getex(bx, by).qnum !== -1) {
+							top = (bd.minby + 1 - by) / -2;
+							by = 0;
+							break;
+						}
+					}
+				}
+
+				offset = Math.min(top, Math.max(0, bd.minby / -2 - 1));
+			}
+
+			return -bd.minby / 2 - offset;
 		}
 	},
 

@@ -106,7 +106,7 @@ ui.keypopup = {
 		aqre: [10, 0],
 		doppelblock: [10, 115],
 		japanesesums: [10, 115],
-		jatahoku: [80, 138],
+		jatahoku: [10, 138],
 		interbd: [116, 0],
 		toichika2: [10, 10],
 		crossstitch: [10, 0],
@@ -267,7 +267,8 @@ ui.keypopup = {
 		elasticlink: [10, 0],
 		slovak: [136, 10],
 		gravel: [120, 0],
-		seiza: [4, 0]
+		seiza: [4, 0],
+		heyajirimisaki: [10, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -546,7 +547,7 @@ ui.keypopup = {
 		if (pid === "familyphoto") {
 			itemlist.push(["q", "●"]);
 		}
-		if (pid === "elasticlink") {
+		if (pid === "elasticlink" || pid === "heyajirimisaki") {
 			itemlist.push(["q", "○"]);
 		}
 		if (
