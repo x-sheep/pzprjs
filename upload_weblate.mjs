@@ -13,7 +13,7 @@ const inputs = JSON.parse(
 const webmap = {};
 
 weblatelist.forEach(el => {
-  if (!el.explanation) {
+  if (el.explanation !== inputs[el.context]) {
     webmap[el.context] = el.url;
   }
 });
@@ -40,5 +40,5 @@ for (const key in inputs) {
     throw new Error("Responsen't");
   }
 
-  await new Promise(resolve => setTimeout(resolve, 50));
+  await new Promise(resolve => setTimeout(resolve, 250));
 }
